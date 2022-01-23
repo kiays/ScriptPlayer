@@ -1,3 +1,7 @@
+.cache
+build 
+*.code-workspace
+
 ### https://raw.github.com/github/gitignore/752b7678db497edb377fa982ded0c70035393794/Global/macOS.gitignore
 
 # General
@@ -86,3 +90,32 @@ compile_commands.json
 *_qmlcache.qrc
 
 
+### https://raw.github.com/github/gitignore/752b7678db497edb377fa982ded0c70035393794/CMake.gitignore
+
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+
+### https://raw.github.com/github/gitignore/752b7678db497edb377fa982ded0c70035393794/Global/VisualStudioCode.gitignore
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
