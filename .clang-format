@@ -1,0 +1,12 @@
+﻿---
+BasedOnStyle: LLVM
+AlignAfterOpenBracket: DontAlign
+CompactNamespaces: 'true'
+ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
+Standard: Cpp11
+UseTab: Never
+Language: Cpp
+IndentWidth: 2
+ColumnLimit: 100
+
+...

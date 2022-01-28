@@ -20,6 +20,8 @@ set(PROJECT_SOURCES ${TS_FILES})
 set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources)
 file(GLOB_RECURSE PROJECT_SOURCES ${PROJECT_SOURCE_DIR}/*.cpp)
+file(GLOB_RECURSE PROJECT_SOURCES_FMT ${PROJECT_SOURCE_DIR}/*.cpp)
+file(GLOB_RECURSE PROJECT_SOURCES_FMT ${PROJECT_SOURCE_DIR}/*.h)
 
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -63,4 +65,14 @@ set_target_properties(ScriptPlayer PROPERTIES
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ScriptPlayer)
+endif()
+
+find_program(CLANG_FORMAT_EXE clang-format)
+if(CLANG_FORMAT_EXE)
+    add_custom_target(${PROJECT_NAME}-format ALL
+        COMMAND clang-format -i --style=file --verbose ${PROJECT_SOURCES_FMT}
+        COMMENT "Running clang-format" 
+        VERBATIM)
+    add_dependencies(ScriptPlayer ${PROJECT_NAME}-format)
+  
 endif()
