@@ -12,22 +12,25 @@ MainWindow::MainWindow(QWidget *parent)
   m_player = new QMediaPlayer(this);
   m_player->setAudioOutput(m_audio_output);
   connect(m_player, &QMediaPlayer::durationChanged, this,
-          &MainWindow::durationChanged);
+      &MainWindow::durationChanged);
   m_playlist_view = new PlaylistView(this);
   m_playlist_view->setModel(m_playlist);
   ui->centralwidget->layout()->addWidget(m_playlist_view);
   connect(m_playlist_view, &PlaylistView::audioFileDropped, m_playlist,
-          &PlaylistModel::addAudioFile);
-  connect(m_playlist_view, &QTableView::doubleClicked, [=](const QModelIndex &index){
-    qDebug()<<"double clicked";
-    m_player->setSource(m_playlist->getUrl(index));
-  });
+      &PlaylistModel::addAudioFile);
+  connect(m_playlist_view, &QTableView::doubleClicked,
+      [=](const QModelIndex &index) {
+        qDebug() << "double clicked";
+        m_player->setSource(m_playlist->getUrl(index));
+      });
   // ui->tableView->setModel(m_playlist);
   // ui->tableView->setDragDropMode(QAbstractItemView::DropOnly);
 }
 
 MainWindow::~MainWindow() { delete ui; }
-  void MainWindow::mousePressEvent(QMouseEvent *event){ qDebug()<< event->pos().x();}
+void MainWindow::mousePressEvent(QMouseEvent *event) {
+  qDebug() << event->pos().x();
+}
 
 void MainWindow::on_dropEvent(QDropEvent *event) {
   //    ui->label->setText(event->mimeData()->text());
@@ -45,8 +48,8 @@ void MainWindow::open() {
   QFile file(fileName);
   currentFile = fileName;
   if (!file.open(QIODevice::ReadOnly)) {
-    QMessageBox::warning(this, "Warning",
-                         "Cannot open file: " + file.errorString());
+    QMessageBox::warning(
+        this, "Warning", "Cannot open file: " + file.errorString());
     return;
   }
   m_player->setSource(QUrl::fromLocalFile(fileName));
