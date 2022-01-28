@@ -1,3 +1,4 @@
+.envrc
 .cache
 build 
 *.code-workspace
