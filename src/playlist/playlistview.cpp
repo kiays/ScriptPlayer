@@ -2,23 +2,24 @@
 
 PlaylistView::PlaylistView(QWidget *parent) : QTableView(parent) {
   setAcceptDrops(true);
+  setSelectionMode(QAbstractItemView::SelectionMode::SingleSelection);
+  setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
+  setSortingEnabled(true);
 }
 void PlaylistView::dragEnterEvent(QDragEnterEvent *event) {
   // if (event->mimeData()->hasFormat("text/plain"))
-  qDebug("dragEnterEvent");
-  //   const auto* mimeData = event->mimeData();
+ 
+    const auto* mimeData = event->mimeData();
   //   qDebug()<<mimeData->text();
-  //   qDebug() << mimeData->hasFormat("audio/x-mp3");
+    qDebug() << mimeData->hasFormat("audio/x-mp3");
   event->acceptProposedAction();
 }
 void PlaylistView::dragMoveEvent(QDragMoveEvent *event) {
   // if (event->mimeData()->hasFormat("text/plain"))
-  qDebug("dragMoveEvent");
   event->acceptProposedAction();
 }
 
 void PlaylistView::dropEvent(QDropEvent *event) {
-  qDebug("dropped");
   event->acceptProposedAction();
   QString file_name_str = event->mimeData()->text();
   QStringList file_names = file_name_str.split("\n");

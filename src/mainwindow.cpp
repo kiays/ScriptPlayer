@@ -18,6 +18,10 @@ MainWindow::MainWindow(QWidget *parent)
   ui->centralwidget->layout()->addWidget(m_playlist_view);
   connect(m_playlist_view, &PlaylistView::audioFileDropped, m_playlist,
           &PlaylistModel::addAudioFile);
+  connect(m_playlist_view, &QTableView::doubleClicked, [=](const QModelIndex &index){
+    qDebug()<<"double clicked";
+    m_player->setSource(m_playlist->getUrl(index));
+  });
   // ui->tableView->setModel(m_playlist);
   // ui->tableView->setDragDropMode(QAbstractItemView::DropOnly);
 }

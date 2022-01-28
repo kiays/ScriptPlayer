@@ -10,9 +10,15 @@
 struct PlayListItem {
   QVariant title = "";
   QVariant album = "";
+  QVariant artist = "";
+  QVariant trackNumber = "";
+  QVariant duration = 0;
+  QVariant mediaType = "";
   QUrl url;
-  PlayListItem(QUrl url, QVariant title, QVariant album)
-      : title{title}, url{url}, album(album) {}
+  PlayListItem(QUrl url, QVariant title, QVariant album, QVariant artist,
+               QVariant trackNumber, QVariant duration, QVariant mediaType)
+      : title{title}, url{url}, album(album), artist(artist),
+        trackNumber(trackNumber), duration(duration), mediaType(mediaType){};
 };
 
 class PlaylistModel : public QAbstractTableModel {
@@ -23,11 +29,24 @@ public:
     return m_data.count();
   };
   int columnCount(const QModelIndex &parent = QModelIndex()) const override {
-    return 1;
+    return 4;
   };
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const {
-    return m_data[index.row()].title;
+    PlayListItem item = m_data[index.row()];
+    switch (index.column()) {
+    case 0:
+      return item.trackNumber;
+    case 1:
+      return item.title;
+    case 2:
+      return item.artist;
+    case 3:
+      return item.duration;
+    default:
+      return QVariant();
+    }
   };
+  QUrl getUrl(const QModelIndex &index) { return m_data[index.row()].url; };
 
 public slots:
   void addAudioFile(QString file_name) {
@@ -36,33 +55,40 @@ public slots:
     auto url = QUrl::fromLocalFile(file_name);
     auto *meta_reader = new QMediaPlayer();
     meta_reader->setSource(url);
-    connect(meta_reader, &QMediaPlayer::mediaStatusChanged, [=]{
-      auto status= meta_reader->mediaStatus();
+    connect(meta_reader, &QMediaPlayer::mediaStatusChanged, [=] {
+      auto status = meta_reader->mediaStatus();
       if (status == QMediaPlayer::LoadedMedia) {
-        auto title = meta_reader->metaData().value(QMediaMetaData::Key::Title);
-        auto album = meta_reader->metaData().value(QMediaMetaData::Key::AlbumTitle);
-        // qDebug() << meta.keys() << meta.isEmpty() << m_meta_reader->duration() << m_meta_reader->mediaStatus() << m_meta_reader->playbackState();
         QMediaMetaData meta = meta_reader->metaData();
-        m_data.append(PlayListItem(url, meta.value(QMediaMetaData::Key::Title), meta.value(QMediaMetaData::Key::AlbumTitle)));
+        auto title = meta.value(QMediaMetaData::Key::Title);
+        auto album = meta.value(QMediaMetaData::Key::AlbumTitle);
+        auto artist = meta.value(QMediaMetaData::Key::ContributingArtist);
+        auto duration = meta.value(QMediaMetaData::Key::Duration).toInt();
+        auto mediaType = meta.value(QMediaMetaData::Key::MediaType);
+        auto trackNumber = meta.value(QMediaMetaData::Key::TrackNumber).toInt();
+        qDebug() << meta.keys();
+        // qDebug() << meta.keys() << meta.isEmpty() <<
+        // m_meta_reader->duration() << m_meta_reader->mediaStatus() <<
+        // m_meta_reader->playbackState();
+        m_data.append(PlayListItem{url, title, album, artist, trackNumber,
+                                   duration, mediaType});
         endInsertRows();
         delete meta_reader;
       }
 
-      switch(status) {
-        case QMediaPlayer::LoadedMedia:
-          return;
-        case QMediaPlayer::BufferingMedia:
-        case QMediaPlayer::BufferedMedia:
-        case QMediaPlayer::EndOfMedia:
-        case QMediaPlayer::InvalidMedia:
-        case QMediaPlayer::NoMedia:
-        case QMediaPlayer::LoadingMedia:
-        case QMediaPlayer::StalledMedia:
-          qDebug() << "Media status:" << status;
-          delete meta_reader;
-          break;
+      switch (status) {
+      case QMediaPlayer::LoadedMedia:
+        return;
+      case QMediaPlayer::BufferingMedia:
+      case QMediaPlayer::BufferedMedia:
+      case QMediaPlayer::EndOfMedia:
+      case QMediaPlayer::InvalidMedia:
+      case QMediaPlayer::NoMedia:
+      case QMediaPlayer::LoadingMedia:
+      case QMediaPlayer::StalledMedia:
+        qDebug() << "Media status:" << status;
+        delete meta_reader;
+        break;
       }
-   
     });
   };
 
