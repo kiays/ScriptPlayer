@@ -1,8 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
 
   m_playlist = new PlaylistModel(this);
   ui->setupUi(this);
@@ -11,26 +10,25 @@ MainWindow::MainWindow(QWidget *parent)
   m_audio_output = new QAudioOutput(this);
   m_player = new QMediaPlayer(this);
   m_player->setAudioOutput(m_audio_output);
-  connect(m_player, &QMediaPlayer::durationChanged, this,
-      &MainWindow::durationChanged);
+
   m_playlist_view = new PlaylistView(this);
   m_playlist_view->setModel(m_playlist);
   ui->centralwidget->layout()->addWidget(m_playlist_view);
-  connect(m_playlist_view, &PlaylistView::audioFileDropped, m_playlist,
-      &PlaylistModel::addAudioFile);
-  connect(m_playlist_view, &QTableView::doubleClicked,
-      [=](const QModelIndex &index) {
-        qDebug() << "double clicked";
-        m_player->setSource(m_playlist->getUrl(index));
-      });
-  // ui->tableView->setModel(m_playlist);
-  // ui->tableView->setDragDropMode(QAbstractItemView::DropOnly);
+
+  connect(m_player, &QMediaPlayer::durationChanged, this, &MainWindow::durationChanged);
+  connect(
+      m_playlist_view, &PlaylistView::audioFileDropped, m_playlist, &PlaylistModel::addAudioFile);
+  connect(m_playlist_view, &PlaylistView::csvFileDropped, m_playlist, &PlaylistModel::addCsvFile);
+  connect(m_playlist_view, &QTableView::doubleClicked, [=](const QModelIndex &index) {
+    qDebug() << "double clicked";
+    m_player->setSource(m_playlist->getUrl(index));
+  });
+  connect(ui->discoverDeviceButton, &QPushButton::clicked, this,
+      &MainWindow::on_discoverButton_clicked);
 }
 
 MainWindow::~MainWindow() { delete ui; }
-void MainWindow::mousePressEvent(QMouseEvent *event) {
-  qDebug() << event->pos().x();
-}
+void MainWindow::mousePressEvent(QMouseEvent *event) { qDebug() << event->pos().x(); }
 
 void MainWindow::on_dropEvent(QDropEvent *event) {
   //    ui->label->setText(event->mimeData()->text());
@@ -48,8 +46,7 @@ void MainWindow::open() {
   QFile file(fileName);
   currentFile = fileName;
   if (!file.open(QIODevice::ReadOnly)) {
-    QMessageBox::warning(
-        this, "Warning", "Cannot open file: " + file.errorString());
+    QMessageBox::warning(this, "Warning", "Cannot open file: " + file.errorString());
     return;
   }
   m_player->setSource(QUrl::fromLocalFile(fileName));
@@ -64,6 +61,25 @@ void MainWindow::open() {
 }
 
 void MainWindow::on_playButton_clicked() { m_player->play(); }
+void MainWindow::on_discoverButton_clicked() {
+
+  m_ble_worker = new SenderThread(this);
+  m_deviceDiscoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
+  m_deviceDiscoveryAgent->setLowEnergyDiscoveryTimeout(15000);
+
+  connect(m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
+      [&] { qDebug() << "discovered: " << m_deviceDiscoveryAgent->discoveredDevices().size(); });
+  connect(m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::errorOccurred,
+      [&] { qDebug() << "error"; });
+
+  connect(m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
+      [&] { qDebug() << m_deviceDiscoveryAgent->discoveredDevices().size(); });
+  connect(m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::canceled, m_ble_worker,
+      &SenderThread::scanFinished);
+  m_ble_worker->start();
+  m_deviceDiscoveryAgent->start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
+  // m_deviceDiscoveryAgent->is
+}
 
 void MainWindow::on_pauseButton_clicked() { m_player->pause(); }
 

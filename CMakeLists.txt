@@ -10,9 +10,8 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools Multimedia REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools Multimedia Bluetooth REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools Multimedia Bluetooth REQUIRED)
 
 set(TS_FILES ScriptPlayer_ja_JP.ts)
 
@@ -53,6 +52,7 @@ endif()
 
 target_link_libraries(ScriptPlayer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(ScriptPlayer PRIVATE Qt${QT_VERSION_MAJOR}::Multimedia)
+target_link_libraries(ScriptPlayer PRIVATE Qt${QT_VERSION_MAJOR}::Bluetooth)
 set_target_properties(ScriptPlayer PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}

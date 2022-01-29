@@ -3,7 +3,9 @@
 
 #include "playlist/playlistmodel.h"
 #include "playlist/playlistview.h"
+#include "senderthread.h"
 #include <QAudioOutput>
+#include <QBluetoothDeviceDiscoveryAgent>
 #include <QDropEvent>
 #include <QFile>
 #include <QFileDialog>
@@ -30,6 +32,7 @@ private slots:
   void mousePressEvent(QMouseEvent *event) override;
   void open();
   void on_playButton_clicked();
+  void on_discoverButton_clicked();
 
   void on_pauseButton_clicked();
   void durationChanged(qint64 duration);
@@ -44,5 +47,7 @@ private:
   qint64 m_duration;
   PlaylistModel *m_playlist;
   PlaylistView *m_playlist_view;
+  SenderThread *m_ble_worker;
+  QBluetoothDeviceDiscoveryAgent *m_deviceDiscoveryAgent;
 };
 #endif // MAINWINDOW_H

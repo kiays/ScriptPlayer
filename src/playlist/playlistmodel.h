@@ -16,6 +16,7 @@ struct PlayListItem {
   QVariant duration = 0;
   QVariant mediaType = "";
   QUrl url;
+  QUrl csvUrl;
   PlayListItem(QUrl url, QVariant title, QVariant album, QVariant artist, QVariant trackNumber,
       QVariant duration, QVariant mediaType)
       : title{title},
@@ -35,10 +36,12 @@ public:
   int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+  QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
   QUrl getUrl(const QModelIndex &index) const;
 
 public slots:
   void addAudioFile(QString file_name);
+  void addCsvFile(QString file_name, QModelIndex const &index);
 
 private:
   QList<PlayListItem> m_data;

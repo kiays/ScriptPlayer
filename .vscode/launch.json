@@ -13,6 +13,7 @@
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
             "externalConsole": false,
+            "env": {"QT_EVENT_DISPATCHER_CORE_FOUNDATION": "1"}
         }
     ]
 }

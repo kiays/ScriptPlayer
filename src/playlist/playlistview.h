@@ -5,6 +5,7 @@
 #include <QMimeData>
 #include <QObject>
 #include <QTableView>
+#include <QUrl>
 #include <QWidget>
 class PlaylistView : public QTableView {
   Q_OBJECT
@@ -13,6 +14,7 @@ public:
 
 signals:
   void audioFileDropped(QString file_name);
+  void csvFileDropped(QString file_name, QModelIndex const &index);
 
 private:
   void dragEnterEvent(QDragEnterEvent *event) override;
