@@ -1,0 +1,63 @@
+{
+  "name": "script-player",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "parcel index.html --public-url ./ --target electron --no-hmr",
+    "start": "electron-forge start",
+    "rebuild:arm64": "electron-rebuild --arch arm64",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.63",
+    "@electron-forge/maker-deb": "^6.0.0-beta.63",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.63",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
+    "@electron-forge/maker-zip": "^6.0.0-beta.63",
+    "electron": "^16.0.8",
+    "electron-devtools-installer": "^3.2.0",
+    "electron-rebuild": "^3.2.7",
+    "parcel-bundler": "^1.12.5"
+  },
+  "dependencies": {
+    "@abandonware/noble": "^1.9.2-15",
+    "electron-squirrel-startup": "^1.0.0",
+    "immutability-helper": "^3.1.1",
+    "react": "^17.0.2",
+    "react-dnd": "^14.0.5",
+    "react-dnd-html5-backend": "^14.1.0",
+    "react-dom": "^17.0.2"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "script_player"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  }
+}
