@@ -9,7 +9,8 @@
     "start": "electron-forge start",
     "rebuild:arm64": "electron-rebuild --arch arm64",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "format": "prettier --write '*.{js,json}' 'renderer/**/*.{js,json,md,yml}'"
   },
   "author": "",
   "license": "ISC",
@@ -22,7 +23,8 @@
     "electron": "^16.0.8",
     "electron-devtools-installer": "^3.2.0",
     "electron-rebuild": "^3.2.7",
-    "parcel-bundler": "^1.12.5"
+    "parcel-bundler": "^1.12.5",
+    "prettier": "2.5.1"
   },
   "dependencies": {
     "@abandonware/noble": "^1.9.2-15",
