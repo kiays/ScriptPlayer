@@ -1,21 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { render } from "react-dom";
+import { RecoilRoot, useRecoilState, useRecoilValue } from "recoil";
 import { DndProvider, useDrop } from "react-dnd";
 import { NativeTypes, HTML5Backend } from "react-dnd-html5-backend";
 import Playlist from "./components/Playlist";
 import update from "immutability-helper";
 import Player from "./components/Player";
-import { useEffect } from "react/cjs/react.development";
 import { readFile, createTrack } from "./utils";
+import { currentPlaylistState, playlistsState } from "./states/playlists";
 
 const App = () => {
-  const [playlist, setPlaylist] = useState({ name: "new", tracks: [] });
-  const [playlistUrl, setPlaylistUrl] = useState("");
-  useEffect(() => {
-    const s = JSON.stringify(playlist);
-    const b = new Blob([s], { type: "application/json" });
-    setPlaylistUrl(URL.createObjectURL(b));
-  }, [playlist]);
+  const [playlist, setPlaylist] = useRecoilState(currentPlaylistState);
+  const playlists = useRecoilValue(playlistsState);
+  console.log(playlists);
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: [NativeTypes.FILE],
     async drop(item) {
@@ -58,9 +55,6 @@ const App = () => {
     <div>
       <Player playlist={playlist} />
       <Playlist playlist={playlist} setCsv={setCsv} />
-      <a download={`${playlist.name}.json`} href={playlistUrl}>
-        save
-      </a>
       <div
         ref={drop}
         style={{ width: "500px", height: "400px", backgroundColor: "pink" }}
@@ -72,8 +66,12 @@ const App = () => {
 };
 
 render(
-  <DndProvider backend={HTML5Backend}>
-    <App />
-  </DndProvider>,
+  <RecoilRoot>
+    <DndProvider backend={HTML5Backend}>
+      <Suspense fallback={<div>loading...</div>}>
+        <App />
+      </Suspense>
+    </DndProvider>
+  </RecoilRoot>,
   document.getElementById("root")
 );

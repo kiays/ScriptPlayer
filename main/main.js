@@ -3,8 +3,8 @@ const noble = require("@abandonware/noble");
 const { DEVICE_UUID, APP_NAME } = require("../common/constants");
 const path = require("path");
 const database = require("./database");
-// const installExtension =require('electron-devtools-installer').default;
-// const {REACT_DEVELOPER_TOOLS} =require('electron-devtools-installer');
+const installExtension = require("electron-devtools-installer").default;
+const { REACT_DEVELOPER_TOOLS } = require("electron-devtools-installer");
 
 let device = null;
 let characteristic = null;
@@ -56,7 +56,11 @@ const createWindow = () => {
 };
 
 app.whenReady().then(() => {
-  // installExtension(REACT_DEVELOPER_TOOLS)
+  installExtension(REACT_DEVELOPER_TOOLS, {
+    loadExtensionOptions: { allowFileAccess: true },
+  })
+    .then((name) => console.log(`Added Extension:  ${name}`))
+    .catch((err) => console.log("An error occurred: ", err));
   createWindow();
 
   app.on("activate", () => {

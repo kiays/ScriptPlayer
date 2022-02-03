@@ -19,8 +19,7 @@ if (!fs.existsSync(dbPath)) {
   });
   fs.writeFileSync(dbPath, initialJsonStr);
 }
-const data = fs.readFileSync(dbPath, { encoding: "utf8" });
-
+const data = JSON.parse(fs.readFileSync(dbPath, { encoding: "utf8" }));
 const getAll = () => data;
 const getAllWorks = () => data.works;
 const getAllPlaylists = () => data.playlists;
