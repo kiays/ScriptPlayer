@@ -1,6 +1,8 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, Menu, MenuItem } = require("electron");
 const noble = require("@abandonware/noble");
+const { DEVICE_UUID, APP_NAME } = require("../common/constants");
 const path = require("path");
+const database = require("./database");
 // const installExtension =require('electron-devtools-installer').default;
 // const {REACT_DEVELOPER_TOOLS} =require('electron-devtools-installer');
 
@@ -9,10 +11,7 @@ let characteristic = null;
 
 noble.once("stateChange", async (state) => {
   if (state === "poweredOn") {
-    await noble.startScanningAsync(
-      ["40EE1111-63EC-4B7F-8CE7-712EFD55B90E"],
-      false
-    );
+    await noble.startScanningAsync([DEVICE_UUID], false);
   }
 });
 
@@ -76,4 +75,9 @@ ipcMain.handle("send-to-device", (_, args) => {
   if (device && characteristic) {
     characteristic.writeAsync(Buffer.from(args), false);
   }
+});
+require("./menu");
+
+Object.keys(database).forEach((method) => {
+  ipcMain.handle(method, async (e, arg) => database[method](arg));
 });
