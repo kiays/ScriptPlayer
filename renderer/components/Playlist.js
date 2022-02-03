@@ -1,6 +1,7 @@
 import React from "react";
 import { useDrop } from "react-dnd";
 import { NativeTypes } from "react-dnd-html5-backend";
+import { formatTime } from "../utils";
 
 const CsvField = ({ track, setCsv }) => {
   const [{ canDrop }, target] = useDrop(() => ({
@@ -12,7 +13,7 @@ const CsvField = ({ track, setCsv }) => {
     },
   }));
   if (track.csvUrl) {
-    return <td>{track.csvUrl}</td>;
+    return <td>{track.csvName}</td>;
   }
   return <td ref={target}>Drop csv ...</td>;
 };
@@ -27,6 +28,7 @@ const Playlist = ({ playlist: { name, tracks }, setCsv }) => {
           <tr>
             <th>#</th>
             <th>title</th>
+            <th>duration</th>
             <th>csv</th>
           </tr>
         </thead>
@@ -35,6 +37,7 @@ const Playlist = ({ playlist: { name, tracks }, setCsv }) => {
             <tr key={track.url + i}>
               <td>{i}</td>
               <td>{track.title}</td>
+              <td>{formatTime(track.duration)}</td>
               <CsvField track={track} setCsv={setCsv} />
             </tr>
           ))}

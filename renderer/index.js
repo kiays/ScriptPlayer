@@ -6,24 +6,7 @@ import Playlist from "./components/Playlist";
 import update from "immutability-helper";
 import Player from "./components/Player";
 import { useEffect } from "react/cjs/react.development";
-
-const createTrack = (file) => {
-  const filePath = file.path;
-
-  const audio = new Audio(filePath);
-  return {
-    title: file.name,
-    url: filePath,
-    duration: audio.duration,
-  };
-};
-
-const readFile = async (file) =>
-  new Promise((resolve, reject) => {
-    const f = new FileReader();
-    f.onload = (e) => resolve(e.target.result);
-    f.readAsText(file);
-  });
+import { readFile, createTrack } from "./utils";
 
 const App = () => {
   const [playlist, setPlaylist] = useState({ name: "new", tracks: [] });
@@ -35,16 +18,15 @@ const App = () => {
   }, [playlist]);
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: [NativeTypes.FILE],
-    drop(item) {
+    async drop(item) {
       if (item.files.length == 1 && item.files[0].type == "application/json") {
         readFile(item.files[0])
           .then(JSON.parse)
           .then((p) => setPlaylist(p));
         return;
       }
-      setPlaylist((p) =>
-        update(p, { tracks: { $push: item.files.map(createTrack) } })
-      );
+      const tracks = await Promise.all(item.files.map(createTrack));
+      setPlaylist((p) => update(p, { tracks: { $push: tracks } }));
     },
     collect(monitor) {
       return { isOver: monitor.isOver, canDrop: monitor.canDrop };
