@@ -8,8 +8,8 @@ import update from "immutability-helper";
 import Player from "./components/Player";
 import { readFile, createTrack } from "./utils";
 import { currentPlaylistState, playlistsState } from "./states/playlists";
-
-const App = () => {
+import { HashRouter, Route, Routes, Link } from "react-router-dom";
+const App2 = () => {
   const [playlist, setPlaylist] = useRecoilState(currentPlaylistState);
   const playlists = useRecoilValue(playlistsState);
   console.log(playlists);
@@ -53,14 +53,40 @@ const App = () => {
 
   return (
     <div>
-      <Player playlist={playlist} />
+      {/* <Player playlist={playlist} />
       <Playlist playlist={playlist} setCsv={setCsv} />
       <div
         ref={drop}
         style={{ width: "500px", height: "400px", backgroundColor: "pink" }}
       >
         drop here
-      </div>
+      </div> */}
+    </div>
+  );
+};
+const SideBar = () => {
+  return (
+    <nav>
+      <Link to="/">Home</Link>
+      <Link to="/playlists">Playlists</Link>
+      <Link to="/tracks">Tracks</Link>
+      <Link to="/works">Works</Link>
+      <Link to="/csvs">CSVs</Link>
+    </nav>
+  );
+};
+const App = () => {
+  return (
+    <div>
+      <SideBar />
+      <Routes>
+        <Route path="/playlists" element={<div>playlists</div>} />
+        <Route path="/tracks" element={<div>tracks</div>} />
+        <Route path="/works" element={<div>works</div>} />
+        <Route path="/csvs" element={<div>csv</div>} />
+        <Route path="/" exact element={<div>home</div>} />
+        <Route path="*" element={<div>not found</div>} />
+      </Routes>
     </div>
   );
 };
@@ -69,7 +95,9 @@ render(
   <RecoilRoot>
     <DndProvider backend={HTML5Backend}>
       <Suspense fallback={<div>loading...</div>}>
-        <App />
+        <HashRouter>
+          <App />
+        </HashRouter>
       </Suspense>
     </DndProvider>
   </RecoilRoot>,
