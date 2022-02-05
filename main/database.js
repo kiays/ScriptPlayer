@@ -25,7 +25,23 @@ const getAllWorks = () => data.works;
 const getAllPlaylists = () => data.playlists;
 const getAllTracks = () => data.tracks;
 const getAllCSVs = () => data.csvs;
-const save = () => fs.writeFileSync(dbPath, initialJsonStr);
+const setAllWorks = (works) => {
+  data.works = works;
+  save();
+};
+const setAllCSVs = (csvs) => {
+  data.csvs = csvs;
+  save();
+};
+const setAllTracks = (tracks) => {
+  data.tracks = tracks;
+  save();
+};
+const setAllPlaylists = (playlists) => {
+  data.playlists = playlists;
+  save();
+};
+const save = () => fs.writeFileSync(dbPath, JSON.stringify(data));
 
 module.exports = {
   getAll,
@@ -33,5 +49,9 @@ module.exports = {
   getAllPlaylists,
   getAllTracks,
   getAllWorks,
+  setAllCSVs,
+  setAllWorks,
+  setAllPlaylists,
+  setAllTracks,
   save,
 };

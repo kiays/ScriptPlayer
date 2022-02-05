@@ -5,6 +5,9 @@ const path = require("path");
 const database = require("./database");
 const installExtension = require("electron-devtools-installer").default;
 const { REACT_DEVELOPER_TOOLS } = require("electron-devtools-installer");
+const { traverseDirectory, copyToDataDir } = require("./directory");
+const crypto = require("crypto");
+const fs = require("fs/promises");
 
 let device = null;
 let characteristic = null;
@@ -44,7 +47,7 @@ const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
-    height: 600,
+    height: 1200,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
@@ -79,6 +82,20 @@ ipcMain.handle("send-to-device", (_, args) => {
   if (device && characteristic) {
     characteristic.writeAsync(Buffer.from(args), false);
   }
+});
+ipcMain.handle("check-dropped-file", async (e, arg) => {
+  return await traverseDirectory(arg);
+});
+
+ipcMain.handle("import-work", async (e, arg) => {
+  return await copyToDataDir(arg);
+});
+
+ipcMain.handle("file-hash", async (_, filePath) => {
+  const fileBuffer = await fs.readFile(filePath);
+  const hashSum = crypto.createHash("sha256");
+  hashSum.update(fileBuffer);
+  return hashSum.digest("hex");
 });
 require("./menu");
 

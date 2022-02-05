@@ -4,7 +4,6 @@ import { atom, selector } from "recoil";
 export const playlistsState = selector({
   key: "playlists",
   get: async ({}) => {
-    ipcRenderer.invoke("getAllPlaylists").then(console.log);
     return await ipcRenderer.invoke("getAllPlaylists");
   },
 });
