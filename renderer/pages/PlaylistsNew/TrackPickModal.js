@@ -1,0 +1,94 @@
+import React, { useState } from "react";
+import {
+  Modal,
+  Box,
+  ListItemButton,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  List,
+  IconButton,
+  ListItem,
+} from "@mui/material";
+import { useRecoilValue } from "recoil";
+import { tracksState } from "../../states/tracks";
+import { worksState } from "../../states/works";
+import { Add } from "@mui/icons-material";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
+const WorkList = ({ works, setWorkId }) => {
+  return (
+    <List>
+      {Object.keys(works).map((workId) => {
+        const work = works[workId];
+        if (!work) return null;
+        return (
+          <ListItemButton onClick={() => setWorkId(workId)} key={workId}>
+            <ListItemAvatar>
+              <Avatar src={work.thumbnailPath} variant="square" />
+            </ListItemAvatar>
+            <ListItemText primary={workId} />
+          </ListItemButton>
+        );
+      })}
+    </List>
+  );
+};
+const TrackList = ({ works, workId, trackDict, addTrack }) => {
+  const work = works[workId];
+  if (!work) return null;
+  const tracks = work.trackIds.map((id) => trackDict[id]);
+
+  return (
+    <List>
+      {tracks.map((track) => {
+        return (
+          <ListItem
+            key={track.hash}
+            secondaryAction={
+              <IconButton onClick={() => addTrack(track.hash)}>
+                <Add />
+              </IconButton>
+            }
+          >
+            <ListItemText primary={track.name} />
+          </ListItem>
+        );
+      })}
+    </List>
+  );
+};
+const TrackPickModal = ({ onClose, open, addTrack }) => {
+  const [currentWorkId, setWorkId] = useState(null);
+  const trackDict = useRecoilValue(tracksState);
+  const works = useRecoilValue(worksState);
+
+  return (
+    <Modal open={open} onClose={onClose}>
+      <Box sx={style}>
+        {currentWorkId == null ? (
+          <WorkList works={works} setWorkId={setWorkId} />
+        ) : (
+          <TrackList
+            works={works}
+            workId={currentWorkId}
+            trackDict={trackDict}
+            addTrack={addTrack}
+          />
+        )}
+      </Box>
+    </Modal>
+  );
+};
+export default TrackPickModal;

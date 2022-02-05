@@ -18,6 +18,8 @@ import Layout from "./layout";
 import { droppedFilePathState } from "./states/droppedFile";
 import { loadingState } from "./states/loading";
 import WorkDetail from "./pages/WorkDetail";
+import Playlists from "./pages/Playlists";
+import PlaylistNew from "./pages/PlaylistsNew";
 const theme = createTheme();
 
 const Loading = ({ loading }) =>
@@ -52,7 +54,8 @@ const App = () => {
 
       <div ref={dropTarget} style={{ width: "100%", height: "100%" }}>
         <Routes>
-          <Route path="/playlists" element={<div>playlists</div>} />
+          <Route path="/playlists" element={<Playlists />} />
+          <Route path="/playlists/new" element={<PlaylistNew />} />
           <Route path="/tracks" element={<div>tracks</div>} />
           <Route path="/works" element={<Works />} />
           <Route path="/works/:workId" element={<WorkDetail />} />
