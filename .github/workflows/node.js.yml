@@ -31,4 +31,4 @@ jobs:
       with:
         name: dist-without-markdown
         path: |
-          out/make/zip
+          out/*
