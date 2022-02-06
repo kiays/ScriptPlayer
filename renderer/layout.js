@@ -19,6 +19,9 @@ import {
   ChevronLeft as ChevronLeftIcon,
   Menu as MenuIcon,
   QueueMusic as PlaylistIcon,
+  Album as AlbumIcon,
+  Audiotrack as AudiotrackIcon,
+  Description as CSVIcon,
 } from "@mui/icons-material";
 
 const drawerWidth = 240;
@@ -143,19 +146,19 @@ export default function Layout(props) {
           </ListItem>
           <ListItem button key={"Works"} onClick={() => navigate("/works")}>
             <ListItemIcon>
-              <PlaylistIcon />
+              <AlbumIcon />
             </ListItemIcon>
             <ListItemText primary={"Works"} />
           </ListItem>
           <ListItem button key={"Tracks"} onClick={() => navigate("/tracks")}>
             <ListItemIcon>
-              <PlaylistIcon />
+              <AudiotrackIcon />
             </ListItemIcon>
             <ListItemText primary={"Tracks"} />
           </ListItem>
           <ListItem button key={"CSVs"} onClick={() => navigate("/csvs")}>
             <ListItemIcon>
-              <PlaylistIcon />
+              <CSVIcon />
             </ListItemIcon>
             <ListItemText primary={"CSVs"} />
           </ListItem>

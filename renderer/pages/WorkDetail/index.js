@@ -1,4 +1,4 @@
-import { Box, List, ListItem, ListItemText } from "@mui/material";
+import { Box, List, ListItem, ListItemText, Stack } from "@mui/material";
 import React, { useEffect } from "react";
 import { useParams } from "react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -21,13 +21,14 @@ const WorkDetail = () => {
   const { thumbnailPath, trackIds } = work;
   return (
     <Box>
-      <h1>{currentWorkId}</h1>
-      <img src={thumbnailPath} />
+      <Stack direction="row" spacing={2}>
+        <h1>{currentWorkId}</h1>
+        <img src={thumbnailPath} style={{ width: "25%" }} />
+      </Stack>
       <List>
         {trackIds.map((id) => {
           const track = tracks[id];
           if (!track) return null;
-          console.log(track, tracks, id);
           return (
             <ListItem key={id}>
               <ListItemText primary={track.name} />

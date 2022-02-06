@@ -20,6 +20,8 @@ import { loadingState } from "./states/loading";
 import WorkDetail from "./pages/WorkDetail";
 import Playlists from "./pages/Playlists";
 import PlaylistNew from "./pages/PlaylistsNew";
+import PlaylistDetail from "./pages/PlaylistDetail";
+
 const theme = createTheme();
 
 const Loading = ({ loading }) =>
@@ -56,6 +58,7 @@ const App = () => {
         <Routes>
           <Route path="/playlists" element={<Playlists />} />
           <Route path="/playlists/new" element={<PlaylistNew />} />
+          <Route path="/playlists/:playlistId" element={<PlaylistDetail />} />
           <Route path="/tracks" element={<div>tracks</div>} />
           <Route path="/works" element={<Works />} />
           <Route path="/works/:workId" element={<WorkDetail />} />
@@ -74,68 +77,14 @@ render(
     <DndProvider backend={HTML5Backend}>
       <ThemeProvider theme={theme}>
         <HashRouter>
-          <Layout>
-            <App />
-          </Layout>
+          <Suspense fallback={<Loading loading={true} />}>
+            <Layout>
+              <App />
+            </Layout>
+          </Suspense>
         </HashRouter>
       </ThemeProvider>
     </DndProvider>
   </RecoilRoot>,
   document.getElementById("root")
 );
-
-// const App2 = () => {
-//   const [playlist, setPlaylist] = useRecoilState(currentPlaylistState);
-//   const playlists = useRecoilValue(playlistsState);
-//   console.log(playlists);
-//   const [{ canDrop, isOver }, drop] = useDrop(() => ({
-//     accept: [NativeTypes.FILE],
-//     async drop(item) {
-//       if (item.files.length == 1 && item.files[0].type == "application/json") {
-//         readFile(item.files[0])
-//           .then(JSON.parse)
-//           .then((p) => setPlaylist(p));
-//         return;
-//       }
-//       const tracks = await Promise.all(item.files.map(createTrack));
-//       setPlaylist((p) => update(p, { tracks: { $push: tracks } }));
-//     },
-//     collect(monitor) {
-//       return { isOver: monitor.isOver, canDrop: monitor.canDrop };
-//     },
-//   }));
-
-//   const setCsv = async (track, csv) => {
-//     const csvContentStr = await readFile(csv);
-//     const csvContent = csvContentStr
-//       .split("\r\n")
-//       .map((l) => l.split(",").map(Number))
-//       .map(([time, dir, val]) => [time * 0.1, dir, val]);
-//     setPlaylist((p) => {
-//       const index = p.tracks.findIndex((t) => t == track);
-//       return update(p, {
-//         tracks: {
-//           [index]: {
-//             csvUrl: { $set: csv.path },
-//             csvName: { $set: csv.name },
-//             csvFile: { $set: csv },
-//             csvContent: { $set: csvContent },
-//           },
-//         },
-//       });
-//     });
-//   };
-
-//   return (
-//     <div>
-//       {/* <Player playlist={playlist} />
-//       <Playlist playlist={playlist} setCsv={setCsv} />
-//       <div
-//         ref={drop}
-//         style={{ width: "500px", height: "400px", backgroundColor: "pink" }}
-//       >
-//         drop here
-//       </div> */}
-//     </div>
-//   );
-// };

@@ -11,6 +11,8 @@ import { ipcRenderer } from "electron";
 import { worksState } from "../../states/works";
 import { tracksState } from "../../states/tracks";
 import { createTrack } from "../../utils";
+import { asyncTasks } from "../../states/loading";
+import { useNavigate } from "react-router";
 const path = require("path");
 
 const ImportWork = () => {
@@ -20,6 +22,7 @@ const ImportWork = () => {
   const [works, setWorks] = useRecoilState(worksState);
   const [tracks, setTracks] = useRecoilState(tracksState);
   const [thumbnailPath, setThumbnail] = useState(null);
+  const navigate = useNavigate();
 
   const doImport = async () => {
     const dest = await ipcRenderer.invoke("import-work", droppedFileInfo.path);
@@ -33,7 +36,6 @@ const ImportWork = () => {
       const acc = await p;
       const name = trackPath.replace(dest + "/", "");
       const t = await createTrack({ name, path: trackPath });
-      console.log(trackPath);
       const hash = await ipcRenderer.invoke("file-hash", trackPath);
       hashes.push(hash);
       return {
@@ -59,7 +61,8 @@ const ImportWork = () => {
     };
     setTracks({ ...tracks, ...tracksInfo });
     setWorks(newWorks);
-    console.log(tracksInfo);
+    setChecked({});
+    navigate(`/works/${name}`);
   };
   if (!droppedFile) return <div>drop here</div>;
   return (

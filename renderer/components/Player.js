@@ -3,7 +3,7 @@ import update from "immutability-helper";
 import { ipcRenderer } from "electron";
 import PlayerControl from "./PlayerControl";
 
-const Player = ({ playlist }) => {
+const Player = ({ tracks }) => {
   const [playing, setPlaying] = useState(false);
   const [audioSrc, setTrack] = useState(null);
   const [trackIndex, setTrackIndex] = useState(0);
@@ -14,22 +14,22 @@ const Player = ({ playlist }) => {
   });
   const audioRef = useRef(null);
   const values =
-    playlist.tracks.length > 0 && playlist.tracks[trackIndex].csvContent
-      ? playlist.tracks[trackIndex].csvContent
+    tracks.length > 0 && tracks[trackIndex].csvContent
+      ? tracks[trackIndex].csvContent
       : [];
 
   useEffect(() => {
     const audioElem = audioRef.current;
     if (!audioElem) return;
-    if (playlist.tracks.length <= trackIndex) return;
+    if (tracks.length <= trackIndex) return;
 
-    const curretTrackUrl = playlist.tracks[trackIndex].url;
+    const curretTrackUrl = tracks[trackIndex].path;
     if (audioSrc != curretTrackUrl) {
-      console.log("update track", playlist.tracks[trackIndex]);
+      console.log("update track", tracks[trackIndex]);
       audioElem.src = curretTrackUrl;
       setTrack(curretTrackUrl);
       setPlayerInfo({
-        title: playlist.tracks[trackIndex].title,
+        title: tracks[trackIndex].name,
         duration: audioElem.duration,
         currentTime: 0,
       });
@@ -83,7 +83,7 @@ const Player = ({ playlist }) => {
   };
 
   const playEnded = () => {
-    if (trackIndex < playlist.tracks.length - 1) {
+    if (trackIndex < tracks.length - 1) {
       setTrackIndex((i) => i + 1);
     } else {
       setPlaying(false);
@@ -92,7 +92,7 @@ const Player = ({ playlist }) => {
   };
 
   const next = () => {
-    if (trackIndex >= playlist.tracks.length - 1) return;
+    if (trackIndex >= tracks.length - 1) return;
     setTrackIndex(trackIndex + 1);
   };
 

@@ -1,17 +1,15 @@
 import { ipcRenderer } from "electron";
 import { atom, selector } from "recoil";
 
-export const playlistsState = selector({
-  key: "playlists",
-  get: async ({}) => {
-    return await ipcRenderer.invoke("getAllPlaylists");
-  },
-});
+const ipcEffect = async ({ setSelf, onSet }) => {
+  setSelf(await ipcRenderer.invoke("getAllPlaylists"));
+  onSet(async (newValue, _, isReset) => {
+    await ipcRenderer.invoke("setAllPlaylists", newValue);
+  });
+};
 
-export const currentPlaylistState = atom({
-  key: "currentPlaylist",
-  default: {
-    name: "new",
-    tracks: [],
-  },
+export const playlistsState = atom({
+  key: "playlists",
+  default: {},
+  effects: [ipcEffect],
 });

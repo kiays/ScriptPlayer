@@ -9,10 +9,11 @@ import {
   ListItemButton,
 } from "@mui/material";
 import TrackPickModal from "./TrackPickModal";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { tracksState } from "../../states/tracks";
 import update from "immutability-helper";
 import { useDrag, useDrop } from "react-dnd";
+import { playlistsState } from "../../states/playlists";
 
 const Track = ({ track, id, index, moveTrack, removeTrack }) => {
   const ref = useRef(null);
@@ -26,7 +27,6 @@ const Track = ({ track, id, index, moveTrack, removeTrack }) => {
       if (!ref.current) return;
       const dragIndex = item.index;
       const hoverIndex = index;
-      console.log(item, item.index, index);
       // Don't replace items with themselves
       if (dragIndex === hoverIndex) {
         return;
@@ -87,6 +87,7 @@ const PlaylistNew = () => {
   const [name, setName] = useState("New Playlist");
   const trackDict = useRecoilValue(tracksState);
   const [tracks, setTracks] = useState([]);
+  const [allPlaylists, setPlaylists] = useRecoilState(playlistsState);
   const addTrack = (hash) => {
     setTracks((t) => update(t, { $push: [{ hash, id: Date.now() }] }));
   };
@@ -102,6 +103,19 @@ const PlaylistNew = () => {
         ],
       })
     );
+  };
+
+  const save = () => {
+    const id = String(Date.now());
+    setPlaylists({
+      ...allPlaylists,
+      [id]: {
+        name,
+        id,
+        tracks,
+        createdAt: Date.now(),
+      },
+    });
   };
 
   return (
@@ -128,6 +142,9 @@ const PlaylistNew = () => {
         </h1>
       )}
       <Button onClick={() => setModalOpen(true)}>add track</Button>
+      <Button onClick={() => save()} disabled={tracks.length == 0}>
+        save
+      </Button>
       <List>
         {tracks.map(({ hash, id }, index) => {
           const track = trackDict[hash];

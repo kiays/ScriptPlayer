@@ -2,10 +2,8 @@ import { ipcRenderer } from "electron";
 import { atom, selector } from "recoil";
 
 const ipcEffect = async ({ setSelf, onSet }) => {
-  ipcRenderer.invoke("getAllWorks").then(console.log);
   setSelf(await ipcRenderer.invoke("getAllWorks"));
   onSet(async (newValue, _, isReset) => {
-    console.log(newValue);
     await ipcRenderer.invoke("setAllWorks", newValue);
   });
 };

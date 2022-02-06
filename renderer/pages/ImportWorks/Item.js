@@ -57,7 +57,6 @@ const Item = ({
   const isDir = type == "dir";
   const isImage = type && type.startsWith("image");
   const checkable = type && type.startsWith("audio");
-
   const handleClick = () => {
     if (isDir) {
       setOpen(!open);
@@ -128,6 +127,8 @@ const Item = ({
                 fileInfo={c}
                 checked={checked}
                 setChecked={setChecked}
+                thumbnailPath={thumbnailPath}
+                setThumbnail={setThumbnail}
                 nest={nest + 1}
               />
             ))}
