@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "parcel renderer/index.html --public-url ./ --target electron --no-hmr",
+    "build": "parcel build renderer/index.html --public-url ./ --target electron --no-content-hash",
     "start": "electron .",
     "start:forge": "electron-forge start",
     "rebuild:arm64": "electron-rebuild --arch arm64",
