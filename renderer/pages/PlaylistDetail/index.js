@@ -8,7 +8,7 @@ import {
   TableBody,
   Paper,
 } from "@mui/material";
-import React from "react";
+import React, { useCallback } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams, useNavigate } from "react-router";
 import { playlistsState } from "../../states/playlists";
@@ -22,14 +22,17 @@ import update from "immutability-helper";
 import { readFile } from "../../utils";
 
 const CsvField = ({ track, setCsv }) => {
-  const [{ canDrop }, target] = useDrop(() => ({
-    accept: [NativeTypes.FILE],
-    drop(item) {
-      if (item.files.length == 1) {
-        setCsv(track, item.files[0]);
-      }
-    },
-  }));
+  const [{ canDrop }, target] = useDrop(
+    () => ({
+      accept: [NativeTypes.FILE],
+      drop(item) {
+        if (item.files.length == 1) {
+          setCsv(track, item.files[0]);
+        }
+      },
+    }),
+    [track, setCsv]
+  );
   if (track.csvName) {
     return <div>{track.csvName}</div>;
   }
@@ -44,32 +47,33 @@ const PlaylistDetail = () => {
   const worksDict = useRecoilValue(worksState);
 
   const playlist = playlists[playlistId];
-  if (!playlist) return <div>loading</div>;
-  const tracks = playlist.tracks
-    .map(({ hash, id, csvName, csvUrl, csvContent }) => {
-      if (!trackDict[hash]) return null;
-      return {
-        ...trackDict[hash],
-        id,
-        csvName,
-        csvUrl,
-        csvContent,
-      };
-    })
-    .filter(Boolean);
+  const tracks =
+    playlist &&
+    playlist.tracks
+      .map(({ hash, id, csvName, csvUrl, csvContent }) => {
+        if (!trackDict[hash]) return null;
+        return {
+          ...trackDict[hash],
+          id,
+          csvName,
+          csvUrl,
+          csvContent,
+        };
+      })
+      .filter(Boolean);
 
-  const setCsv = async (track, csv) => {
-    const csvContentStr = await readFile(csv);
-    const csvContent = csvContentStr
-      .split("\r\n")
-      .map((l) => l.split(",").map(Number))
-      .map(([time, dir, val]) => [time * 0.1, dir, val]);
+  const setCsv = useCallback(
+    async (track, csv) => {
+      const csvContentStr = await readFile(csv);
+      const csvContent = csvContentStr
+        .split("\r\n")
+        .map((l) => l.split(",").map(Number))
+        .map(([time, dir, val]) => [time * 0.1, dir, val]);
+      const trackIndex = tracks
+        .map((t, i) => ({ ...t, index: i }))
+        .filter((t) => t.id == track.id)[0].index;
 
-    const trackIndex = tracks
-      .map((t, i) => ({ ...t, index: i }))
-      .filter((t) => t.id == track.id)[0].index;
-    setPlaylists(
-      update(playlists, {
+      const newPlaylists = update(playlists, {
         [playlistId]: {
           tracks: {
             [trackIndex]: {
@@ -79,9 +83,12 @@ const PlaylistDetail = () => {
             },
           },
         },
-      })
-    );
-  };
+      });
+      setPlaylists(newPlaylists);
+    },
+    [playlist, playlists, tracks]
+  );
+  if (!playlist) return <div>loading</div>;
 
   return (
     <Box>
