@@ -20,11 +20,11 @@ export const readFile = async (file): Promise<string> =>
       const result = e.target.result;
       if (typeof(result) == "string") {
 
-      resolve(result);
+        resolve(result);
       } else {
-        reject("should pass a text file")
+        reject("should pass a text file");
       }
-    }
+    };
     f.readAsText(file);
   });
 
