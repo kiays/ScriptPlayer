@@ -11,17 +11,15 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { playlistsState } from "../../states/playlists";
 import { tracksState } from "../../states/tracks";
-import { worksState } from "../../states/works";
 import { formatTime } from "../../utils";
 import { format, fromUnixTime } from "date-fns";
 const Playlists = () => {
   const navigate = useNavigate();
-  const [playlists, setPlaylists] = useRecoilState(playlistsState);
+  const playlists = useRecoilValue(playlistsState);
   const trackDict = useRecoilValue(tracksState);
-  const worksDict = useRecoilValue(worksState);
 
   const createPlaylist = () => {
     navigate("/playlists/new");

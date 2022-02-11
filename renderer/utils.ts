@@ -1,4 +1,6 @@
-export const createTrack = (file: File | {name: string, path: string}): Promise<TrackFile> =>
+export const createTrack = (
+  file: File | { name: string; path: string }
+): Promise<TrackFile> =>
   new Promise((resolve, _reject) => {
     const filePath = file.path;
     const audio = new Audio(filePath);
@@ -18,8 +20,7 @@ export const readFile = async (file): Promise<string> =>
     const f = new FileReader();
     f.onload = (e) => {
       const result = e.target.result;
-      if (typeof(result) == "string") {
-
+      if (typeof result == "string") {
         resolve(result);
       } else {
         reject("should pass a text file");

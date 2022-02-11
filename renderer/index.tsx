@@ -3,7 +3,7 @@ import { render } from "react-dom";
 import { RecoilRoot, useRecoilState, useRecoilValue } from "recoil";
 import { DndProvider, useDrop } from "react-dnd";
 import { NativeTypes, HTML5Backend } from "react-dnd-html5-backend";
-import { HashRouter, Route, Routes, Link, useNavigate } from "react-router-dom";
+import { HashRouter, Route, Routes, useNavigate } from "react-router-dom";
 import {
   ThemeProvider,
   createTheme,
@@ -24,7 +24,7 @@ import PlaylistDetail from "./pages/PlaylistDetail";
 
 const theme = createTheme();
 
-const Loading = ({ loading }) =>
+const Loading = ({ loading }: { loading: boolean }) =>
   loading ? (
     <Backdrop
       sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -34,13 +34,17 @@ const Loading = ({ loading }) =>
     </Backdrop>
   ) : null;
 
+type Item = {
+  files: Array<File>;
+};
+
 const App = () => {
   const [_path, setDroppedFilePath] = useRecoilState(droppedFilePathState);
   const loading = useRecoilValue(loadingState);
   const navigate = useNavigate();
   const [_, dropTarget] = useDrop(() => ({
     accept: [NativeTypes.FILE],
-    async drop(item) {
+    async drop(item: Item) {
       if (item.files.length != 1) return;
       const file = item.files[0];
       if (file.type == "") {

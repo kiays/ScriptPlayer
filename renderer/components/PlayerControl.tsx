@@ -1,6 +1,18 @@
 import React from "react";
 import { formatTime } from "../utils";
 
+type PlayerControlProps = {
+  onSeek: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onPrev: () => void;
+  onNext: () => void;
+  playing: boolean;
+  onPlayPause: () => void;
+  playerInfo: {
+    currentTime: number;
+    duration: number;
+    title: string;
+  };
+};
 const PlayerControl = ({
   playerInfo,
   onSeek,
@@ -8,7 +20,7 @@ const PlayerControl = ({
   onNext,
   onPlayPause,
   playing,
-}) => {
+}: PlayerControlProps) => {
   return (
     <div>
       <div>

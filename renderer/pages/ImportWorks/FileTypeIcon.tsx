@@ -7,7 +7,10 @@ import {
   Folder as FolderIcon,
 } from "@mui/icons-material";
 
-const FileTypeIcon = ({ type }) => {
+type FileTypeIconProps = {
+  type: string;
+};
+const FileTypeIcon = ({ type }: FileTypeIconProps) => {
   if (!type) return <FileIcon />;
   if (type.startsWith("audio")) return <AudioFileIcon />;
   if (type.startsWith("image")) return <PhotoIcon />;

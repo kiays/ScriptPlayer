@@ -58,7 +58,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
+})(({ theme, open }: { theme; open: boolean }) => ({
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
@@ -91,8 +91,11 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function Layout(props) {
-  const theme = useTheme();
+type LayoutProps = {
+  children: React.ReactNode;
+};
+export default function Layout({ children }: LayoutProps) {
+  const _theme = useTheme();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -168,7 +171,7 @@ export default function Layout(props) {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        {props.children}
+        {children}
       </Box>
     </Box>
   );

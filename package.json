@@ -12,10 +12,10 @@
     "rebuild:arm64": "electron-rebuild --arch arm64",
     "package": "electron-forge package",
     "make": "electron-forge make --targets @electron-forge/maker-zip",
-    "format": "prettier --write '**/*.{js,json}'",
+    "format": "prettier --write '**/*.{ts,tsx,js,json}'",
     "clean": "rm -rf dist",
     "lint": "eslint \"renderer/**/*.{ts,tsx}\"",
-    "lint:fix": "eslint --fix \"renderer/**/*.{ts,tsx}\"",
+    "lint:fix": "npm run format && eslint --fix \"renderer/**/*.{ts,tsx}\"",
     "check": "tsc --noEmit"
   },
   "author": "",

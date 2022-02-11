@@ -28,9 +28,9 @@ const style = {
 };
 
 type WorkListProps = {
-  works: {[key: string]: Work},
-  setWorkId: (workId: string) => void
-}
+  works: { [key: string]: Work };
+  setWorkId: (workId: string) => void;
+};
 const WorkList = ({ works, setWorkId }: WorkListProps) => {
   return (
     <List>
@@ -51,13 +51,19 @@ const WorkList = ({ works, setWorkId }: WorkListProps) => {
 };
 
 type TrackListProps = {
-  works: {[key: string]: Work},
-  workId: string,
-  trackDict: {[key:string]: Track},
-  addTrack: (hash: string) => void,
-  onBack: () => void,
-}
-const TrackList = ({ works, workId, trackDict, addTrack, onBack }: TrackListProps) => {
+  works: { [key: string]: Work };
+  workId: string;
+  trackDict: { [key: string]: Track };
+  addTrack: (hash: string) => void;
+  onBack: () => void;
+};
+const TrackList = ({
+  works,
+  workId,
+  trackDict,
+  addTrack,
+  onBack,
+}: TrackListProps) => {
   const work = works[workId];
   if (!work) return null;
   const tracks = work.trackIds.map((id) => trackDict[id]);
@@ -86,7 +92,13 @@ const TrackList = ({ works, workId, trackDict, addTrack, onBack }: TrackListProp
     </>
   );
 };
-const TrackPickModal = ({ onClose, open, addTrack }) => {
+
+type TrackPickModalProps = {
+  onClose: () => void;
+  open: boolean;
+  addTrack: (hash: string) => void;
+};
+const TrackPickModal = ({ onClose, open, addTrack }: TrackPickModalProps) => {
   const [currentWorkId, setWorkId] = useState(null);
   const trackDict = useRecoilValue(tracksState);
   const works = useRecoilValue(worksState);

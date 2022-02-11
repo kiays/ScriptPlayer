@@ -16,21 +16,20 @@ import { useDrag, useDrop } from "react-dnd";
 import { playlistsState } from "../../states/playlists";
 
 type TrackPropType = {
-  track: Track,
-  id: number,
-  index: number,
-  moveTrack: (dragIndex: number, hoverIndex: number) => void,
-  removeTrack: (id: number) => void
+  track: Track;
+  id: number;
+  index: number;
+  moveTrack: (dragIndex: number, hoverIndex: number) => void;
+  removeTrack: (id: number) => void;
 };
 
 type DraggableItem = {
-  index: number,
-
+  index: number;
 };
 
 const Track = ({ track, id, index, moveTrack, removeTrack }: TrackPropType) => {
   const ref = useRef(null);
-  const [{ handlerId }, drop] = useDrop({
+  const [{ handlerId: _ }, drop] = useDrop({
     accept: "TRACK",
     collect(monitor) {
       return { handlerId: monitor.getHandlerId() };
@@ -76,7 +75,7 @@ const Track = ({ track, id, index, moveTrack, removeTrack }: TrackPropType) => {
       item.index = index;
     },
   });
-  const [{ isDragging }, drag] = useDrag({
+  const [_collected, drag] = useDrag({
     type: "TRACK",
     item: () => {
       return { id, index };
@@ -163,10 +162,7 @@ const PlaylistNew = () => {
           const track = trackDict[hash];
           if (!track) return null;
           return (
-            <Track
-              {...{ track, id, index, removeTrack, moveTrack }}
-              key={id}
-            />
+            <Track {...{ track, id, index, removeTrack, moveTrack }} key={id} />
           );
         })}
       </List>

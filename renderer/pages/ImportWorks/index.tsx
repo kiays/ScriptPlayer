@@ -11,7 +11,6 @@ import { ipcRenderer } from "electron";
 import { worksState } from "../../states/works";
 import { tracksState } from "../../states/tracks";
 import { createTrack } from "../../utils";
-import { asyncTasks } from "../../states/loading";
 import { useNavigate } from "react-router";
 const path = require("path");
 
@@ -76,7 +75,7 @@ const ImportWork = () => {
           />
         )}
       </div>
-      <Button onClick={() => doImport(droppedFile, checked)}>Import</Button>
+      <Button onClick={doImport}>Import</Button>
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
         {droppedFile.map((fileInfo) => (
           <Item

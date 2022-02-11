@@ -3,7 +3,10 @@ import update from "immutability-helper";
 import { ipcRenderer } from "electron";
 import PlayerControl from "./PlayerControl";
 
-const Player = ({ tracks }) => {
+type PlayerProps = {
+  tracks: Array<Track>;
+};
+const Player = ({ tracks }: PlayerProps) => {
   const [playing, setPlaying] = useState(false);
   const [audioSrc, setTrack] = useState(null);
   const [trackIndex, setTrackIndex] = useState(0);
@@ -41,7 +44,7 @@ const Player = ({ tracks }) => {
     }
   }, [audioRef, trackIndex, playing]);
 
-  const seek = (e) => {
+  const seek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const audioElem = audioRef.current;
     if (!audioElem) return;
     setPlayerInfo((info) =>
@@ -74,7 +77,7 @@ const Player = ({ tracks }) => {
     ]);
   };
 
-  const durationChanged = (e) => {
+  const durationChanged = () => {
     const audioElem = audioRef.current;
     if (!audioElem) return;
     setPlayerInfo((info) =>

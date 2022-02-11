@@ -10,9 +10,8 @@ import {
 } from "@mui/material";
 import React, { useCallback } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useParams, useNavigate } from "react-router";
+import { useParams } from "react-router";
 import { playlistsState } from "../../states/playlists";
-import { worksState } from "../../states/works";
 import { tracksState } from "../../states/tracks";
 import { formatTime } from "../../utils";
 import Player from "../../components/Player";
@@ -21,11 +20,18 @@ import { NativeTypes } from "react-dnd-html5-backend";
 import update from "immutability-helper";
 import { readFile } from "../../utils";
 
-const CsvField = ({ track, setCsv }) => {
-  const [{ canDrop }, target] = useDrop(
+type Item = {
+  files: Array<File>;
+};
+type CsvFieldProps = {
+  track: Track;
+  setCsv: (track: Track, file: File) => void;
+};
+const CsvField = ({ track, setCsv }: CsvFieldProps) => {
+  const [_collected, target] = useDrop(
     () => ({
       accept: [NativeTypes.FILE],
-      drop(item) {
+      drop(item: Item) {
         if (item.files.length == 1) {
           setCsv(track, item.files[0]);
         }

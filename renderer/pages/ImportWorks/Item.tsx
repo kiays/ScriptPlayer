@@ -4,9 +4,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
-  IconButton,
   Modal,
-  Typography,
   Box,
   Checkbox,
   ListItemText,
@@ -26,7 +24,13 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const LightBox = ({ open, onClose, src }) => (
+
+type LightBoxProps = {
+  open: boolean;
+  onClose: () => void;
+  src: string;
+};
+const LightBox = ({ open, onClose, src }: LightBoxProps) => (
   <Modal
     open={open}
     onClose={onClose}
@@ -43,6 +47,21 @@ const LightBox = ({ open, onClose, src }) => (
   </Modal>
 );
 
+type FileInfo = {
+  name: string;
+  path: string;
+  type: string;
+  children?: Array<FileInfo>;
+};
+
+type ItemProps = {
+  fileInfo: FileInfo;
+  checked: { [key: string]: boolean };
+  setChecked: (arg: { [key: string]: boolean }) => void;
+  nest?: number;
+  setThumbnail: (path: string) => void;
+  thumbnailPath: string | null;
+};
 const Item = ({
   fileInfo: { name, path, type, children },
   checked,
@@ -50,7 +69,7 @@ const Item = ({
   nest = 0,
   setThumbnail,
   thumbnailPath,
-}) => {
+}: ItemProps) => {
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const isChecked = checked[path] || false;

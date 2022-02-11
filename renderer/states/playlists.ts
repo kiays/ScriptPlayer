@@ -1,9 +1,9 @@
 import { ipcRenderer } from "electron";
-import { atom,  } from "recoil";
+import { atom } from "recoil";
 
-const ipcEffect = async ({ setSelf, onSet }) => {
+const ipcEffect = ({ setSelf, onSet }) => {
   console.log("playlist effect");
-  setSelf(await ipcRenderer.invoke("getAllPlaylists"));
+  ipcRenderer.invoke("getAllPlaylists").then(setSelf);
   onSet(async (newValue, _prevValue, _isReset) => {
     console.log("onSet: ", newValue);
     await ipcRenderer.invoke("setAllPlaylists", newValue);
