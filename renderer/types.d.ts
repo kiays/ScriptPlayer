@@ -17,6 +17,7 @@ type Track = {
 type Work = {
   trackIds: Array<string>;
   thumbnailPath: string;
+  name: string;
 };
 type Playlist = {
   name: string;

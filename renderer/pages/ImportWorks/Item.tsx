@@ -126,7 +126,9 @@ const Item = ({
               tabIndex={-1}
               disableRipple
               onChange={() =>
-                setChecked((s) => update(s, { [path]: { $set: !isChecked } }))
+                setChecked((s) =>
+                  update(s, { [path]: { $set: !isChecked } })
+                )
               }
             />
           </ListItemIcon>

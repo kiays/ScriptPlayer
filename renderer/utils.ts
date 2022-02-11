@@ -15,10 +15,14 @@ export const createTrack = (
     audio.addEventListener("loadedmetadata", listener);
   });
 
-export const readFile = async (file): Promise<string> =>
+export const readFile = async (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
     const f = new FileReader();
     f.onload = (e) => {
+      if (!e.target) {
+        reject("target is null");
+        return;
+      }
       const result = e.target.result;
       if (typeof result == "string") {
         resolve(result);
@@ -29,7 +33,7 @@ export const readFile = async (file): Promise<string> =>
     f.readAsText(file);
   });
 
-export const formatTime = (time) => {
+export const formatTime = (time: number) => {
   const minutes = Math.floor(time / 60);
   const seconds = String(Math.floor(time % 60)).padStart(2, "0");
   return `${minutes}:${seconds}`;

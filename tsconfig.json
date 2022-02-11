@@ -5,6 +5,7 @@
     "jsx": "react",
     "allowJs": false,
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "strict": false
   }
 }

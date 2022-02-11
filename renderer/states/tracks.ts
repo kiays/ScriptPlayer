@@ -15,7 +15,7 @@ export const tracksState = atom({
   effects: [ipcEffect],
 });
 
-export const tracksByPlaylist = selectorFamily<Array<Tracks>, sttring>({
+export const tracksByPlaylist = selectorFamily<Array<Track>, string>({
   key: RecoilKeys.TRACKS_BY_PLAYLIST,
   get:
     (id) =>

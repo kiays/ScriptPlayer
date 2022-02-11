@@ -48,7 +48,7 @@ const Player = ({ tracks }: PlayerProps) => {
     const audioElem = audioRef.current;
     if (!audioElem) return;
     setPlayerInfo((info) =>
-      update(info, { currentTime: { $set: e.target.value } })
+      update(info, { currentTime: { $set: e.target.value } } as any)
     );
     audioElem.currentTime = e.target.value;
   };

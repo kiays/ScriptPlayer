@@ -17,7 +17,7 @@ export const playlistsState = atom({
   effects: [ipcEffect],
 });
 
-export const playlistSelector = selectorFamily<Playlist | null, stirng>({
+export const playlistSelector = selectorFamily<Playlist | null, string>({
   key: RecoilKeys.PLAYLIST_SELECTOR,
   get:
     (id) =>
