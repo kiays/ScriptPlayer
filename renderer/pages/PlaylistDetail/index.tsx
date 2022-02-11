@@ -11,8 +11,8 @@ import {
 import React, { useCallback } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams } from "react-router";
-import { playlistsState } from "../../states/playlists";
-import { tracksState } from "../../states/tracks";
+import { playlistSelector } from "../../states/playlists";
+import { tracksByPlaylist } from "../../states/tracks";
 import { formatTime } from "../../utils";
 import Player from "../../components/Player";
 import { useDrop } from "react-dnd";
@@ -47,24 +47,8 @@ const CsvField = ({ track, setCsv }: CsvFieldProps) => {
 
 const PlaylistDetail = () => {
   const { playlistId } = useParams();
-  const [playlists, setPlaylists] = useRecoilState(playlistsState);
-  const trackDict = useRecoilValue(tracksState);
-
-  const playlist = playlists[playlistId];
-  const tracks =
-    playlist &&
-    playlist.tracks
-      .map(({ hash, id, csvName, csvUrl, csvContent }) => {
-        if (!trackDict[hash]) return null;
-        return {
-          ...trackDict[hash],
-          id,
-          csvName,
-          csvUrl,
-          csvContent,
-        };
-      })
-      .filter(Boolean);
+  const [playlist, setPlaylist] = useRecoilState(playlistSelector(playlistId));
+  const tracks = useRecoilValue(tracksByPlaylist(playlistId));
 
   const setCsv = useCallback(
     async (track, csv) => {
@@ -77,8 +61,8 @@ const PlaylistDetail = () => {
         .map((t, i) => ({ ...t, index: i }))
         .filter((t) => t.id == track.id)[0].index;
 
-      const newPlaylists = update(playlists, {
-        [playlistId]: {
+      setPlaylist(
+        update(playlist, {
           tracks: {
             [trackIndex]: {
               csvUrl: { $set: csv.path },
@@ -86,11 +70,11 @@ const PlaylistDetail = () => {
               csvContent: { $set: csvContent },
             },
           },
-        },
-      });
-      setPlaylists(newPlaylists);
+        })
+      );
     },
-    [playlist, playlists, tracks]
+
+    [playlist, tracks]
   );
   if (!playlist) return <div>loading</div>;
 

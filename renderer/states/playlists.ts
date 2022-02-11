@@ -1,8 +1,9 @@
 import { ipcRenderer } from "electron";
-import { atom } from "recoil";
+import { atom, selectorFamily } from "recoil";
+import RecoilKeys from "./keys";
+import update from "immutability-helper";
 
 const ipcEffect = ({ setSelf, onSet }) => {
-  console.log("playlist effect");
   ipcRenderer.invoke("getAllPlaylists").then(setSelf);
   onSet(async (newValue, _prevValue, _isReset) => {
     console.log("onSet: ", newValue);
@@ -11,7 +12,23 @@ const ipcEffect = ({ setSelf, onSet }) => {
 };
 
 export const playlistsState = atom({
-  key: "playlists",
+  key: RecoilKeys.PLAYLISTS,
   default: {},
   effects: [ipcEffect],
+});
+
+export const playlistSelector = selectorFamily<Playlist | null, stirng>({
+  key: RecoilKeys.PLAYLIST_SELECTOR,
+  get:
+    (id) =>
+      ({ get }) => {
+        const playlists = get(playlistsState);
+        return playlists[id] || null;
+      },
+  set:
+    (id) =>
+      ({ get, set }, newPlaylist) => {
+        const playlists = get(playlistsState);
+        set(playlistsState, update(playlists, { [id]: { $set: newPlaylist } }));
+      },
 });

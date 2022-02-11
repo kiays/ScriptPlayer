@@ -1,0 +1,7 @@
+const RecoilKeys = {
+  PLAYLISTS: "PLAYLISTS",
+  PLAYLIST_SELECTOR: "PLAYLIST_SELECTOR",
+  TRACKS: "TRACKS",
+  TRACKS_BY_PLAYLIST: "TRACKS_BY_PLAYLIST",
+};
+export default RecoilKeys;

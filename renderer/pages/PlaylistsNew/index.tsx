@@ -1,97 +1,11 @@
-import React, { useRef, useState } from "react";
-import {
-  Box,
-  TextField,
-  Button,
-  ListItem,
-  ListItemText,
-  List,
-  ListItemButton,
-} from "@mui/material";
+import React, { useState } from "react";
+import { Box, TextField, Button, List } from "@mui/material";
 import TrackPickModal from "./TrackPickModal";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { tracksState } from "../../states/tracks";
 import update from "immutability-helper";
-import { useDrag, useDrop } from "react-dnd";
 import { playlistsState } from "../../states/playlists";
-
-type TrackPropType = {
-  track: Track;
-  id: number;
-  index: number;
-  moveTrack: (dragIndex: number, hoverIndex: number) => void;
-  removeTrack: (id: number) => void;
-};
-
-type DraggableItem = {
-  index: number;
-};
-
-const Track = ({ track, id, index, moveTrack, removeTrack }: TrackPropType) => {
-  const ref = useRef(null);
-  const [{ handlerId: _ }, drop] = useDrop({
-    accept: "TRACK",
-    collect(monitor) {
-      return { handlerId: monitor.getHandlerId() };
-    },
-    hover(item: DraggableItem, monitor) {
-      // https://github.com/react-dnd/react-dnd/blob/main/packages/examples/src/04-sortable/simple/Card.tsx
-      if (!ref.current) return;
-      const dragIndex = item.index;
-      const hoverIndex = index;
-      // Don't replace items with themselves
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-
-      // Determine rectangle on screen
-      const hoverBoundingRect = ref.current.getBoundingClientRect();
-
-      // Get vertical middle
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-
-      // Determine mouse position
-      const clientOffset = monitor.getClientOffset();
-
-      // Get pixels to the top
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging downwards, only move when the cursor is below 50%
-      // When dragging upwards, only move when the cursor is above 50%
-
-      // Dragging downwards
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
-
-      // Dragging upwards
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
-      moveTrack(dragIndex, hoverIndex);
-
-      item.index = index;
-    },
-  });
-  const [_collected, drag] = useDrag({
-    type: "TRACK",
-    item: () => {
-      return { id, index };
-    },
-    collect: (monitor) => ({ isDragging: monitor.isDragging }),
-  });
-  drag(drop(ref));
-  return (
-    <ListItem ref={ref}>
-      <ListItemText primary={track.name} />
-      <ListItemButton onClick={() => removeTrack(id)}>
-        <Button>Delete</Button>
-      </ListItemButton>
-    </ListItem>
-  );
-};
+import TrackRow from "./Track";
 
 const PlaylistNew = () => {
   const [editing, setEditing] = useState(false);
@@ -162,7 +76,10 @@ const PlaylistNew = () => {
           const track = trackDict[hash];
           if (!track) return null;
           return (
-            <Track {...{ track, id, index, removeTrack, moveTrack }} key={id} />
+            <TrackRow
+              {...{ track, id, index, removeTrack, moveTrack }}
+              key={id}
+            />
           );
         })}
       </List>
