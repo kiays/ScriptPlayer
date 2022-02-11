@@ -11,7 +11,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 
-import ImportWork from "./pages/ImportWorks";
+import ImportWork from "./pages/ImportWorks/index";
 import Works from "./pages/Works";
 import "@mui/material/styles";
 import Layout from "./layout";
@@ -36,7 +36,7 @@ const Loading = ({ loading }) =>
 
 const App = () => {
   const [_path, setDroppedFilePath] = useRecoilState(droppedFilePathState);
-  const loading = useRecoilState(loadingState)[0];
+  const loading = useRecoilValue(loadingState);
   const navigate = useNavigate();
   const [_, dropTarget] = useDrop(() => ({
     accept: [NativeTypes.FILE],
@@ -64,7 +64,7 @@ const App = () => {
           <Route path="/works/:workId" element={<WorkDetail />} />
           <Route path="/works/import" element={<ImportWork />} />
           <Route path="/csvs" element={<div>csv</div>} />
-          <Route path="/" exact element={<div>home</div>} />
+          <Route path="/" element={<div>home</div>} />
           <Route path="*" element={<div>not found</div>} />
         </Routes>
       </div>

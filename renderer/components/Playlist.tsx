@@ -3,10 +3,20 @@ import { useDrop } from "react-dnd";
 import { NativeTypes } from "react-dnd-html5-backend";
 import { formatTime } from "../utils";
 
-const CsvField = ({ track, setCsv }) => {
+
+type CsvFieldProps = {
+  track: Track,
+  setCsv: (track:Track, csv: CSV) => void,
+}
+
+type Item = {
+  files: Array<File>
+}
+
+const CsvField = ({ track, setCsv }: CsvFieldProps) => {
   const [{ canDrop }, target] = useDrop(() => ({
     accept: [NativeTypes.FILE],
-    drop(item) {
+    drop(item: Item) {
       if (item.files.length == 1) {
         setCsv(track, item.files[0]);
       }

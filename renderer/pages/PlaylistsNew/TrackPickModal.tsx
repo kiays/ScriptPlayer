@@ -27,7 +27,11 @@ const style = {
   p: 4,
 };
 
-const WorkList = ({ works, setWorkId }) => {
+type WorkListProps = {
+  works: {[key: string]: Work},
+  setWorkId: (workId: string) => void
+}
+const WorkList = ({ works, setWorkId }: WorkListProps) => {
   return (
     <List>
       {Object.keys(works).map((workId) => {
@@ -45,7 +49,15 @@ const WorkList = ({ works, setWorkId }) => {
     </List>
   );
 };
-const TrackList = ({ works, workId, trackDict, addTrack, onBack }) => {
+
+type TrackListProps = {
+  works: {[key: string]: Work},
+  workId: string,
+  trackDict: {[key:string]: Track},
+  addTrack: (hash: string) => void,
+  onBack: () => void,
+}
+const TrackList = ({ works, workId, trackDict, addTrack, onBack }: TrackListProps) => {
   const work = works[workId];
   if (!work) return null;
   const tracks = work.trackIds.map((id) => trackDict[id]);

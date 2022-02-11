@@ -1,9 +1,9 @@
 import { ipcRenderer } from "electron";
-import { atom, selector } from "recoil";
+import { atom } from "recoil";
 
 const ipcEffect = async ({ setSelf, onSet }) => {
   setSelf(await ipcRenderer.invoke("getAllTracks"));
-  onSet(async (newValue, _, isReset) => {
+  onSet(async (newValue, _prevValue, _isReset) => {
     await ipcRenderer.invoke("setAllTracks", newValue);
   });
 };

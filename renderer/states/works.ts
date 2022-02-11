@@ -3,7 +3,7 @@ import { atom, selector } from "recoil";
 
 const ipcEffect = async ({ setSelf, onSet }) => {
   setSelf(await ipcRenderer.invoke("getAllWorks"));
-  onSet(async (newValue, _, isReset) => {
+  onSet(async (newValue, _prevVarlue, _isReset) => {
     await ipcRenderer.invoke("setAllWorks", newValue);
   });
 };

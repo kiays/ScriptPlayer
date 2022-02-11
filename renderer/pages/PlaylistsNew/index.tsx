@@ -15,14 +15,27 @@ import update from "immutability-helper";
 import { useDrag, useDrop } from "react-dnd";
 import { playlistsState } from "../../states/playlists";
 
-const Track = ({ track, id, index, moveTrack, removeTrack }) => {
+type TrackPropType = {
+  track: Track,
+  id: number,
+  index: number,
+  moveTrack: (dragIndex: number, hoverIndex: number) => void,
+  removeTrack: (id: number) => void
+};
+
+type DraggableItem = {
+  index: number,
+
+};
+
+const Track = ({ track, id, index, moveTrack, removeTrack }: TrackPropType) => {
   const ref = useRef(null);
   const [{ handlerId }, drop] = useDrop({
     accept: "TRACK",
     collect(monitor) {
       return { handlerId: monitor.getHandlerId() };
     },
-    hover(item, monitor) {
+    hover(item: DraggableItem, monitor) {
       // https://github.com/react-dnd/react-dnd/blob/main/packages/examples/src/04-sortable/simple/Card.tsx
       if (!ref.current) return;
       const dragIndex = item.index;
@@ -151,7 +164,7 @@ const PlaylistNew = () => {
           if (!track) return null;
           return (
             <Track
-              {...{ track, id, index, index, removeTrack, moveTrack }}
+              {...{ track, id, index, removeTrack, moveTrack }}
               key={id}
             />
           );

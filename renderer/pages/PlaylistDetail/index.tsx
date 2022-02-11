@@ -40,11 +40,9 @@ const CsvField = ({ track, setCsv }) => {
 };
 
 const PlaylistDetail = () => {
-  const navigate = useNavigate();
   const { playlistId } = useParams();
   const [playlists, setPlaylists] = useRecoilState(playlistsState);
   const trackDict = useRecoilValue(tracksState);
-  const worksDict = useRecoilValue(worksState);
 
   const playlist = playlists[playlistId];
   const tracks =

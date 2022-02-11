@@ -1,0 +1,10 @@
+{
+  "include": ["renderer/**/*"],
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "jsx": "react",
+    "allowJs": false,
+    "sourceMap": true, 
+    "esModuleInterop": true
+  }
+}
