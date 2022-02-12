@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Menu, MenuItem } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const noble = require("@abandonware/noble");
 const { DEVICE_UUID, APP_NAME } = require("../common/constants");
 const path = require("path");
@@ -97,6 +97,7 @@ ipcMain.handle("file-hash", async (_, filePath) => {
   hashSum.update(fileBuffer);
   return hashSum.digest("hex");
 });
+
 require("./menu");
 
 Object.keys(database).forEach((method) => {

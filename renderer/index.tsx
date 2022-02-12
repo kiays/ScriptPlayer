@@ -21,6 +21,10 @@ import WorkDetail from "./pages/WorkDetail";
 import Playlists from "./pages/Playlists";
 import PlaylistNew from "./pages/PlaylistsNew";
 import PlaylistDetail from "./pages/PlaylistDetail";
+import TimeSheets from "./pages/TimeSheets";
+import TimeSheetDetail from "./pages/TimeSheetDetail";
+import TrackList from "./pages/Tracks";
+import TrackDetail from "./pages/TrackDetail";
 
 const theme = createTheme();
 
@@ -62,11 +66,13 @@ const App = () => {
           <Route path="/playlists" element={<Playlists />} />
           <Route path="/playlists/new" element={<PlaylistNew />} />
           <Route path="/playlists/:playlistId" element={<PlaylistDetail />} />
-          <Route path="/tracks" element={<div>tracks</div>} />
+          <Route path="/tracks" element={<TrackList />} />
+          <Route path="/tracks/:trackId" element={<TrackDetail />} />
           <Route path="/works" element={<Works />} />
           <Route path="/works/:workId" element={<WorkDetail />} />
           <Route path="/works/import" element={<ImportWork />} />
-          <Route path="/csvs" element={<div>csv</div>} />
+          <Route path="/csvs/:csvId" element={<TimeSheetDetail />} />
+          <Route path="/csvs" element={<TimeSheets />} />
           <Route path="/" element={<div>home</div>} />
           <Route path="*" element={<div>not found</div>} />
         </Routes>

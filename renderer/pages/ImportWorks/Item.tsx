@@ -56,7 +56,11 @@ type FileInfo = {
 type ItemProps = {
   fileInfo: FileInfo;
   checked: { [key: string]: boolean };
-  setChecked: (arg: { [key: string]: boolean }) => void;
+  setChecked: (
+    updater: (prevState: { [key: string]: boolean }) => {
+      [key: string]: boolean;
+    }
+  ) => void;
   nest?: number;
   setThumbnail: (path: string) => void;
   thumbnailPath: string | null;

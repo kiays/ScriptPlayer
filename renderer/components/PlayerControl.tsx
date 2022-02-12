@@ -13,6 +13,7 @@ type PlayerControlProps = {
     title: string;
   };
 };
+
 const PlayerControl = ({
   playerInfo,
   onSeek,

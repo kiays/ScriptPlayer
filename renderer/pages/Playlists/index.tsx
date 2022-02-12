@@ -14,8 +14,8 @@ import { useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
 import { playlistsState } from "../../states/playlists";
 import { tracksState } from "../../states/tracks";
-import { formatTime } from "../../utils";
-import { format, fromUnixTime } from "date-fns";
+import { formatDate, formatTime } from "../../utils";
+
 const Playlists = () => {
   const navigate = useNavigate();
   const playlists = useRecoilValue(playlistsState);
@@ -56,12 +56,7 @@ const Playlists = () => {
                   <TableCell>{playlist.name}</TableCell>
                   <TableCell>{playlist.tracks.length}</TableCell>
                   <TableCell>{formatTime(duration)}</TableCell>
-                  <TableCell>
-                    {format(
-                      fromUnixTime(playlist.createdAt * 0.001 || 0),
-                      "yyyy-MM-dd"
-                    )}
-                  </TableCell>
+                  <TableCell>{formatDate(playlist.createdAt)}</TableCell>
                 </TableRow>
               );
             })}

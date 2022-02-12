@@ -124,7 +124,7 @@ export default function Layout({ children }: LayoutProps) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
+            Player
           </Typography>
         </Toolbar>
       </AppBar>

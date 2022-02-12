@@ -4,7 +4,7 @@ import { ipcRenderer } from "electron";
 import PlayerControl from "./PlayerControl";
 
 type PlayerProps = {
-  tracks: Array<Track>;
+  tracks: Array<PlaylistTrack & Track>;
 };
 const Player = ({ tracks }: PlayerProps) => {
   const [playing, setPlaying] = useState(false);
@@ -42,13 +42,13 @@ const Player = ({ tracks }: PlayerProps) => {
     } else {
       audioElem.pause();
     }
-  }, [audioRef, trackIndex, playing]);
+  }, [audioRef, trackIndex, playing, audioSrc, tracks]);
 
   const seek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const audioElem = audioRef.current;
     if (!audioElem) return;
     setPlayerInfo((info) =>
-      update(info, { currentTime: { $set: e.target.value } } as any)
+      update(info, { currentTime: { $set: Number(e.target.value) } })
     );
     audioElem.currentTime = e.target.value;
   };

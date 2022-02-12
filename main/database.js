@@ -42,7 +42,7 @@ const setAllPlaylists = (playlists) => {
   save();
 };
 const save = () => fs.writeFileSync(dbPath, JSON.stringify(data));
-
+const dump = () => ({ data });
 module.exports = {
   getAll,
   getAllCSVs,
@@ -54,4 +54,5 @@ module.exports = {
   setAllPlaylists,
   setAllTracks,
   save,
+  dump,
 };

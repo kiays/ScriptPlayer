@@ -31,23 +31,26 @@ const ImportWork = () => {
       .filter((k) => checked[k])
       .map((k) => k.replace(prevDirName, newDirName));
     const hashes = [];
-    const tracksInfo = await newTrackPaths.reduce(async (p, trackPath) => {
-      const acc = await p;
-      const name = trackPath.replace(dest + "/", "");
-      const t = await createTrack({ name, path: trackPath });
-      const hash = await ipcRenderer.invoke("file-hash", trackPath);
-      hashes.push(hash);
-      return {
-        ...acc,
-        [hash]: {
-          path: trackPath,
-          name,
-          hash,
-          duration: t.duration,
-          workName: droppedFileInfo.name,
-        },
-      };
-    }, Promise.resolve({}));
+    const tracksInfo: { [key: string]: Track } = await newTrackPaths.reduce(
+      async (p, trackPath) => {
+        const acc = await p;
+        const name = trackPath.replace(dest + "/", "");
+        const t = await createTrack({ name, path: trackPath });
+        const hash = await ipcRenderer.invoke("file-hash", trackPath);
+        hashes.push(hash);
+        return {
+          ...acc,
+          [hash]: {
+            path: trackPath,
+            name,
+            hash,
+            duration: t.duration,
+            workName: droppedFileInfo.name,
+          },
+        };
+      },
+      Promise.resolve({})
+    );
     const newWorks = {
       ...works,
       [droppedFileInfo.name]: {

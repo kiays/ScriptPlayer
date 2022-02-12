@@ -1,3 +1,6 @@
+import { format, fromUnixTime } from "date-fns";
+import { ipcRenderer } from "electron";
+
 export const createTrack = (
   file: File | { name: string; path: string }
 ): Promise<TrackFile> =>
@@ -33,8 +36,28 @@ export const readFile = async (file: File): Promise<string> =>
     f.readAsText(file);
   });
 
+export const readCsvFile = async (
+  file: File
+): Promise<Array<[number, number, number]>> => {
+  const contentStr = await readFile(file);
+  const csvContent = contentStr
+    .split("\r\n")
+    .map((l) => l.split(",").map(Number))
+    .map(([time, dir, val]): [number, number, number] => [
+      time * 0.1,
+      dir,
+      val,
+    ]);
+  return csvContent;
+};
+export const getFileHash = (path: string): Promise<string> =>
+  ipcRenderer.invoke("file-hash", path);
+
 export const formatTime = (time: number) => {
   const minutes = Math.floor(time / 60);
   const seconds = String(Math.floor(time % 60)).padStart(2, "0");
   return `${minutes}:${seconds}`;
 };
+
+export const formatDate = (date: number) =>
+  format(fromUnixTime(date * 0.001 || 0), "yyyy-MM-dd");

@@ -24,8 +24,8 @@ type Item = {
   files: Array<File>;
 };
 type CsvFieldProps = {
-  track: Track;
-  setCsv: (track: Track, file: File) => void;
+  track: PlaylistTrack & Track;
+  setCsv: (track: PlaylistTrack & Track, file: File) => void;
 };
 const CsvField = ({ track, setCsv }: CsvFieldProps) => {
   const [_collected, target] = useDrop(
@@ -74,7 +74,7 @@ const PlaylistDetail = () => {
       );
     },
 
-    [playlist, tracks]
+    [playlist, tracks, setPlaylist]
   );
   if (!playlist) return <div>loading</div>;
 

@@ -1,7 +1,9 @@
 import { ipcRenderer } from "electron";
-import { atom, selectorFamily } from "recoil";
+import { atom, selectorFamily, selector } from "recoil";
 import RecoilKeys from "./keys";
 import { playlistSelector } from "./playlists";
+import { worksState } from "./works";
+import update from "immutability-helper";
 
 const ipcEffect = ({ setSelf, onSet }) => {
   ipcRenderer.invoke("getAllTracks").then(setSelf);
@@ -9,13 +11,29 @@ const ipcEffect = ({ setSelf, onSet }) => {
     await ipcRenderer.invoke("setAllTracks", newValue);
   });
 };
-export const tracksState = atom({
+export const tracksState = atom<AllTracks>({
   key: RecoilKeys.TRACKS,
   default: {},
   effects: [ipcEffect],
 });
 
-export const tracksByPlaylist = selectorFamily<Array<Track>, string>({
+export const tracksWithWork = selector<AllTracksWithWork>({
+  key: RecoilKeys.TRACKS_WITH_WORK,
+  get: ({ get }) => {
+    const worksDict = get(worksState);
+    const tracks = get(tracksState);
+    return Object.keys(tracks).reduce((acc, hash) => {
+      const track = tracks[hash];
+      const work = worksDict[track.workName];
+      return { ...acc, [hash]: { ...track, work } };
+    }, {});
+  },
+});
+
+export const tracksByPlaylist = selectorFamily<
+  Array<PlaylistTrack & Track>,
+  string
+>({
   key: RecoilKeys.TRACKS_BY_PLAYLIST,
   get:
     (id) =>
@@ -35,5 +53,28 @@ export const tracksByPlaylist = selectorFamily<Array<Track>, string>({
           };
         })
         .filter(Boolean);
+    },
+});
+
+export const trackById = selectorFamily<TrackWithWork | null, string>({
+  key: RecoilKeys.TRACK_BY_ID,
+  get:
+    (id: string) =>
+    ({ get }) => {
+      const tracksDict = get(tracksState);
+      const track = tracksDict[id];
+      if (!track) return null;
+      const worksDict = get(worksState);
+      const work = worksDict[track.workName];
+      return {
+        ...track,
+        work,
+      };
+    },
+  set:
+    (id: string) =>
+    ({ set, get }, newTrack: TrackWithWork) => {
+      const tracksDict = get(tracksState);
+      set(tracksState, update(tracksDict, { [id]: { $set: newTrack } }));
     },
 });
