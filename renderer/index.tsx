@@ -28,8 +28,7 @@ const Loading = ({ loading }: { loading: boolean }) =>
   loading ? (
     <Backdrop
       sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      open={true}
-    >
+      open={true}>
       <CircularProgress color="inherit" />
     </Backdrop>
   ) : null;

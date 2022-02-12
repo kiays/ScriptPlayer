@@ -62,8 +62,7 @@ const PlaylistNew = () => {
           onClick={(e) => {
             setEditing(true);
             e.stopPropagation();
-          }}
-        >
+          }}>
           {name}
         </h1>
       )}

@@ -35,8 +35,7 @@ const PlayerControl = ({
         max={playerInfo.duration || 0}
         min={0}
         step={0.01}
-        onChange={onSeek}
-      ></input>
+        onChange={onSeek}></input>
       <div>{playerInfo.title}</div>
     </div>
   );

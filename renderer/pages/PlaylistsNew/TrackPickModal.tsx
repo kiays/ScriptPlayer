@@ -82,8 +82,7 @@ const TrackList = ({
                 <IconButton onClick={() => addTrack(track.hash)}>
                   <Add />
                 </IconButton>
-              }
-            >
+              }>
               <ListItemText primary={track.name} />
             </ListItem>
           );

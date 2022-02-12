@@ -12,7 +12,7 @@ import { worksState } from "../../states/works";
 import { tracksState } from "../../states/tracks";
 import { createTrack } from "../../utils";
 import { useNavigate } from "react-router";
-const path = require("path");
+import { dirname } from "path";
 
 const ImportWork = () => {
   const [checked, setChecked] = useState({});
@@ -25,8 +25,8 @@ const ImportWork = () => {
 
   const doImport = async () => {
     const dest = await ipcRenderer.invoke("import-work", droppedFileInfo.path);
-    const prevDirName = path.dirname(droppedFileInfo.path);
-    const newDirName = path.dirname(dest);
+    const prevDirName = dirname(droppedFileInfo.path);
+    const newDirName = dirname(dest);
     const newTrackPaths = Object.keys(checked)
       .filter((k) => checked[k])
       .map((k) => k.replace(prevDirName, newDirName));

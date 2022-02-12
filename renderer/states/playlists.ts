@@ -21,14 +21,14 @@ export const playlistSelector = selectorFamily<Playlist | null, string>({
   key: RecoilKeys.PLAYLIST_SELECTOR,
   get:
     (id) =>
-      ({ get }) => {
-        const playlists = get(playlistsState);
-        return playlists[id] || null;
-      },
+    ({ get }) => {
+      const playlists = get(playlistsState);
+      return playlists[id] || null;
+    },
   set:
     (id) =>
-      ({ get, set }, newPlaylist) => {
-        const playlists = get(playlistsState);
-        set(playlistsState, update(playlists, { [id]: { $set: newPlaylist } }));
-      },
+    ({ get, set }, newPlaylist) => {
+      const playlists = get(playlistsState);
+      set(playlistsState, update(playlists, { [id]: { $set: newPlaylist } }));
+    },
 });

@@ -19,21 +19,21 @@ export const tracksByPlaylist = selectorFamily<Array<Track>, string>({
   key: RecoilKeys.TRACKS_BY_PLAYLIST,
   get:
     (id) =>
-      ({ get }) => {
-        const trackDict = get(tracksState);
-        const playlist = get(playlistSelector(id));
-        if (!playlist) return [];
-        return playlist.tracks
-          .map(({ hash, id, csvName, csvUrl, csvContent }) => {
-            if (!trackDict[hash]) return null;
-            return {
-              ...trackDict[hash],
-              id,
-              csvName,
-              csvUrl,
-              csvContent,
-            };
-          })
-          .filter(Boolean);
-      },
+    ({ get }) => {
+      const trackDict = get(tracksState);
+      const playlist = get(playlistSelector(id));
+      if (!playlist) return [];
+      return playlist.tracks
+        .map(({ hash, id, csvName, csvUrl, csvContent }) => {
+          if (!trackDict[hash]) return null;
+          return {
+            ...trackDict[hash],
+            id,
+            csvName,
+            csvUrl,
+            csvContent,
+          };
+        })
+        .filter(Boolean);
+    },
 });

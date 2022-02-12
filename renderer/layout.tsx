@@ -120,8 +120,7 @@ export default function Layout({ children }: LayoutProps) {
             sx={{
               marginRight: "36px",
               ...(open && { display: "none" }),
-            }}
-          >
+            }}>
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
@@ -140,8 +139,7 @@ export default function Layout({ children }: LayoutProps) {
           <ListItem
             button
             key={"Playlists"}
-            onClick={() => navigate("/playlists")}
-          >
+            onClick={() => navigate("/playlists")}>
             <ListItemIcon>
               <PlaylistIcon />
             </ListItemIcon>
