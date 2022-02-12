@@ -37,9 +37,14 @@ export const readFile = async (file: File): Promise<string> =>
   });
 
 export const readCsvFile = async (
-  file: File
+  file: File | string
 ): Promise<Array<[number, number, number]>> => {
-  const contentStr = await readFile(file);
+  let contentStr = "";
+  if (typeof file == "string") {
+    contentStr = await ipcRenderer.invoke("read-file-as-text", file);
+  } else {
+    contentStr = await readFile(file);
+  }
   const csvContent = contentStr
     .split("\r\n")
     .map((l) => l.split(",").map(Number))

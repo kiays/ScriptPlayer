@@ -72,9 +72,17 @@ export const trackById = selectorFamily<TrackWithWork | null, string>({
       };
     },
   set:
-    (id: string) =>
+    (trackId: string) =>
     ({ set, get }, newTrack: TrackWithWork) => {
       const tracksDict = get(tracksState);
-      set(tracksState, update(tracksDict, { [id]: { $set: newTrack } }));
+      const { name, id, hash, path, duration, workName, sheetIds } = newTrack;
+      set(
+        tracksState,
+        update(tracksDict, {
+          [trackId]: {
+            $set: { name, id, hash, path, duration, workName, sheetIds },
+          },
+        })
+      );
     },
 });

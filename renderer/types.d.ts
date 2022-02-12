@@ -52,3 +52,11 @@ type TimeSheet = {
   name: string;
   content: TimeSheetData;
 };
+
+type TimeSheetsWithWorkAndTrack = TimeSheetMeta & {
+  track: Track;
+  work: Work;
+};
+
+type TimeSheetMeta = Omit<TimeSheet, "content">;
+type AllTimeSheets = All<TimeSheetMeta>;

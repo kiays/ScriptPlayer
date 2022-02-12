@@ -8,14 +8,16 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDrop } from "react-dnd";
 import { NativeTypes } from "react-dnd-html5-backend";
 import { useParams } from "react-router";
-import { useRecoilValue } from "recoil";
-import TimeSheetPreview from "../../components/TimeSheetPreview";
+import { useRecoilState } from "recoil";
 import { trackById } from "../../states/tracks";
-import { formatTime, getFileHash, readCsvFile } from "../../utils";
+import { getFileHash, readCsvFile } from "../../utils";
+import update from "immutability-helper";
+import { allTimeSheets } from "../../states/timesheets";
+import SheetRow from "../../components/TimeSheetTableRow";
 
 type Item = {
   files: Array<File>;
@@ -36,9 +38,15 @@ const createTimeSheet = async (file: File): Promise<TimeSheet> => {
 
 const TrackDetailPage = () => {
   const { trackId } = useParams();
-  const track = useRecoilValue(trackById(trackId));
-  const [sheetIds, setSheetIds] = useState(track ? track.sheetIds : []);
-  const [sheetDict, setSheetDict] = useState({});
+  const [track, saveTrack] = useRecoilState(trackById(trackId));
+  const [sheetIds, setSheetIds] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    if (!track || !track.sheetIds || loaded) return;
+    setSheetIds([...track.sheetIds]);
+    setLoaded(true);
+  }, [track, sheetIds, setSheetIds, loaded]);
+  const [sheetDict, setSheetDict] = useRecoilState(allTimeSheets);
   const [_, target] = useDrop(
     () => ({
       accept: [NativeTypes.FILE],
@@ -53,15 +61,17 @@ const TrackDetailPage = () => {
     }),
     [sheetDict, sheetIds, setSheetDict, setSheetIds]
   );
+  const save = () => {
+    saveTrack(update(track, { sheetIds: { $set: sheetIds } }));
+  };
+
   if (!track) return null;
-  console.log({ sheetIds, sheetDict });
   return (
     <Box>
       <h1>{track.name}</h1>
       <Button>new TimeSheet</Button>
-      <Paper
-        sx={{ width: "75%", minHeight: "5rem", bgcolor: "secondary.main" }}
-        ref={target}>
+      <Button onClick={save}>save</Button>
+      <Paper sx={{ width: "75%", minHeight: "5rem" }} ref={target}>
         <Button>add TimeSheet from File</Button>
       </Paper>
       <Table>
@@ -71,21 +81,9 @@ const TrackDetailPage = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {sheetIds.map((id) => {
-            const sheet = sheetDict[id];
-            if (!sheet) return null;
-            return (
-              <TableRow key={`sheet-${id}`}>
-                <TableCell>{sheet.name}</TableCell>
-                <TableCell>
-                  {formatTime(sheet.content[sheet.content.length - 1][0])}
-                </TableCell>
-                <TableCell>
-                  <TimeSheetPreview content={sheet.content} />
-                </TableCell>
-              </TableRow>
-            );
-          })}
+          {sheetIds.map((id) => (
+            <SheetRow key={`sheet-${id}`} sheet={sheetDict[id]} />
+          ))}
         </TableBody>
       </Table>
     </Box>

@@ -19,7 +19,6 @@ noble.once("stateChange", async (state) => {
 });
 
 noble.on("discover", async (peripheral) => {
-  // console.log("discover", peripheral)
   await noble.stopScanningAsync();
   await peripheral.connectAsync();
   peripheral.once("disconnected", () => {
@@ -32,9 +31,7 @@ noble.on("discover", async (peripheral) => {
       ["40ee222263ec4b7f8ce7712efd55b90e"]
     );
 
-  console.log(characteristics);
   const ch = characteristics[0];
-  console.log("write");
   await ch.writeAsync(Buffer.from([0x02, 0x01, 0xf0]), false);
   await ch.writeAsync(Buffer.from([0x02, 0x01, 0xa0]), false);
   await ch.writeAsync(Buffer.from([0x02, 0x01, 0x00]), false);
@@ -97,7 +94,10 @@ ipcMain.handle("file-hash", async (_, filePath) => {
   hashSum.update(fileBuffer);
   return hashSum.digest("hex");
 });
-
+ipcMain.handle("read-file-as-text", async (_, filePath) => {
+  const fileContentStr = await fs.readFile(filePath, { encoding: "utf8" });
+  return fileContentStr;
+});
 require("./menu");
 
 Object.keys(database).forEach((method) => {
