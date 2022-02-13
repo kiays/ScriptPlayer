@@ -15,11 +15,11 @@ import { useNavigate } from "react-router";
 import { dirname } from "path";
 
 const ImportWork = () => {
-  const [checked, setChecked] = useState({});
   const droppedFile = useRecoilValue(droppedFileState);
   const droppedFileInfo = useRecoilState(droppedFilePathState)[0];
   const [works, setWorks] = useRecoilState(worksState);
   const [tracks, setTracks] = useRecoilState(tracksState);
+  const [checked, setChecked] = useState({});
   const [thumbnailPath, setThumbnail] = useState(null);
   const navigate = useNavigate();
 
@@ -64,6 +64,7 @@ const ImportWork = () => {
     setTracks({ ...tracks, ...tracksInfo });
     setWorks(newWorks);
     setChecked({});
+    setThumbnail(null);
     navigate(`/works/${name}`);
   };
   if (!droppedFile) return <div>drop here</div>;

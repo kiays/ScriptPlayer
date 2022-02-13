@@ -55,7 +55,7 @@ const TrackListPage = () => {
                 <TableRow hover key={hash} onClick={toTrackPage(track)}>
                   <TableCell>{i}</TableCell>
                   <TableCell>
-                    <Avatar src={track.work.thumbnailPath} variant="square" />
+                    <Avatar src={track?.work?.thumbnailPath} variant="square" />
                   </TableCell>
                   <TableCell>{track.name}</TableCell>
                   <TableCell>

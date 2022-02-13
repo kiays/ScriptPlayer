@@ -1,21 +1,43 @@
-import { Box, List, ListItem, ListItemText, Stack } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
+import { PlayArrow as PlayIcon } from "@mui/icons-material";
 import React, { useEffect } from "react";
 import { useParams } from "react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { tracksState } from "../../states/tracks";
 import { currentWorkIdState, currentWorkState } from "../../states/works";
 import { formatTime } from "../../utils";
+import { playerState } from "../../states/player";
 
 const WorkDetail = () => {
   const { workId } = useParams();
   const [currentWorkId, setCurrentWork] = useRecoilState(currentWorkIdState);
   const work = useRecoilValue(currentWorkState);
   const tracks = useRecoilValue(tracksState);
+  const [_player, setPlayerState] = useRecoilState(playerState);
   useEffect(() => {
     if (workId != currentWorkId) {
       setCurrentWork(workId);
     }
   }, [workId, currentWorkId, setCurrentWork]);
+
+  const play = (track: Track, index: number) => () => {
+    setPlayerState({
+      currentTrackId: track.hash,
+      trackIndex: index,
+      tracks: trackIds.map((id) => tracks[id]),
+      playlistPath: location.hash,
+      playing: true,
+    });
+  };
 
   if (!work || !tracks) return <div>loading...</div>;
   const { thumbnailPath, trackIds } = work;
@@ -25,18 +47,33 @@ const WorkDetail = () => {
         <h1>{currentWorkId}</h1>
         <img src={thumbnailPath} style={{ width: "25%" }} />
       </Stack>
-      <List>
-        {trackIds.map((id) => {
-          const track = tracks[id];
-          if (!track) return null;
-          return (
-            <ListItem key={id}>
-              <ListItemText primary={track.name} />
-              <ListItemText primary={formatTime(track.duration)} />
-            </ListItem>
-          );
-        })}
-      </List>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell></TableCell>
+
+            <TableCell>name</TableCell>
+            <TableCell>duration</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {trackIds.map((id, index) => {
+            const track = tracks[id];
+            if (!track) return null;
+            return (
+              <TableRow key={id}>
+                <TableCell>
+                  <IconButton onClick={play(track, index)}>
+                    <PlayIcon />
+                  </IconButton>
+                </TableCell>
+                <TableCell>{track.name}</TableCell>
+                <TableCell>{formatTime(track.duration)}</TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
     </Box>
   );
 };

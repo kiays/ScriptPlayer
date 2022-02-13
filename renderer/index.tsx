@@ -25,6 +25,7 @@ import TimeSheets from "./pages/TimeSheets";
 import TimeSheetDetail from "./pages/TimeSheetDetail";
 import TrackList from "./pages/Tracks";
 import TrackDetail from "./pages/TrackDetail";
+import Player from "./components/Player";
 
 const theme = createTheme();
 
@@ -90,6 +91,7 @@ render(
             <Layout>
               <App />
             </Layout>
+            <Player />
           </Suspense>
         </HashRouter>
       </ThemeProvider>

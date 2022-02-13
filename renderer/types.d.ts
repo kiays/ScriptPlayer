@@ -34,6 +34,7 @@ type AllWorks = All<Work>;
 type PlaylistTrack = {
   id: number;
   hash: TrackHashID;
+  sheetId?: TimeSheetHashID;
   csvUrl?: string;
   csvName?: string;
   csvContent?: Array<Array<number>>;
@@ -60,3 +61,11 @@ type TimeSheetsWithWorkAndTrack = TimeSheetMeta & {
 
 type TimeSheetMeta = Omit<TimeSheet, "content">;
 type AllTimeSheets = All<TimeSheetMeta>;
+
+type PlayerState = {
+  currentTrackId: string | null;
+  playlistPath: string | null;
+  tracks: Array<Track & PlaylistTrack>;
+  trackIndex: number;
+  playing: boolean;
+};

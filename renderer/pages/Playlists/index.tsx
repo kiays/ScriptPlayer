@@ -27,6 +27,7 @@ const Playlists = () => {
   const selectPlaylist = (id) => {
     navigate(`/playlists/${id}`);
   };
+
   return (
     <Box>
       <h1>Playlists</h1>

@@ -7,18 +7,20 @@ import {
   TableContainer,
   TableBody,
   Paper,
+  IconButton,
 } from "@mui/material";
+import { PlayArrow as PlayIcon } from "@mui/icons-material";
 import React, { useCallback } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams } from "react-router";
 import { playlistSelector } from "../../states/playlists";
-import { tracksByPlaylist } from "../../states/tracks";
+import { tracksByPlaylist, tracksState } from "../../states/tracks";
 import { formatTime } from "../../utils";
-import Player from "../../components/Player";
 import { useDrop } from "react-dnd";
 import { NativeTypes } from "react-dnd-html5-backend";
 import update from "immutability-helper";
 import { readFile } from "../../utils";
+import { playerState } from "../../states/player";
 
 type Item = {
   files: Array<File>;
@@ -49,6 +51,8 @@ const PlaylistDetail = () => {
   const { playlistId } = useParams();
   const [playlist, setPlaylist] = useRecoilState(playlistSelector(playlistId));
   const tracks = useRecoilValue(tracksByPlaylist(playlistId));
+  const trackDict = useRecoilValue(tracksState);
+  const [_player, setPlayerState] = useRecoilState(playerState);
 
   const setCsv = useCallback(
     async (track, csv) => {
@@ -76,6 +80,21 @@ const PlaylistDetail = () => {
 
     [playlist, tracks, setPlaylist]
   );
+
+  const play = (track: Track, index: number) => () => {
+    setPlayerState({
+      currentTrackId: track.hash,
+      trackIndex: index,
+      tracks: playlist.tracks.map(({ hash, csvName, csvUrl, csvContent }) => ({
+        ...trackDict[hash],
+        csvName,
+        csvUrl,
+        csvContent,
+      })),
+      playlistPath: location.hash,
+      playing: true,
+    });
+  };
   if (!playlist) return <div>loading</div>;
 
   return (
@@ -95,6 +114,11 @@ const PlaylistDetail = () => {
             {tracks.map((track, index) => {
               return (
                 <TableRow key={track.id}>
+                  <TableCell>
+                    <IconButton onClick={play(track, index)}>
+                      <PlayIcon />
+                    </IconButton>
+                  </TableCell>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{track.name}</TableCell>
                   <TableCell>{formatTime(track.duration)}</TableCell>
@@ -107,7 +131,6 @@ const PlaylistDetail = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Player tracks={tracks} />
     </Box>
   );
 };

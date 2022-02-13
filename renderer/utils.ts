@@ -48,11 +48,17 @@ export const readCsvFile = async (
   const csvContent = contentStr
     .split("\r\n")
     .map((l) => l.split(",").map(Number))
-    .map(([time, dir, val]): [number, number, number] => [
-      time * 0.1,
-      dir,
-      val,
-    ]);
+    .map(
+      ([time, dir, val]): [
+        number | undefined,
+        number | undefined,
+        number | undefined
+      ] => [time * 0.1, dir, val]
+    )
+    .filter(
+      ([time, dir, val]) =>
+        time != undefined && dir != undefined && val != undefined
+    );
   return csvContent;
 };
 export const getFileHash = (path: string): Promise<string> =>
