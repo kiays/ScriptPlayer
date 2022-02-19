@@ -2,11 +2,11 @@ import React from "react";
 import {
   Avatar,
   Box,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  ListItemButton,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
 } from "@mui/material";
 import { useRecoilState } from "recoil";
 import { worksState } from "../../states/works";
@@ -18,19 +18,20 @@ const Works = () => {
   return (
     <Box>
       <h1>Works</h1>
-      <List>
-        {Object.keys(works).map((key) => (
-          <ListItem key={key}>
-            <ListItemButton onClick={() => navigate(`/works/${key}`)}>
-              <ListItemAvatar>
+      <Table>
+        <TableHead></TableHead>
+        <TableBody>
+          {Object.keys(works).map((key) => (
+            <TableRow key={key} onClick={() => navigate(`/works/${key}`)}>
+              <TableCell>
                 <Avatar src={works[key].thumbnailPath} variant="square" />
-              </ListItemAvatar>
-              <ListItemText primary={works[key].name} />
-              <ListItemText primary={`${works[key].trackIds.length} tracks`} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+              </TableCell>
+              <TableCell>{works[key].name}</TableCell>
+              <TableCell>{`${works[key].trackIds.length} tracks`}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </Box>
   );
 };
