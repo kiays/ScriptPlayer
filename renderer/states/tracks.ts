@@ -75,12 +75,22 @@ export const trackById = selectorFamily<TrackWithWork | null, string>({
     (trackId: string) =>
     ({ set, get }, newTrack: TrackWithWork) => {
       const tracksDict = get(tracksState);
-      const { name, id, hash, path, duration, workName, sheetIds } = newTrack;
+      const { name, id, hash, path, duration, workName, sheetIds, numPlayed } =
+        newTrack;
       set(
         tracksState,
         update(tracksDict, {
           [trackId]: {
-            $set: { name, id, hash, path, duration, workName, sheetIds },
+            $set: {
+              name,
+              id,
+              hash,
+              path,
+              duration,
+              workName,
+              sheetIds,
+              numPlayed,
+            },
           },
         })
       );

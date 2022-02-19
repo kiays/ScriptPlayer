@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { PlayArrow as PlayIcon } from "@mui/icons-material";
 import React, { useEffect } from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { tracksState } from "../../states/tracks";
 import { currentWorkIdState, currentWorkState } from "../../states/works";
@@ -18,6 +18,7 @@ import { formatTime } from "../../utils";
 import { playerState } from "../../states/player";
 
 const WorkDetail = () => {
+  const navigate = useNavigate();
   const { workId } = useParams();
   const [currentWorkId, setCurrentWork] = useRecoilState(currentWorkIdState);
   const work = useRecoilValue(currentWorkState);
@@ -29,7 +30,8 @@ const WorkDetail = () => {
     }
   }, [workId, currentWorkId, setCurrentWork]);
 
-  const play = (track: Track, index: number) => () => {
+  const play = (track: Track, index: number) => (e) => {
+    e.stopPropagation();
     setPlayerState({
       currentTrackId: track.hash,
       trackIndex: index,
@@ -61,7 +63,10 @@ const WorkDetail = () => {
             const track = tracks[id];
             if (!track) return null;
             return (
-              <TableRow key={id}>
+              <TableRow
+                key={id}
+                onClick={() => navigate(`/tracks/${track.hash}`)}
+                hover>
                 <TableCell>
                   <IconButton onClick={play(track, index)}>
                     <PlayIcon />

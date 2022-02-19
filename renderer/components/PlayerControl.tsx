@@ -23,10 +23,8 @@ const PlayerControl = ({
   playing,
 }: PlayerControlProps) => {
   return (
-    <div>
-      <div>
-        {formatTime(playerInfo.currentTime)} / {formatTime(playerInfo.duration)}
-      </div>
+    <>
+      {formatTime(playerInfo.currentTime)} / {formatTime(playerInfo.duration)}
       <button onClick={onPlayPause}>{playing ? "pause" : "play"}</button>
       <button onClick={onPrev}>prev</button>
       <button onClick={onNext}>next</button>
@@ -37,8 +35,8 @@ const PlayerControl = ({
         min={0}
         step={0.01}
         onChange={onSeek}></input>
-      <div>{playerInfo.title}</div>
-    </div>
+      {playerInfo.title}
+    </>
   );
 };
 

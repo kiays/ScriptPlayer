@@ -20,6 +20,16 @@ if (!fs.existsSync(dbPath)) {
   fs.writeFileSync(dbPath, initialJsonStr);
 }
 const data = JSON.parse(fs.readFileSync(dbPath, { encoding: "utf8" }));
+
+// data migration
+if (data.tracks) {
+  for (let k in data.tracks) {
+    const track = data.tracks[k];
+    if (!track.sheetIds) data.tracks[k].sheetIds = [];
+    if (!track.numPlayed) data.tracks[k].numPlayed = 0;
+  }
+}
+
 const getAll = () => data;
 const getAllWorks = () => data.works;
 const getAllPlaylists = () => data.playlists;

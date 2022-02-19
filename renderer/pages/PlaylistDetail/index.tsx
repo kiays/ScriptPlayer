@@ -12,7 +12,7 @@ import {
 import { PlayArrow as PlayIcon } from "@mui/icons-material";
 import React, { useCallback } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { playlistSelector } from "../../states/playlists";
 import { tracksByPlaylist, tracksState } from "../../states/tracks";
 import { formatTime } from "../../utils";
@@ -48,6 +48,7 @@ const CsvField = ({ track, setCsv }: CsvFieldProps) => {
 };
 
 const PlaylistDetail = () => {
+  const navigate = useNavigate();
   const { playlistId } = useParams();
   const [playlist, setPlaylist] = useRecoilState(playlistSelector(playlistId));
   const tracks = useRecoilValue(tracksByPlaylist(playlistId));
@@ -113,7 +114,9 @@ const PlaylistDetail = () => {
           <TableBody>
             {tracks.map((track, index) => {
               return (
-                <TableRow key={track.id}>
+                <TableRow
+                  key={track.id}
+                  onClick={() => navigate(`/tracks/${track.hash}`)}>
                   <TableCell>
                     <IconButton onClick={play(track, index)}>
                       <PlayIcon />

@@ -44,8 +44,9 @@ const TrackListPage = () => {
               <TableCell>name</TableCell>
               <TableCell>work</TableCell>
               <TableCell>duration</TableCell>
+              <TableCell># of timesheets</TableCell>
+              <TableCell># of played</TableCell>
               <TableCell>added at</TableCell>
-              <TableCell># of playing</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -55,13 +56,16 @@ const TrackListPage = () => {
                 <TableRow hover key={hash} onClick={toTrackPage(track)}>
                   <TableCell>{i}</TableCell>
                   <TableCell>
-                    <Avatar src={track?.work?.thumbnailPath} variant="square" />
+                    <Avatar src={track.work?.thumbnailPath} variant="square" />
                   </TableCell>
                   <TableCell>{track.name}</TableCell>
                   <TableCell>
                     <Link onClick={toWorkPage(track)}>{track.workName}</Link>
                   </TableCell>
                   <TableCell>{formatTime(track.duration)}</TableCell>
+                  <TableCell>{track.sheetIds?.length || 0}</TableCell>
+                  <TableCell>{track.numPlayed}</TableCell>
+                  <TableCell>{track.work?.addedAt}</TableCell>
                 </TableRow>
               );
             })}

@@ -15,12 +15,14 @@ type Track = {
   duration: number;
   workName: string;
   sheetIds: Array<string>;
+  numPlayed: number;
 };
 
 type Work = {
   trackIds: Array<string>;
   thumbnailPath: string;
   name: string;
+  addedAt: number;
 };
 
 type TrackWithWork = Track & {

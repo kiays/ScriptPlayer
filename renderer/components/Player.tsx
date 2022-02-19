@@ -2,14 +2,20 @@ import React, { useState, useRef, useEffect } from "react";
 import update from "immutability-helper";
 import { ipcRenderer } from "electron";
 import PlayerControl from "./PlayerControl";
-import { Paper } from "@mui/material";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { IconButton, Paper } from "@mui/material";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { playerState } from "../states/player";
 import { readCsvFile } from "../utils";
 import { allTimeSheets } from "../states/timesheets";
 import TimeSheetPreview from "./TimeSheetPreview";
+import {
+  Launch as OpenIcon,
+  CloseFullscreen as CloseIcon,
+} from "@mui/icons-material";
+import { trackById } from "../states/tracks";
 
 const Player = () => {
+  const [open, setOpen] = useState(false);
   const [{ tracks, trackIndex, playing }, setPlayerState] =
     useRecoilState(playerState);
   const [audioSrc, setTrack] = useState(null);
@@ -22,6 +28,7 @@ const Player = () => {
   });
   const audioRef = useRef(null);
   const [values, setValues] = useState([]);
+  const setTrackInfo = useSetRecoilState(trackById(tracks[trackIndex]?.hash));
 
   const setTrackIndex = (index) => {
     setPlayerState((s) => update(s, { trackIndex: { $set: index } }));
@@ -39,7 +46,6 @@ const Player = () => {
     const curretTrackUrl = tracks[trackIndex].path;
 
     if (audioSrc != curretTrackUrl) {
-      console.log("update track", tracks[trackIndex]);
       audioElem.src = curretTrackUrl;
       setTrack(curretTrackUrl);
       setPlayerInfo({
@@ -107,6 +113,7 @@ const Player = () => {
   };
 
   const playEnded = () => {
+    setTrackInfo((s) => update(s, { numPlayed: { $set: s.numPlayed + 1 } }));
     if (trackIndex < tracks.length - 1) {
       setTrackIndex(trackIndex + 1);
     } else {
@@ -133,6 +140,8 @@ const Player = () => {
         bottom: 0,
         margin: 2,
         padding: 2,
+        color: "info.contrastText",
+        bgcolor: "info.main",
       }}>
       <PlayerControl
         playerInfo={playerInfo}
@@ -142,21 +151,32 @@ const Player = () => {
         onPlayPause={() => setPlaying(!playing)}
         playing={playing}
       />
-      <button onClick={() => ipcRenderer.invoke("send-to-device", [2, 0, 100])}>
-        test device
-      </button>
-      <button onClick={() => ipcRenderer.invoke("send-to-device", [2, 0, 0])}>
-        stop device
-      </button>
-      <input
-        onChange={(e) => setScaleFactor(Number(e.target.value))}
-        type="range"
-        min={0.1}
-        max={1.0}
-        step={0.01}
-      />
-      UFO Scale Factor: {ufoScaleFactor}
-      <TimeSheetPreview content={values} />
+      <IconButton onClick={() => setOpen(!open)}>
+        {open ? <CloseIcon /> : <OpenIcon />}
+      </IconButton>
+      {open && (
+        <div>
+          <div>
+            <button
+              onClick={() => ipcRenderer.invoke("send-to-device", [2, 0, 100])}>
+              test device
+            </button>
+            <button
+              onClick={() => ipcRenderer.invoke("send-to-device", [2, 0, 0])}>
+              stop device
+            </button>
+            <input
+              onChange={(e) => setScaleFactor(Number(e.target.value))}
+              type="range"
+              min={0.1}
+              max={1.0}
+              step={0.01}
+            />
+            UFO Scale Factor: {ufoScaleFactor}
+          </div>
+          <TimeSheetPreview content={values} />
+        </div>
+      )}
       <audio
         ref={audioRef}
         onTimeUpdate={timeUpdated}
