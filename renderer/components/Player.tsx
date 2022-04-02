@@ -98,8 +98,8 @@ const Player = () => {
     }
     if (!lastVal) return;
     ipcRenderer.invoke("send-to-device", [
-      0x02,
-      0x00,
+      0x05,
+      Math.floor(lastVal[2] * ufoScaleFactor) + (lastVal[1] ? 128 : 0),
       Math.floor(lastVal[2] * ufoScaleFactor) + (lastVal[1] ? 128 : 0),
     ]);
   };
@@ -158,18 +158,18 @@ const Player = () => {
         <div>
           <div>
             <button
-              onClick={() => ipcRenderer.invoke("send-to-device", [2, 0, 100])}>
+              onClick={() => ipcRenderer.invoke("send-to-device", [5, 100, 100])}>
               test device
             </button>
             <button
-              onClick={() => ipcRenderer.invoke("send-to-device", [2, 0, 0])}>
+              onClick={() => ipcRenderer.invoke("send-to-device", [5, 0, 0])}>
               stop device
             </button>
             <input
               onChange={(e) => setScaleFactor(Number(e.target.value))}
               type="range"
               min={0.1}
-              max={1.0}
+              max={1.5}
               step={0.01}
             />
             UFO Scale Factor: {ufoScaleFactor}
