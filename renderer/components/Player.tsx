@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import update from "immutability-helper";
-import { ipcRenderer } from "electron";
 import PlayerControl from "./PlayerControl";
 import { IconButton, Paper } from "@mui/material";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -13,6 +12,7 @@ import {
   CloseFullscreen as CloseIcon,
 } from "@mui/icons-material";
 import { trackById } from "../states/tracks";
+import { useBluetooth } from "../useBluetooth";
 
 const Player = () => {
   const [open, setOpen] = useState(false);
@@ -21,6 +21,7 @@ const Player = () => {
   const [audioSrc, setTrack] = useState(null);
   const sheetDict = useRecoilValue(allTimeSheets);
   const [ufoScaleFactor, setScaleFactor] = useState(1.0);
+  const { device, connected, connecting, requestDevice } = useBluetooth()
   const [playerInfo, setPlayerInfo] = useState({
     duration: 0,
     currentTime: 0,
@@ -97,11 +98,11 @@ const Player = () => {
       }
     }
     if (!lastVal) return;
-    ipcRenderer.invoke("send-to-device", [
+    device.writeValue(Buffer.from([
       0x05,
       Math.floor(lastVal[2] * ufoScaleFactor) + (lastVal[1] ? 128 : 0),
       Math.floor(lastVal[2] * ufoScaleFactor) + (lastVal[1] ? 128 : 0),
-    ]);
+    ]));
   };
 
   const durationChanged = () => {
@@ -158,11 +159,23 @@ const Player = () => {
         <div>
           <div>
             <button
-              onClick={() => ipcRenderer.invoke("send-to-device", [5, 100, 100])}>
+              onClick={() => requestDevice()}
+              disabled={connected || connecting}>
+              connect
+            </button>
+            <button
+              onClick={() => {
+                device.service.device.gatt.disconnect();
+              }}
+              disabled={!connected}>
+              disconnect
+            </button>
+            <button
+              onClick={() => device.writeValue(Buffer.from([5, 100, 100]))}>
               test device
             </button>
             <button
-              onClick={() => ipcRenderer.invoke("send-to-device", [5, 0, 0])}>
+              onClick={() => device.writeValue(Buffer.from([5, 0, 0]))}>
               stop device
             </button>
             <input

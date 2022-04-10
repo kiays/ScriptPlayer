@@ -1,5 +1,4 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
-const noble = require("@abandonware/noble");
 const { DEVICE_UUID, APP_NAME } = require("../common/constants");
 const path = require("path");
 const database = require("./database");
@@ -8,37 +7,6 @@ const database = require("./database");
 const { traverseDirectory, copyToDataDir } = require("./directory");
 const crypto = require("crypto");
 const fs = require("fs/promises");
-
-let device = null;
-let characteristic = null;
-
-noble.once("stateChange", async (state) => {
-  if (state === "poweredOn") {
-    await noble.startScanningAsync([DEVICE_UUID], false);
-  }
-});
-
-noble.on("discover", async (peripheral) => {
-  await noble.stopScanningAsync();
-  await peripheral.connectAsync();
-  peripheral.once("disconnected", () => {
-    device = null;
-    characteristic = null;
-  });
-  const { characteristics } =
-    await peripheral.discoverSomeServicesAndCharacteristicsAsync(
-      [],
-      ["40ee222263ec4b7f8ce7712efd55b90e"]
-    );
-
-  const ch = characteristics[0];
-  await ch.writeAsync(Buffer.from([0x02, 0x01, 0xf0]), false);
-  await ch.writeAsync(Buffer.from([0x02, 0x01, 0xa0]), false);
-  await ch.writeAsync(Buffer.from([0x02, 0x01, 0x00]), false);
-
-  device = peripheral;
-  characteristic = ch;
-});
 
 const createWindow = () => {
   // Create the browser window.
@@ -51,7 +19,17 @@ const createWindow = () => {
       contextIsolation: false,
     },
   });
-
+  mainWindow.webContents.on(
+    "select-bluetooth-device",
+    (event, deviceList, callback) => {
+      console.log("select bluetooth device callback")
+      event.preventDefault();
+      if (deviceList && deviceList.length > 0) {
+        console.log(deviceList);
+        callback(deviceList[0].deviceId);
+      }
+    }
+  );
   mainWindow.loadFile("dist/index.html");
 };
 
@@ -69,17 +47,12 @@ app.whenReady().then(() => {
 });
 
 app.on("window-all-closed", async () => {
-  if (device) {
-    await device.disconnectAsync();
-  }
   if (process.platform !== "darwin") app.quit();
 });
 
 ipcMain.handle("send-to-device", (_, args) => {
-  if (device && characteristic) {
-    characteristic.writeAsync(Buffer.from(args), false);
-  }
 });
+
 ipcMain.handle("check-dropped-file", async (e, arg) => {
   return await traverseDirectory(arg);
 });
