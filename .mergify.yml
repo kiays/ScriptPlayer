@@ -1,0 +1,7 @@
+pull_request_rules:
+  - name: Automatic merge on approval
+    conditions:
+        - author~=^dependabot(|-preview)\[bot\]$
+        - check-success=auto-merge-test    actions:
+    merge:
+        method: merge
