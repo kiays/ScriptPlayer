@@ -7,10 +7,10 @@ const database = require("./database");
 const { traverseDirectory, copyToDataDir } = require("./directory");
 const crypto = require("crypto");
 const fs = require("fs/promises");
-
+let mainWindow;
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 1200,
     webPreferences: {
@@ -75,4 +75,17 @@ require("./menu");
 
 Object.keys(database).forEach((method) => {
   ipcMain.handle(method, async (e, arg) => database[method](arg));
+});
+
+
+app.on("before-quit", async (e) => {
+  console.log("before quit");
+  mainWindow.send("quit");
+  e.preventDefault();
+  return new Promise((res) => {
+    console.log("send quit");
+    setTimeout(() => {
+      app.exit();
+    }, 1000);
+  });
 });
