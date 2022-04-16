@@ -1,7 +1,9 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ipcRenderer } from "electron";
 
-const detectDevice = (setChar: (any) => void): Promise<BluetoothRemoteGATTCharacteristic> => {
+const detectDevice = (
+  setChar: (any) => void
+): Promise<BluetoothRemoteGATTCharacteristic> => {
   console.log("requestDevice");
   return new Promise((resolve, reject) => {
     navigator.bluetooth
@@ -18,9 +20,11 @@ const detectDevice = (setChar: (any) => void): Promise<BluetoothRemoteGATTCharac
         console.log("connect to gatt server: ", device);
         device.addEventListener("gattserverdisconnected", () => {
           device.gatt.disconnect();
-          setChar(null)
+          setChar(null);
         });
-        window.addEventListener("beforeunload", () => { device.gatt.disconnect(); })
+        window.addEventListener("beforeunload", () => {
+          device.gatt.disconnect();
+        });
         return device.gatt.connect();
       })
       .then((gattServer: BluetoothRemoteGATTServer) =>
@@ -41,7 +45,9 @@ export const useBluetooth = (): {
   device: BluetoothRemoteGATTCharacteristic | null;
   requestDevice: () => void;
 } => {
-  const [char, setChar] = useState<BluetoothRemoteGATTCharacteristic | null>(null);
+  const [char, setChar] = useState<BluetoothRemoteGATTCharacteristic | null>(
+    null
+  );
   const [connecting, setConnecting] = useState(false);
   useEffect(() => {
     const disconnect = () => {
@@ -56,8 +62,7 @@ export const useBluetooth = (): {
     connecting,
     requestDevice: () => {
       setConnecting(true);
-      detectDevice(setChar)
-        .finally(() => setConnecting(false));
+      detectDevice(setChar).finally(() => setConnecting(false));
     },
   };
 };

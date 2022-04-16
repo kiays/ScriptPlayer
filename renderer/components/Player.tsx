@@ -21,7 +21,7 @@ const Player = () => {
   const [audioSrc, setTrack] = useState(null);
   const sheetDict = useRecoilValue(allTimeSheets);
   const [ufoScaleFactor, setScaleFactor] = useState(1.0);
-  const { device, connected, connecting, requestDevice } = useBluetooth()
+  const { device, connected, connecting, requestDevice } = useBluetooth();
   const [playerInfo, setPlayerInfo] = useState({
     duration: 0,
     currentTime: 0,
@@ -64,12 +64,17 @@ const Player = () => {
 
   useEffect(() => {
     if (!tracks || !tracks[trackIndex]) return;
-    const sheetIds = tracks[trackIndex].sheetIds || [];
-    if (sheetIds.length == 0) return;
-    const sheetId = sheetIds[0];
-    const sheet = sheetDict[sheetId];
-    if (!sheet) return;
-    readCsvFile(sheet.path).then(setValues);
+    const track = tracks[trackIndex];
+    const sheetIds = track.sheetIds || [];
+    if (sheetIds.length != 0) {
+      const sheetId = sheetIds[0];
+      const sheet = sheetDict[sheetId];
+      if (!sheet) return;
+      readCsvFile(sheet.path).then(setValues);
+    }
+    if (track.csvUrl) {
+      readCsvFile(track.csvUrl).then(setValues);
+    }
   }, [tracks, trackIndex, sheetDict]);
 
   const seek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,11 +103,13 @@ const Player = () => {
       }
     }
     if (!lastVal) return;
-    device.writeValue(Buffer.from([
-      0x05,
-      Math.floor(lastVal[2] * ufoScaleFactor) + (lastVal[1] ? 128 : 0),
-      Math.floor(lastVal[2] * ufoScaleFactor) + (lastVal[1] ? 128 : 0),
-    ]));
+    device.writeValue(
+      Buffer.from([
+        0x05,
+        Math.floor(lastVal[2] * ufoScaleFactor) + (lastVal[1] ? 128 : 0),
+        Math.floor(lastVal[2] * ufoScaleFactor) + (lastVal[1] ? 128 : 0),
+      ])
+    );
   };
 
   const durationChanged = () => {
@@ -174,8 +181,7 @@ const Player = () => {
               onClick={() => device.writeValue(Buffer.from([5, 100, 100]))}>
               test device
             </button>
-            <button
-              onClick={() => device.writeValue(Buffer.from([5, 0, 0]))}>
+            <button onClick={() => device.writeValue(Buffer.from([5, 0, 0]))}>
               stop device
             </button>
             <input

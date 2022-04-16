@@ -22,7 +22,7 @@ const createWindow = () => {
   mainWindow.webContents.on(
     "select-bluetooth-device",
     (event, deviceList, callback) => {
-      console.log("select bluetooth device callback")
+      console.log("select bluetooth device callback");
       event.preventDefault();
       if (deviceList && deviceList.length > 0) {
         console.log(deviceList);
@@ -50,8 +50,7 @@ app.on("window-all-closed", async () => {
   if (process.platform !== "darwin") app.quit();
 });
 
-ipcMain.handle("send-to-device", (_, args) => {
-});
+ipcMain.handle("send-to-device", (_, args) => {});
 
 ipcMain.handle("check-dropped-file", async (e, arg) => {
   return await traverseDirectory(arg);
@@ -76,7 +75,6 @@ require("./menu");
 Object.keys(database).forEach((method) => {
   ipcMain.handle(method, async (e, arg) => database[method](arg));
 });
-
 
 app.on("before-quit", async (e) => {
   console.log("before quit");

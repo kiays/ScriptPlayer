@@ -33,7 +33,7 @@ type WorkListProps = {
 };
 const WorkList = ({ works, setWorkId }: WorkListProps) => {
   return (
-    <List>
+    <List sx={{ height: "100%", overflowY: "scroll" }}>
       {Object.keys(works).map((workId) => {
         const work = works[workId];
         if (!work) return null;
@@ -73,7 +73,7 @@ const TrackList = ({
       <IconButton onClick={onBack}>
         <ArrowBack />
       </IconButton>
-      <List>
+      <List sx={{ height: "100%", overflowY: "scroll" }}>
         {tracks.map((track) => {
           return (
             <ListItem
@@ -104,7 +104,7 @@ const TrackPickModal = ({ onClose, open, addTrack }: TrackPickModalProps) => {
 
   return (
     <Modal open={open} onClose={onClose}>
-      <Box sx={style}>
+      <Box sx={{ ...style, height: "80%" }}>
         {currentWorkId == null ? (
           <WorkList works={works} setWorkId={setWorkId} />
         ) : (
