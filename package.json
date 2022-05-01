@@ -4,7 +4,6 @@
   "description": "",
   "main": "main/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "parcel renderer/index.html --public-url ./ --target electron --no-hmr",
     "build": "cross-env NODE_ENV=production parcel build renderer/index.html --public-url ./ --target electron --no-content-hash",
     "start": "electron .",
@@ -15,7 +14,8 @@
     "format": "prettier --write '**/*.{ts,tsx,js,json}'",
     "clean": "rm -rf dist",
     "lint": "eslint \"renderer/**/*.{ts,tsx}\"",
-    "lint:fix": "npm run format && eslint --fix \"renderer/**/*.{ts,tsx}\"",
+    "lint:fix": "npm run format && eslint --fix \"renderer/**/*.{ts,tsx}\" \"tests/**/*.{js,ts}\"",
+    "test": "playwright test",
     "check": "tsc --noEmit"
   },
   "author": "",
@@ -23,6 +23,7 @@
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.63",
     "@electron-forge/maker-zip": "^6.0.0-beta.63",
+    "@playwright/test": "^1.21.1",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
     "cross-env": "^7.0.3",
@@ -34,6 +35,7 @@
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.5.0",
     "parcel-bundler": "^1.12.5",
+    "playwright": "^1.21.1",
     "prettier": "2.6.2",
     "typescript": "^4.6.4"
   },
