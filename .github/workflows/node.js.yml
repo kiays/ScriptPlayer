@@ -33,7 +33,7 @@ jobs:
     - run: npm run lint
     - run: npm run build
     - run: npm test
-      if: runner.os == 'macOS' || runner.os == "Windows"
+      if: runner.os == 'macOS' || runner.os == 'Windows'
     - run: npm run package
     - run: npm run make
     - name: Archive production artifacts
