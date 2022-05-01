@@ -32,6 +32,7 @@ jobs:
     - run: npm ci
     - run: npm run lint
     - run: npm run build
+    - run: npm test
     - run: npm run package
     - run: npm run make
     - name: Archive production artifacts
