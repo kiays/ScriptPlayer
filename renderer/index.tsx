@@ -1,9 +1,10 @@
 import React, { Suspense } from "react";
 import { render } from "react-dom";
 import { RecoilRoot, useRecoilState, useRecoilValue } from "recoil";
+
+import { HashRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { DndProvider, useDrop } from "react-dnd";
 import { NativeTypes, HTML5Backend } from "react-dnd-html5-backend";
-import { HashRouter, Route, Routes, useNavigate } from "react-router-dom";
 import {
   ThemeProvider,
   createTheme,
