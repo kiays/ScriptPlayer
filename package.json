@@ -24,7 +24,7 @@
     "@electron-forge/cli": "^6.0.0-beta.63",
     "@electron-forge/maker-zip": "^6.0.0-beta.63",
     "@playwright/test": "^1.22.2",
-    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.26.0",
     "cross-env": "^7.0.3",
     "electron": "^18.2.4",
