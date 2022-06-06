@@ -30,7 +30,7 @@
     "electron": "^19.0.3",
     "electron-devtools-installer": "^3.2.0",
     "electron-rebuild": "^3.2.7",
-    "eslint": "^8.16.0",
+    "eslint": "^8.17.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.5.0",
