@@ -77,13 +77,11 @@ const Player = () => {
     }
   }, [tracks, trackIndex, sheetDict]);
 
-  const seek = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const seek = (value: number) => {
     const audioElem = audioRef.current;
     if (!audioElem) return;
-    setPlayerInfo((info) =>
-      update(info, { currentTime: { $set: Number(e.target.value) } })
-    );
-    audioElem.currentTime = e.target.value;
+    setPlayerInfo((info) => update(info, { currentTime: { $set: value } }));
+    audioElem.currentTime = value;
   };
 
   const timeUpdated = () => {

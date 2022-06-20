@@ -2,7 +2,7 @@ import React from "react";
 import { formatTime } from "../utils";
 
 type PlayerControlProps = {
-  onSeek: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSeek: (value: number) => void;
   onPrev: () => void;
   onNext: () => void;
   playing: boolean;
@@ -34,7 +34,7 @@ const PlayerControl = ({
         max={playerInfo.duration || 0}
         min={0}
         step={0.01}
-        onChange={onSeek}></input>
+        onChange={(e) => onSeek(Number(e.target.value))}></input>
       {playerInfo.title}
     </>
   );
