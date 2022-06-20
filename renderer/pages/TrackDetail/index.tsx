@@ -69,10 +69,9 @@ const TrackDetailPage = () => {
   return (
     <Box>
       <h1>{track.name}</h1>
-      <Button>new TimeSheet</Button>
       <Button onClick={save}>save</Button>
-      <Paper sx={{ width: "75%", minHeight: "5rem" }} ref={target}>
-        <Button>add TimeSheet from File</Button>
+      <Paper sx={{ width: "75%", minHeight: "5rem"}} ref={target}>
+        <div>Drop CSV file here</div>
       </Paper>
       <Table>
         <TableHead>
