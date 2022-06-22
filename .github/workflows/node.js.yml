@@ -30,6 +30,8 @@ jobs:
         npm install --global node-gyp@latest
         npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
     - run: npm ci
+    - run: |
+        echo "VERSION=\"$(echo $GITHUB_REF | sed -e 's/refs\/tags\///')"\nBUILD=\"${{ github.sha }}\"\nRELEASED=\"$(date -I minutes)\"" > .env
     - run: npm run lint
     - run: npm run build
     - run: npm test
