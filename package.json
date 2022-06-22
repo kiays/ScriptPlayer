@@ -4,8 +4,8 @@
   "description": "",
   "main": "main/main.js",
   "scripts": {
-    "watch": "parcel renderer/index.html --public-url ./ --target electron --no-hmr",
-    "build": "cross-env NODE_ENV=production parcel build renderer/index.html --public-url ./ --target electron --no-content-hash",
+    "watch": "parcel --no-hmr renderer/index.html renderer/splash.html --public-url ./ --target electron ",
+    "build": "cross-env NODE_ENV=production parcel build renderer/index.html renderer/splash.html --public-url ./ --target electron --no-content-hash",
     "start": "electron .",
     "start:forge": "electron-forge start",
     "rebuild:arm64": "electron-rebuild --arch arm64",
@@ -35,6 +35,7 @@
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.6.0",
     "parcel-bundler": "^1.12.5",
+    "parcel-plugin-electron-dotenv": "^0.1.0",
     "playwright": "^1.22.2",
     "prettier": "2.7.1",
     "typescript": "^4.7.4"
