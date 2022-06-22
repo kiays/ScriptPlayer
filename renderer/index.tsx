@@ -27,6 +27,7 @@ import TimeSheetDetail from "./pages/TimeSheetDetail";
 import TrackList from "./pages/Tracks";
 import TrackDetail from "./pages/TrackDetail";
 import Player from "./components/Player";
+import { ipcRenderer } from "electron/renderer";
 
 const theme = createTheme();
 
@@ -100,3 +101,5 @@ render(
   </RecoilRoot>,
   document.getElementById("root")
 );
+console.log("ready");
+ipcRenderer.invoke("main-window-ready");

@@ -8,6 +8,24 @@ const { traverseDirectory, copyToDataDir } = require("./directory");
 const crypto = require("crypto");
 const fs = require("fs/promises");
 let mainWindow;
+let splashScreen;
+
+function createSplash () {
+  splashScreen = new BrowserWindow({
+    show: false,
+    frame: false,
+    width: 600,
+    height: 322,
+  })
+
+  splashScreen.loadFile('dist/splash.html')
+
+  splashScreen.once('ready-to-show', () => {
+    splashScreen.show()
+  })
+}
+
+
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -19,6 +37,7 @@ const createWindow = () => {
       contextIsolation: false,
     },
   });
+  mainWindow.hide();
   mainWindow.webContents.on(
     "select-bluetooth-device",
     (event, deviceList, callback) => {
@@ -39,7 +58,16 @@ app.whenReady().then(() => {
   // })
   //   .then((name) => console.log(`Added Extension:  ${name}`))
   //   .catch((err) => console.log("An error occurred: ", err));
+  createSplash();
+  ipcMain.handle("main-window-ready", () => {
+    if(splashScreen) {
+    // splashScreen.destroy();
+    splashScreen = null;
+  }
+    mainWindow.show();
+  })
   createWindow();
+
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
@@ -49,7 +77,6 @@ app.whenReady().then(() => {
 app.on("window-all-closed", async () => {
   if (process.platform !== "darwin") app.quit();
 });
-
 ipcMain.handle("send-to-device", (_, args) => {});
 
 ipcMain.handle("check-dropped-file", async (e, arg) => {
