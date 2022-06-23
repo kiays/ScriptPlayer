@@ -61,7 +61,7 @@ app.whenReady().then(() => {
   createSplash();
   ipcMain.handle("main-window-ready", () => {
     if(splashScreen) {
-    // splashScreen.destroy();
+    splashScreen.destroy();
     splashScreen = null;
   }
     mainWindow.show();

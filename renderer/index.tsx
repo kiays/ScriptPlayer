@@ -53,6 +53,7 @@ const App = () => {
     async drop(item: Item) {
       if (item.files.length != 1) return;
       const file = item.files[0];
+      console.log(item);
       if (file.type == "") {
         setDroppedFilePath(file);
         navigate("/works/import");
