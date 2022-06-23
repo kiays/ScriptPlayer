@@ -54,11 +54,20 @@ const App = () => {
       if (item.files.length != 1) return;
       const file = item.files[0];
       console.log(item);
+      if (file.type == "application/zip") {
+        alert("zipファイルはインポートできません。解凍したフォルダをドロップしてください。");
+        return;
+      }
+      if (file.type == "application/x-rar") {
+        alert("rarファイルはインポートできません。解凍したフォルダをドロップしてください。");
+        return;
+      }
       if (file.type == "") {
         setDroppedFilePath(file);
         navigate("/works/import");
         return;
       }
+      alert("サポートされていない形式のファイルです。音声ファイルの含まれたフォルダをドロップしてください");
     },
   }));
   return (
