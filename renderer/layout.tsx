@@ -22,6 +22,7 @@ import {
   Album as AlbumIcon,
   Audiotrack as AudiotrackIcon,
   Description as CSVIcon,
+  ArrowBack as BackIcon,
 } from "@mui/icons-material";
 
 const drawerWidth = 240;
@@ -123,6 +124,10 @@ export default function Layout({ children }: LayoutProps) {
             }}>
             <MenuIcon />
           </IconButton>
+          <IconButton onClick={() => history.back()}>
+            <BackIcon color="inherit"/>
+          </IconButton>
+
           <Typography variant="h6" noWrap component="div">
             Player
           </Typography>

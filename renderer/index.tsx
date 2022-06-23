@@ -28,6 +28,7 @@ import TrackList from "./pages/Tracks";
 import TrackDetail from "./pages/TrackDetail";
 import Player from "./components/Player";
 import { ipcRenderer } from "electron/renderer";
+import Home from "./pages/Home/Index";
 
 const theme = createTheme();
 
@@ -86,7 +87,7 @@ const App = () => {
           <Route path="/works/import" element={<ImportWork />} />
           <Route path="/csvs/:csvId" element={<TimeSheetDetail />} />
           <Route path="/csvs" element={<TimeSheets />} />
-          <Route path="/" element={<div>home</div>} />
+          <Route path="/" element={<Home/>} />
           <Route path="*" element={<div>not found</div>} />
         </Routes>
       </div>
