@@ -29,6 +29,7 @@ const Player = () => {
   });
   const audioRef = useRef(null);
   const [values, setValues] = useState([]);
+  const [inverted, setInverted] = useState(false)
   const setTrackInfo = useSetRecoilState(trackById(tracks[trackIndex]?.hash));
 
   const setTrackIndex = (index) => {
@@ -101,13 +102,45 @@ const Player = () => {
       }
     }
     if (!lastVal) return;
-    device.writeValue(
-      Buffer.from([
-        0x05,
-        Math.floor(lastVal[2] * ufoScaleFactor) + (lastVal[1] ? 128 : 0),
-        Math.floor(lastVal[2] * ufoScaleFactor) + (lastVal[1] ? 128 : 0),
-      ])
-    );
+    if (lastVal.length === 5) {
+      const [_time, leftDir, leftPower, rightDir, rightPower] = lastVal;
+      let leftScaled = Math.floor(leftPower * ufoScaleFactor);
+      let rightScaled = Math.floor(rightPower * ufoScaleFactor);
+      if (leftScaled >= 100) leftScaled = 100;
+      if (rightScaled >= 100) rightScaled = 100;
+      if (inverted) {
+        device.writeValue(
+          Buffer.from([
+            0x05,
+            leftScaled + (leftDir ? 128 : 0),
+            rightScaled + (rightDir ? 128 : 0),
+          ])
+        );
+      } else {
+        device.writeValue(
+          Buffer.from([
+            0x05,
+            rightScaled + (rightDir ? 128 : 0),
+            leftScaled + (leftDir ? 128 : 0),
+
+          ])
+        );
+      }
+      return;
+    }
+    if (lastVal.length === 3) {
+      const [_time, dir, power] = lastVal;
+      let scaled = Math.floor(power * ufoScaleFactor);
+      if (scaled >= 100) scaled = 100;
+      device.writeValue(
+        Buffer.from([
+          0x05,
+          scaled + (dir ? 128 : 0),
+          scaled + (dir ? 128 : 0),
+        ])
+      );
+    }
+
   };
 
   const durationChanged = () => {
@@ -182,6 +215,7 @@ const Player = () => {
             <button onClick={() => device.writeValue(Buffer.from([5, 0, 0]))}>
               stop device
             </button>
+            <button onClick={() => setInverted(!inverted)}>左右反転</button>
             <input
               onChange={(e) => setScaleFactor(Number(e.target.value))}
               type="range"
