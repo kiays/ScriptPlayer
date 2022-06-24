@@ -38,7 +38,7 @@ export const readFile = async (file: File): Promise<string> =>
 
 export const readCsvFile = async (
   file: File | string
-): Promise<Array<[number, number, number]>> => {
+): Promise<Array<[number, number, number]> | Array<[number, number, number, number, number]>> => {
   let contentStr = "";
   if (typeof file == "string") {
     contentStr = await ipcRenderer.invoke("read-file-as-text", file);
@@ -49,14 +49,14 @@ export const readCsvFile = async (
     .split("\r\n")
     .map((l) => l.split(",").map(Number))
     .map(
-      ([time, dir, val]): [
+      ([time, ...rest]): [
         number | undefined,
         number | undefined,
         number | undefined
-      ] => [time * 0.1, dir, val]
+      ] => [time * 0.1, ...rest]
     )
     .filter(
-      ([time, dir, val]) =>
+      ([time, dir, val, ..._rest]) =>
         time != undefined && dir != undefined && val != undefined
     );
   return csvContent;
