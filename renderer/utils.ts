@@ -46,10 +46,16 @@ export const readCsvFile = async (
     contentStr = await readFile(file);
   }
   const csvContent = contentStr
-    .split("\r\n")
+    .split(/\r\n|\n/)
     .map((l) => l.split(",").map(Number))
     .map(
       ([time, ...rest]): [
+        number | undefined,
+        number | undefined,
+        number | undefined
+      ] | [
+        number | undefined,
+        number | undefined,
         number | undefined,
         number | undefined,
         number | undefined
