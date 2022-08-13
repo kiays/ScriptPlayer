@@ -4,6 +4,7 @@ import { useRecoilState } from "recoil";
 import { useDrop } from "react-dnd";
 import { NativeTypes } from "react-dnd-html5-backend";
 import { droppedFilePathState } from "../../states/droppedFile";
+import { Card, CardContent, Typography } from "@mui/material";
 
 type Item = {
   files: Array<File>;
@@ -39,7 +40,17 @@ const DropArea = () => {
       );
     },
   }));
-  return <div ref={dropTarget}>音声作品フォルダをドロップしてください</div>;
+  return (
+    <Card
+      ref={dropTarget}
+      sx={{ backgroundColor: "primary.light", color: "primary.contrastText" }}>
+      <CardContent sx={{ height: "75vh" }}>
+        <Typography sx={{ fontSize: 24 }}>
+          音声作品フォルダをドロップしてください
+        </Typography>
+      </CardContent>
+    </Card>
+  );
 };
 
 export default DropArea;
