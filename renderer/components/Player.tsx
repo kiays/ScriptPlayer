@@ -29,7 +29,7 @@ const Player = () => {
   });
   const audioRef = useRef(null);
   const [values, setValues] = useState([]);
-  const [inverted, setInverted] = useState(false)
+  const [inverted, setInverted] = useState(false);
   const setTrackInfo = useSetRecoilState(trackById(tracks[trackIndex]?.hash));
 
   const setTrackIndex = (index) => {
@@ -122,7 +122,6 @@ const Player = () => {
             0x05,
             rightScaled + (rightDir ? 128 : 0),
             leftScaled + (leftDir ? 128 : 0),
-
           ])
         );
       }
@@ -133,14 +132,9 @@ const Player = () => {
       let scaled = Math.floor(power * ufoScaleFactor);
       if (scaled >= 100) scaled = 100;
       device.writeValue(
-        Buffer.from([
-          0x05,
-          scaled + (dir ? 128 : 0),
-          scaled + (dir ? 128 : 0),
-        ])
+        Buffer.from([0x05, scaled + (dir ? 128 : 0), scaled + (dir ? 128 : 0)])
       );
     }
-
   };
 
   const durationChanged = () => {

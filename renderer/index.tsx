@@ -56,11 +56,15 @@ const App = () => {
       const file = item.files[0];
       console.log(item);
       if (file.type == "application/zip") {
-        alert("zipファイルはインポートできません。解凍したフォルダをドロップしてください。");
+        alert(
+          "zipファイルはインポートできません。解凍したフォルダをドロップしてください。"
+        );
         return;
       }
       if (file.type == "application/x-rar") {
-        alert("rarファイルはインポートできません。解凍したフォルダをドロップしてください。");
+        alert(
+          "rarファイルはインポートできません。解凍したフォルダをドロップしてください。"
+        );
         return;
       }
       if (file.type == "") {
@@ -68,7 +72,9 @@ const App = () => {
         navigate("/works/import");
         return;
       }
-      alert("サポートされていない形式のファイルです。音声ファイルの含まれたフォルダをドロップしてください");
+      alert(
+        "サポートされていない形式のファイルです。音声ファイルの含まれたフォルダをドロップしてください"
+      );
     },
   }));
   return (
@@ -87,7 +93,7 @@ const App = () => {
           <Route path="/works/import" element={<ImportWork />} />
           <Route path="/csvs/:csvId" element={<TimeSheetDetail />} />
           <Route path="/csvs" element={<TimeSheets />} />
-          <Route path="/" element={<Home/>} />
+          <Route path="/" element={<Home />} />
           <Route path="*" element={<div>not found</div>} />
         </Routes>
       </div>

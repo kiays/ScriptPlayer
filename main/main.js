@@ -10,21 +10,20 @@ const fs = require("fs/promises");
 let mainWindow;
 let splashScreen;
 
-function createSplash () {
+function createSplash() {
   splashScreen = new BrowserWindow({
     show: false,
     frame: false,
     width: 600,
     height: 322,
-  })
+  });
 
-  splashScreen.loadFile('dist/splash.html')
+  splashScreen.loadFile("dist/splash.html");
 
-  splashScreen.once('ready-to-show', () => {
-    splashScreen.show()
-  })
+  splashScreen.once("ready-to-show", () => {
+    splashScreen.show();
+  });
 }
-
 
 const createWindow = () => {
   // Create the browser window.
@@ -60,14 +59,13 @@ app.whenReady().then(() => {
   //   .catch((err) => console.log("An error occurred: ", err));
   createSplash();
   ipcMain.handle("main-window-ready", () => {
-    if(splashScreen) {
-    splashScreen.destroy();
-    splashScreen = null;
-  }
+    if (splashScreen) {
+      splashScreen.destroy();
+      splashScreen = null;
+    }
     mainWindow.show();
-  })
+  });
   createWindow();
-
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();

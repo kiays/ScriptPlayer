@@ -125,7 +125,7 @@ export default function Layout({ children }: LayoutProps) {
             <MenuIcon />
           </IconButton>
           <IconButton onClick={() => history.back()}>
-            <BackIcon color="inherit"/>
+            <BackIcon color="inherit" />
           </IconButton>
 
           <Typography variant="h6" noWrap component="div">

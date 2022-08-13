@@ -70,7 +70,7 @@ const TrackDetailPage = () => {
     <Box>
       <h1>{track.name}</h1>
       <Button onClick={save}>save</Button>
-      <Paper sx={{ width: "75%", minHeight: "5rem"}} ref={target}>
+      <Paper sx={{ width: "75%", minHeight: "5rem" }} ref={target}>
         <div>Drop CSV file here</div>
       </Paper>
       <Table>
