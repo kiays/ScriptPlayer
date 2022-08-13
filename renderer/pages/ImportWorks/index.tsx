@@ -14,6 +14,8 @@ import { createTrack } from "../../utils";
 import { useNavigate } from "react-router";
 import { dirname } from "path";
 import NoImage from "../../assets/no_image.png";
+import DropArea from "./DropArea";
+
 const ImportWork = () => {
   const droppedFile = useRecoilValue(droppedFileState);
   const droppedFileInfo = useRecoilState(droppedFilePathState)[0];
@@ -67,7 +69,7 @@ const ImportWork = () => {
     setThumbnail(null);
     navigate(`/works/${name}`);
   };
-  if (!droppedFile) return <div>drop here</div>;
+  if (!droppedFile) return <DropArea />;
   return (
     <div>
       <div>

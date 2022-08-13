@@ -1,10 +1,10 @@
 import React, { Suspense } from "react";
 import { render } from "react-dom";
-import { RecoilRoot, useRecoilState, useRecoilValue } from "recoil";
+import { RecoilRoot, useRecoilValue } from "recoil";
 
-import { HashRouter, Route, Routes, useNavigate } from "react-router-dom";
-import { DndProvider, useDrop } from "react-dnd";
-import { NativeTypes, HTML5Backend } from "react-dnd-html5-backend";
+import { HashRouter, Route, Routes } from "react-router-dom";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import {
   ThemeProvider,
   createTheme,
@@ -16,7 +16,6 @@ import ImportWork from "./pages/ImportWorks/index";
 import Works from "./pages/Works";
 import "@mui/material/styles";
 import Layout from "./layout";
-import { droppedFilePathState } from "./states/droppedFile";
 import { loadingState } from "./states/loading";
 import WorkDetail from "./pages/WorkDetail";
 import Playlists from "./pages/Playlists";
@@ -41,47 +40,14 @@ const Loading = ({ loading }: { loading: boolean }) =>
     </Backdrop>
   ) : null;
 
-type Item = {
-  files: Array<File>;
-};
-
 const App = () => {
-  const [_path, setDroppedFilePath] = useRecoilState(droppedFilePathState);
   const loading = useRecoilValue(loadingState);
-  const navigate = useNavigate();
-  const [_, dropTarget] = useDrop(() => ({
-    accept: [NativeTypes.FILE],
-    async drop(item: Item) {
-      if (item.files.length != 1) return;
-      const file = item.files[0];
-      console.log(item);
-      if (file.type == "application/zip") {
-        alert(
-          "zipファイルはインポートできません。解凍したフォルダをドロップしてください。"
-        );
-        return;
-      }
-      if (file.type == "application/x-rar") {
-        alert(
-          "rarファイルはインポートできません。解凍したフォルダをドロップしてください。"
-        );
-        return;
-      }
-      if (file.type == "") {
-        setDroppedFilePath(file);
-        navigate("/works/import");
-        return;
-      }
-      alert(
-        "サポートされていない形式のファイルです。音声ファイルの含まれたフォルダをドロップしてください"
-      );
-    },
-  }));
+
   return (
     <>
       <Loading loading={loading} />
 
-      <div ref={dropTarget} style={{ width: "100%", height: "100%" }}>
+      <div style={{ width: "100%", height: "100%" }}>
         <Routes>
           <Route path="/playlists" element={<Playlists />} />
           <Route path="/playlists/new" element={<PlaylistNew />} />
@@ -118,5 +84,4 @@ render(
   </RecoilRoot>,
   document.getElementById("root")
 );
-console.log("ready");
 ipcRenderer.invoke("main-window-ready");

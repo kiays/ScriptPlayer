@@ -23,6 +23,7 @@ import {
   Audiotrack as AudiotrackIcon,
   Description as CSVIcon,
   ArrowBack as BackIcon,
+  Download as ImportIcon,
 } from "@mui/icons-material";
 
 const drawerWidth = 240;
@@ -167,6 +168,15 @@ export default function Layout({ children }: LayoutProps) {
               <CSVIcon />
             </ListItemIcon>
             <ListItemText primary={"CSVs"} />
+          </ListItem>
+          <ListItem
+            button
+            key={"Import"}
+            onClick={() => navigate("/works/import")}>
+            <ListItemIcon>
+              <ImportIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Import"} />
           </ListItem>
         </List>
         <Divider />
