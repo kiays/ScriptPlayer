@@ -13,14 +13,14 @@ import { tracksState } from "../../states/tracks";
 import { createTrack } from "../../utils";
 import { useNavigate } from "react-router";
 import { dirname } from "path";
-
+import NoImage from "../../assets/no_image.png";
 const ImportWork = () => {
   const droppedFile = useRecoilValue(droppedFileState);
   const droppedFileInfo = useRecoilState(droppedFilePathState)[0];
   const [works, setWorks] = useRecoilState(worksState);
   const [tracks, setTracks] = useRecoilState(tracksState);
   const [checked, setChecked] = useState({});
-  const [thumbnailPath, setThumbnail] = useState(null);
+  const [thumbnailPath, setThumbnail] = useState(NoImage);
   const navigate = useNavigate();
 
   const doImport = async () => {
