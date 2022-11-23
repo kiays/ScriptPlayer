@@ -57,7 +57,7 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.4.3",
-    "recoil": "^0.7.5"
+    "recoil": "^0.7.6"
   },
   "config": {
     "forge": {
