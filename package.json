@@ -23,7 +23,7 @@
   "devDependencies": {
     "@electron-forge/cli": "^6.0.5",
     "@electron-forge/maker-zip": "^6.0.5",
-    "@playwright/test": "^1.30.0",
+    "@playwright/test": "^1.31.0",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",
     "cross-env": "^7.0.3",
