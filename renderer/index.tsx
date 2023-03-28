@@ -1,10 +1,8 @@
 import React, { Suspense } from "react";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { RecoilRoot, useRecoilValue } from "recoil";
 
 import { HashRouter, Route, Routes } from "react-router-dom";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import {
   ThemeProvider,
   createTheme,
@@ -26,7 +24,7 @@ import TimeSheetDetail from "./pages/TimeSheetDetail";
 import TrackList from "./pages/Tracks";
 import TrackDetail from "./pages/TrackDetail";
 import Player from "./components/Player";
-import { ipcRenderer } from "electron/renderer";
+import { ipcRenderer } from "electron";
 import Home from "./pages/Home/Index";
 
 const theme = createTheme();
@@ -67,21 +65,19 @@ const App = () => {
   );
 };
 
-render(
+const root = createRoot(document.getElementById("root"));
+root.render(
   <RecoilRoot>
-    <DndProvider backend={HTML5Backend}>
-      <ThemeProvider theme={theme}>
-        <HashRouter>
-          <Suspense fallback={<Loading loading={true} />}>
-            <Layout>
-              <App />
-            </Layout>
-            <Player />
-          </Suspense>
-        </HashRouter>
-      </ThemeProvider>
-    </DndProvider>
-  </RecoilRoot>,
-  document.getElementById("root")
+    <ThemeProvider theme={theme}>
+      <HashRouter>
+        <Suspense fallback={<Loading loading={true} />}>
+          <Layout>
+            <App />
+          </Layout>
+          <Player />
+        </Suspense>
+      </HashRouter>
+    </ThemeProvider>
+  </RecoilRoot>
 );
 ipcRenderer.invoke("main-window-ready");

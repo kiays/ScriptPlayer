@@ -9,8 +9,6 @@ import {
   TableRow,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useDrop } from "react-dnd";
-import { NativeTypes } from "react-dnd-html5-backend";
 import { useParams } from "react-router";
 import { useRecoilState } from "recoil";
 import { trackById } from "../../states/tracks";
@@ -18,10 +16,6 @@ import { getFileHash, readCsvFile } from "../../utils";
 import update from "immutability-helper";
 import { allTimeSheets } from "../../states/timesheets";
 import SheetRow from "../../components/TimeSheetTableRow";
-
-type Item = {
-  files: Array<File>;
-};
 
 const createTimeSheet = async (file: File): Promise<TimeSheet> => {
   const [content, hash] = await Promise.all([
@@ -47,20 +41,22 @@ const TrackDetailPage = () => {
     setLoaded(true);
   }, [track, sheetIds, setSheetIds, loaded]);
   const [sheetDict, setSheetDict] = useRecoilState(allTimeSheets);
-  const [_, target] = useDrop(
-    () => ({
-      accept: [NativeTypes.FILE],
-      drop: async (item: Item) => {
-        const sheets = await Promise.all(item.files.map(createTimeSheet));
-        setSheetDict(
-          sheets.reduce((acc, s) => ({ ...acc, [s.hash]: s }), sheetDict)
-        );
-        setSheetIds([...sheetIds, ...sheets.map((s) => s.hash)]);
-        return;
-      },
-    }),
-    [sheetDict, sheetIds, setSheetDict, setSheetIds]
-  );
+
+  const handleDrop = async (event: React.DragEvent) => {
+    const { items } = event.dataTransfer;
+    const files = Array.from(items)
+      .map((i) => i.getAsFile())
+      .filter((f) => f.type === "text/csv");
+    if (files.length === 0) {
+      alert("No CSV file found");
+      return;
+    }
+    const sheets = await Promise.all(files.map(createTimeSheet));
+    setSheetDict(
+      sheets.reduce((acc, s) => ({ ...acc, [s.hash]: s }), sheetDict)
+    );
+    setSheetIds([...sheetIds, ...sheets.map((s) => s.hash)]);
+  };
   const save = () => {
     saveTrack(update(track, { sheetIds: { $set: sheetIds } }));
   };
@@ -70,7 +66,10 @@ const TrackDetailPage = () => {
     <Box>
       <h1>{track.name}</h1>
       <Button onClick={save}>save</Button>
-      <Paper sx={{ width: "75%", minHeight: "5rem" }} ref={target}>
+      <Paper
+        sx={{ width: "75%", minHeight: "5rem" }}
+        onDrop={handleDrop}
+        onDragOver={(e) => e.preventDefault()}>
         <div>Drop CSV file here</div>
       </Paper>
       <Table>

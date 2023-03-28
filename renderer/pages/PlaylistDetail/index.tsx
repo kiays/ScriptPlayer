@@ -16,35 +16,27 @@ import { useParams, useNavigate } from "react-router";
 import { playlistSelector } from "../../states/playlists";
 import { tracksByPlaylist, tracksState } from "../../states/tracks";
 import { formatTime } from "../../utils";
-import { useDrop } from "react-dnd";
-import { NativeTypes } from "react-dnd-html5-backend";
 import update from "immutability-helper";
 import { readFile } from "../../utils";
 import { playerState } from "../../states/player";
+import FileDropArea from "../../components/FileDropArea";
 
-type Item = {
-  files: Array<File>;
-};
 type CsvFieldProps = {
   track: PlaylistTrack & Track;
   setCsv: (track: PlaylistTrack & Track, file: File) => void;
 };
+
 const CsvField = ({ track, setCsv }: CsvFieldProps) => {
-  const [_collected, target] = useDrop(
-    () => ({
-      accept: [NativeTypes.FILE],
-      drop(item: Item) {
-        if (item.files.length == 1) {
-          setCsv(track, item.files[0]);
-        }
-      },
-    }),
-    [track, setCsv]
-  );
   if (track.csvName) {
     return <div>{track.csvName}</div>;
   }
-  return <div ref={target}>Drop csv ...</div>;
+  return (
+    <FileDropArea
+      onDrop={(files) => setCsv(track, files[0])}
+      fileType="text/csv">
+      Drop CSV file here
+    </FileDropArea>
+  );
 };
 
 const PlaylistDetail = () => {

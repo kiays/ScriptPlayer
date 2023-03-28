@@ -6,6 +6,20 @@ import { tracksState } from "../../states/tracks";
 import update from "immutability-helper";
 import { playlistsState } from "../../states/playlists";
 import TrackRow from "./Track";
+import {
+  DndContext,
+  useSensor,
+  useSensors,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  sortableKeyboardCoordinates,
+  arrayMove,
+} from "@dnd-kit/sortable";
 
 const PlaylistNew = () => {
   const [editing, setEditing] = useState(false);
@@ -20,16 +34,6 @@ const PlaylistNew = () => {
   const removeTrack = (id) => {
     setTracks((t) => t.filter((tr) => tr.id != id));
   };
-  const moveTrack = (dragIndex, hoverIndex) => {
-    setTracks((p) =>
-      update(p, {
-        $splice: [
-          [dragIndex, 1],
-          [hoverIndex, 0, p[dragIndex]],
-        ],
-      })
-    );
-  };
 
   const save = () => {
     const id = String(Date.now());
@@ -42,6 +46,24 @@ const PlaylistNew = () => {
         createdAt: Date.now(),
       },
     });
+  };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      setTracks((items) => {
+        const oldIndex = items.findIndex((t) => t.id == active.id);
+        const newIndex = items.findIndex((t) => t.id == over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
   };
 
   return (
@@ -71,16 +93,22 @@ const PlaylistNew = () => {
         save
       </Button>
       <List>
-        {tracks.map(({ hash, id }, index) => {
-          const track = trackDict[hash];
-          if (!track) return null;
-          return (
-            <TrackRow
-              {...{ track, id, index, removeTrack, moveTrack }}
-              key={id}
-            />
-          );
-        })}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}>
+          <SortableContext
+            items={tracks.map((t) => t.id)}
+            strategy={verticalListSortingStrategy}>
+            {tracks.map(({ hash, id }, index) => {
+              const track = trackDict[hash];
+              if (!track) return null;
+              return (
+                <TrackRow {...{ track, id, index, removeTrack }} key={id} />
+              );
+            })}
+          </SortableContext>
+        </DndContext>
       </List>
     </Box>
   );
