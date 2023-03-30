@@ -39,6 +39,33 @@ const CsvField = ({ track, setCsv }: CsvFieldProps) => {
   );
 };
 
+type TrackRowProps = {
+  track: Track;
+  index: number;
+  navigate: (path: string) => void;
+  play: (track: Track, index: number) => () => void;
+  setCsv: (track: PlaylistTrack & Track, file: File) => void;
+}
+const TrackRow = ({track, index, navigate, play, setCsv}: TrackRowProps) => {
+  return (
+    <TableRow
+      key={track.id}
+      onClick={() => navigate(`/tracks/${track.hash}`)}>
+      <TableCell>
+        <IconButton onClick={play(track, index)}>
+          <PlayIcon />
+        </IconButton>
+      </TableCell>
+      <TableCell>{index + 1}</TableCell>
+      <TableCell>{track.name}</TableCell>
+      <TableCell>{formatTime(track.duration)}</TableCell>
+      <TableCell>
+        <CsvField track={track} setCsv={setCsv} />
+      </TableCell>
+    </TableRow>
+  );
+}
+
 const PlaylistDetail = () => {
   const navigate = useNavigate();
   const { playlistId } = useParams();
@@ -104,25 +131,7 @@ const PlaylistDetail = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tracks.map((track, index) => {
-              return (
-                <TableRow
-                  key={track.id}
-                  onClick={() => navigate(`/tracks/${track.hash}`)}>
-                  <TableCell>
-                    <IconButton onClick={play(track, index)}>
-                      <PlayIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{track.name}</TableCell>
-                  <TableCell>{formatTime(track.duration)}</TableCell>
-                  <TableCell>
-                    <CsvField track={track} setCsv={setCsv} />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            {tracks.map((track, index) => <TrackRow key={`${track.id}-${index}`} {...{track, index, setCsv, play, navigate}} />)}
           </TableBody>
         </Table>
       </TableContainer>
