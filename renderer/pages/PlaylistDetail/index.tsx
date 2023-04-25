@@ -45,12 +45,10 @@ type TrackRowProps = {
   navigate: (path: string) => void;
   play: (track: Track, index: number) => () => void;
   setCsv: (track: PlaylistTrack & Track, file: File) => void;
-}
-const TrackRow = ({track, index, navigate, play, setCsv}: TrackRowProps) => {
+};
+const TrackRow = ({ track, index, navigate, play, setCsv }: TrackRowProps) => {
   return (
-    <TableRow
-      key={track.id}
-      onClick={() => navigate(`/tracks/${track.hash}`)}>
+    <TableRow key={track.id} onClick={() => navigate(`/tracks/${track.hash}`)}>
       <TableCell>
         <IconButton onClick={play(track, index)}>
           <PlayIcon />
@@ -64,7 +62,7 @@ const TrackRow = ({track, index, navigate, play, setCsv}: TrackRowProps) => {
       </TableCell>
     </TableRow>
   );
-}
+};
 
 const PlaylistDetail = () => {
   const navigate = useNavigate();
@@ -131,7 +129,12 @@ const PlaylistDetail = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tracks.map((track, index) => <TrackRow key={`${track.id}-${index}`} {...{track, index, setCsv, play, navigate}} />)}
+            {tracks.map((track, index) => (
+              <TrackRow
+                key={`${track.id}-${index}`}
+                {...{ track, index, setCsv, play, navigate }}
+              />
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

@@ -107,7 +107,7 @@ const Player = () => {
       }
     }
     if (!lastVal) return;
-    if(!device) return;
+    if (!device) return;
     if (lastVal.length === 5) {
       const [_time, leftDir, leftPower, rightDir, rightPower] = lastVal;
       let leftScaled = Math.floor(leftPower * ufoScaleFactor);
@@ -225,7 +225,7 @@ const Player = () => {
             />
             UFO Scale Factor: {ufoScaleFactor}
           </div>
-          <TimeSheetPreview content={values} onMouseDown={onTimeSheetClicked}/>
+          <TimeSheetPreview content={values} onMouseDown={onTimeSheetClicked} />
         </div>
       )}
       <audio
