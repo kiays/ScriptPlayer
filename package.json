@@ -57,7 +57,7 @@
     "@types/react-dom": "^18.2.0",
     "date-fns": "^2.29.3",
     "electron-squirrel-startup": "^1.0.0",
-    "file-type": "^18.2.1",
+    "file-type": "^18.3.0",
     "immutability-helper": "^3.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
