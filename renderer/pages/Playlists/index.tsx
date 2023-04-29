@@ -11,7 +11,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import React from "react";
+import React, {useState} from "react";
 import { useNavigate } from "react-router";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { playlistsState } from "../../states/playlists";
@@ -28,8 +28,8 @@ const Playlists = () => {
   const playlists = useRecoilValue(playlistsState);
   const trackDict = useRecoilValue(tracksState);
   const setPlayLists = useSetRecoilState(playlistsState);
-  const popupState = usePopupState({ variant: "popover", popupId: "demoMenu" });
-  const [selectedId, setSelectedId] = React.useState<string | null>(null);
+  const popupState = usePopupState({ variant: "popover", popupId: "playlist" });
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const createPlaylist = () => {
     navigate("/playlists/new");
