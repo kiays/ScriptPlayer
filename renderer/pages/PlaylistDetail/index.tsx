@@ -8,9 +8,11 @@ import {
   TableBody,
   Paper,
   IconButton,
+  Menu,
+  MenuItem
 } from "@mui/material";
 import { PlayArrow as PlayIcon } from "@mui/icons-material";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams, useNavigate } from "react-router";
 import { playlistSelector } from "../../states/playlists";
@@ -20,6 +22,7 @@ import update from "immutability-helper";
 import { readFile } from "../../utils";
 import { playerState } from "../../states/player";
 import FileDropArea from "../../components/FileDropArea";
+import { usePopupState, bindContextMenu, bindMenu } from "material-ui-popup-state/hooks";
 
 type CsvFieldProps = {
   track: PlaylistTrack & Track;
@@ -45,12 +48,14 @@ type TrackRowProps = {
   navigate: (path: string) => void;
   play: (track: Track, index: number) => () => void;
   setCsv: (track: PlaylistTrack & Track, file: File) => void;
-}
-const TrackRow = ({track, index, navigate, play, setCsv}: TrackRowProps) => {
+  onContextMenu: (e: React.SyntheticEvent) => void;
+};
+const TrackRow = ({ track, index, navigate, play, setCsv, onContextMenu }: TrackRowProps) => {
   return (
     <TableRow
-      key={track.id}
-      onClick={() => navigate(`/tracks/${track.hash}`)}>
+    key={track.id}
+    onClick={() => navigate(`/tracks/${track.hash}`)}
+    onContextMenu={onContextMenu}>
       <TableCell>
         <IconButton onClick={play(track, index)}>
           <PlayIcon />
@@ -64,7 +69,7 @@ const TrackRow = ({track, index, navigate, play, setCsv}: TrackRowProps) => {
       </TableCell>
     </TableRow>
   );
-}
+};
 
 const PlaylistDetail = () => {
   const navigate = useNavigate();
@@ -73,6 +78,8 @@ const PlaylistDetail = () => {
   const tracks = useRecoilValue(tracksByPlaylist(playlistId));
   const trackDict = useRecoilValue(tracksState);
   const [_player, setPlayerState] = useRecoilState(playerState);
+  const popupState = usePopupState({ variant: "popover", popupId: "playlistDetail" });
+  const [selectedId, setSelectedId] = useState<number| null>(null);
 
   const setCsv = useCallback(
     async (track, csv) => {
@@ -117,6 +124,26 @@ const PlaylistDetail = () => {
   };
   if (!playlist) return <div>loading</div>;
 
+  const handleContextMenu = (id: number) => {
+    const { onContextMenu } = bindContextMenu(popupState);
+    return (e) => {
+      setSelectedId(id);
+      onContextMenu(e);
+    };
+  };
+  const deleteTrack = () => {
+    const trackIndex = playlist.tracks.findIndex(e => e.id == selectedId);
+    setPlaylist(
+      update(playlist, {
+        tracks: {
+          $unset: [trackIndex]
+        },
+      })
+    );
+    popupState.close()
+  }
+
+
   return (
     <Box>
       <h1>Playlist: {playlist.name}</h1>
@@ -131,7 +158,19 @@ const PlaylistDetail = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tracks.map((track, index) => <TrackRow key={`${track.id}-${index}`} {...{track, index, setCsv, play, navigate}} />)}
+            {tracks.map((track, index) => (
+              <TrackRow
+                key={`${track.id}-${index}`}
+                onContextMenu={handleContextMenu(track.id)}
+                {...{ track, index, setCsv, play, navigate }}
+              />
+            ))}
+              <Menu
+              {...bindMenu(popupState)}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+              transformOrigin={{ vertical: "top", horizontal: "left" }}>
+              <MenuItem onClick={deleteTrack}>Delete {selectedId}</MenuItem>
+            </Menu>
           </TableBody>
         </Table>
       </TableContainer>

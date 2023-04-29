@@ -8,24 +8,51 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Menu,
+  MenuItem,
 } from "@mui/material";
-import React from "react";
+import React, {useState} from "react";
 import { useNavigate } from "react-router";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { playlistsState } from "../../states/playlists";
 import { tracksState } from "../../states/tracks";
 import { formatDate, formatTime } from "../../utils";
+import {
+  usePopupState,
+  bindContextMenu,
+  bindMenu,
+} from "material-ui-popup-state/hooks";
 
 const Playlists = () => {
   const navigate = useNavigate();
   const playlists = useRecoilValue(playlistsState);
   const trackDict = useRecoilValue(tracksState);
+  const setPlayLists = useSetRecoilState(playlistsState);
+  const popupState = usePopupState({ variant: "popover", popupId: "playlist" });
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const createPlaylist = () => {
     navigate("/playlists/new");
   };
   const selectPlaylist = (id) => {
     navigate(`/playlists/${id}`);
+  };
+
+  const handleContextMenu = (id: string) => {
+    const { onContextMenu } = bindContextMenu(popupState);
+    return (e) => {
+      setSelectedId(id);
+      onContextMenu(e);
+    };
+  };
+
+  const deletePlaylist = () => {
+    setPlayLists((playlists) => {
+      const newPlaylists = { ...playlists };
+      delete newPlaylists[selectedId];
+      return newPlaylists;
+    });
+    popupState.close();
   };
 
   return (
@@ -52,7 +79,10 @@ const Playlists = () => {
                 .filter(Boolean)
                 .reduce((acc, t) => acc + t.duration, 0);
               return (
-                <TableRow key={id} onClick={() => selectPlaylist(id)}>
+                <TableRow
+                  key={id}
+                  onClick={() => selectPlaylist(id)}
+                  onContextMenu={handleContextMenu(id)}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{playlist.name}</TableCell>
                   <TableCell>{playlist.tracks.length}</TableCell>
@@ -61,6 +91,12 @@ const Playlists = () => {
                 </TableRow>
               );
             })}
+            <Menu
+              {...bindMenu(popupState)}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+              transformOrigin={{ vertical: "top", horizontal: "left" }}>
+              <MenuItem onClick={deletePlaylist}>Delete {selectedId}</MenuItem>
+            </Menu>
           </TableBody>
         </Table>
       </TableContainer>

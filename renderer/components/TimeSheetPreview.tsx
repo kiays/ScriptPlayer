@@ -19,13 +19,13 @@ const TimeSheetPreview = ({ content, onMouseDown }: TimeSheetPreviewProps) => {
     const x = clientX - left;
 
     const time = (x / width) * lastTimeStamp;
-    setMousePos({ x: clientX, y: clientY, time })
-  }
+    setMousePos({ x: clientX, y: clientY, time });
+  };
   const handleMouseDown = () => {
     if (onMouseDown) {
       onMouseDown(mousePos.time);
     }
-  }
+  };
   useEffect(() => {
     const cvs: HTMLCanvasElement | null = ref.current;
     if (!cvs || content.length == 0) return;
@@ -53,16 +53,19 @@ const TimeSheetPreview = ({ content, onMouseDown }: TimeSheetPreviewProps) => {
     left: mousePos.x,
     transform: "translate(-50%, 0)",
     display: showTimeStamp ? "block" : "none",
-  }
-  return <>
-    <canvas
-      ref={ref}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setShowTimeStamp(true)}
-      onMouseLeave={() => setShowTimeStamp(false)} />
-    <span style={style}>{formatTime(mousePos.time)}</span>
-  </>;
+  };
+  return (
+    <>
+      <canvas
+        ref={ref}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setShowTimeStamp(true)}
+        onMouseLeave={() => setShowTimeStamp(false)}
+      />
+      <span style={style}>{formatTime(mousePos.time)}</span>
+    </>
+  );
 };
 
 export default TimeSheetPreview;
