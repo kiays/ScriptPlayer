@@ -30,8 +30,13 @@ const ComponentCatalog = () => {
     { x: 4, y: 5 },
   ];
   const schema = {
-    x: { name: "X", order: 1, sortable: true, },
-    y: { name: "Y", order: 10, render: (val) => <b>test: {val.y}</b>, sortable: true },
+    x: { name: "X", order: 1, sortable: true },
+    y: {
+      name: "Y",
+      order: 10,
+      render: (val) => <b>test: {val.y}</b>,
+      sortable: true,
+    },
     $onContextMenu: {
       delete: (id) => console.log("deleted: ", id),
       copy: (id) => console.log("copy: ", id),

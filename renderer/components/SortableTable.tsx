@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import {
   Paper,
   TableContainer,
@@ -34,21 +35,31 @@ type EventHandlerSpec = {
 
 type SortableTableProps<T> =
   | {
-    data: { [id: string]: T };
-    schema: { [Key in keyof T]: TableSchema<T> } & { [id: string]: TableSchema<T> } & EventHandlerSpec;
-    sortable?: boolean;
-  }
+      data: { [id: string]: T };
+      schema: { [Key in keyof T]: TableSchema<T> } & {
+        [id: string]: TableSchema<T>;
+      } & EventHandlerSpec;
+      sortable?: boolean;
+    }
   | {
-    data: T[];
-    schema: { [Key in keyof T]: TableSchema<T> } & { [id: string]: TableSchema<T> } & EventHandlerSpec;
-    sortable?: boolean;
-  };
+      data: T[];
+      schema: { [Key in keyof T]: TableSchema<T> } & {
+        [id: string]: TableSchema<T>;
+      } & EventHandlerSpec;
+      sortable?: boolean;
+    };
 
-const SortableTable = <T,>({ data, schema, sortable = false }: SortableTableProps<T>) => {
+const SortableTable = <T,>({
+  data,
+  schema,
+  sortable = false,
+}: SortableTableProps<T>) => {
+  const firstItem = Object.values(data)[0] || {};
   const schemaKeys = Object.keys(schema)
     .sort((a, b) => schema[a].order || 0 - schema[b].order || 0)
     .filter((key) => !schema[key].hide)
-    .filter((key) => key !== "$onContextMenu" && key !== "$onRowClicked");
+    .filter((key) => key !== "$onContextMenu" && key !== "$onRowClicked")
+    .filter((key) => firstItem.hasOwnProperty(key) || schema[key].render);
 
   const popupState = usePopupState({ variant: "popover", popupId: "playlist" });
   const [selectedId, setId] = useState<string | null>(null);
@@ -74,12 +85,13 @@ const SortableTable = <T,>({ data, schema, sortable = false }: SortableTableProp
     } else {
       setOrderBy(key);
     }
-  }
-  const sortedDataIdList: string[] = Object
-    .keys(data)
-    .sort((k1, k2) => {
-      return (data[k1][orderBy] > data[k2][orderBy] ? 1 : -1) * (order === "asc" ? -1 : 1)
-    })
+  };
+  const sortedDataIdList: string[] = Object.keys(data).sort((k1, k2) => {
+    return (
+      (data[k1][orderBy] > data[k2][orderBy] ? 1 : -1) *
+      (order === "asc" ? -1 : 1)
+    );
+  });
 
   return (
     <TableContainer component={Paper}>
@@ -88,15 +100,16 @@ const SortableTable = <T,>({ data, schema, sortable = false }: SortableTableProp
           <TableRow>
             {schemaKeys.map((key) => (
               <TableCell key={`table-head-${key}`}>
-                {sortable && schema[key].sortable
-                  ? <TableSortLabel
+                {sortable && schema[key].sortable ? (
+                  <TableSortLabel
                     active={orderBy === key}
-                    direction={orderBy === key ? order : 'asc'}
-                    onClick={createSortHandler(key)}
-                  >
-                    {schema[key].name}
+                    direction={orderBy === key ? order : "asc"}
+                    onClick={createSortHandler(key)}>
+                    {schema[key].name || key}
                   </TableSortLabel>
-                  : schema[key].name}
+                ) : (
+                  schema[key].name || key
+                )}
               </TableCell>
             ))}
           </TableRow>
@@ -104,31 +117,38 @@ const SortableTable = <T,>({ data, schema, sortable = false }: SortableTableProp
         <TableBody>
           {sortedDataIdList.map((id) => (
             <TableRow
+              hover
               key={`table-row-${id}`}
               onClick={() => onRowClicked(id)}
               onContextMenu={handleContextMenu(id)}>
               {schemaKeys.map((k) => (
                 <TableCell key={`table-cell-${k}`}>
-                  {schema[k].render ? schema[k].render(data[id]) : data[id][k]}
+                  {schema[k].render
+                    ? schema[k].render(data[id])
+                    : data[id].hasOwnProperty(k)
+                    ? data[id][k]
+                    : ""}
                 </TableCell>
               ))}
             </TableRow>
           ))}
-          <Menu
-            {...bindMenu(popupState)}
-            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-            transformOrigin={{ vertical: "top", horizontal: "left" }}>
-            {Object.keys(contextMenuItems).map((name) => (
-              <MenuItem
-                key={`context-menu-item-${name}`}
-                onClick={() => {
-                  contextMenuItems[name](selectedId);
-                  popupState.close();
-                }}>
-                {name}
-              </MenuItem>
-            ))}
-          </Menu>
+          {schema.$onContextMenu && (
+            <Menu
+              {...bindMenu(popupState)}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+              transformOrigin={{ vertical: "top", horizontal: "left" }}>
+              {Object.keys(contextMenuItems).map((name) => (
+                <MenuItem
+                  key={`context-menu-item-${name}`}
+                  onClick={() => {
+                    contextMenuItems[name](selectedId);
+                    popupState.close();
+                  }}>
+                  {name}
+                </MenuItem>
+              ))}
+            </Menu>
+          )}
         </TableBody>
       </Table>
     </TableContainer>
