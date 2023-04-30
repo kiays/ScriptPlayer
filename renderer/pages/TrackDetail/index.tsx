@@ -35,6 +35,8 @@ const TrackDetailPage = () => {
   const [track, saveTrack] = useRecoilState(trackById(trackId));
   const [sheetIds, setSheetIds] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [dirty, setDirty] = useState(false);
+
   useEffect(() => {
     if (!track || !track.sheetIds || loaded) return;
     setSheetIds([...track.sheetIds]);
@@ -51,7 +53,12 @@ const TrackDetailPage = () => {
       alert("No CSV file found");
       return;
     }
-    const sheets = await Promise.all(files.map(createTimeSheet));
+    const newSheets = await Promise.all(files.map(createTimeSheet));
+
+    // delete duplicates
+    const sheets = newSheets.filter(s => (sheetIds.findIndex((id) => id === s.hash) === -1));
+
+    setDirty(true);
     setSheetDict(
       sheets.reduce((acc, s) => ({ ...acc, [s.hash]: s }), sheetDict)
     );
@@ -59,13 +66,20 @@ const TrackDetailPage = () => {
   };
   const save = () => {
     saveTrack(update(track, { sheetIds: { $set: sheetIds } }));
+    setDirty(false);
+  };
+
+  const deleteSheet = (id: string) => () => {
+    const ids = sheetIds.filter(e => e != id);
+    setSheetIds(ids);
+    setDirty(true);
   };
 
   if (!track) return null;
   return (
     <Box>
       <h1>{track.name}</h1>
-      <Button onClick={save}>save</Button>
+      <Button onClick={save} disabled={!dirty}>save</Button>
       <Paper
         sx={{ width: "75%", minHeight: "5rem" }}
         onDrop={handleDrop}
@@ -80,7 +94,11 @@ const TrackDetailPage = () => {
         </TableHead>
         <TableBody>
           {sheetIds.map((id) => (
-            <SheetRow key={`sheet-${id}`} sheet={sheetDict[id]} />
+            <SheetRow
+              key={`sheet-${id}`}
+              sheet={sheetDict[id]}
+              onDelete={deleteSheet(id)}
+              allowReload />
           ))}
         </TableBody>
       </Table>
