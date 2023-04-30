@@ -1,37 +1,35 @@
 import React from "react";
-import {
-  Avatar,
-  Box,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-} from "@mui/material";
+import { Avatar, Box } from "@mui/material";
 import { useRecoilState } from "recoil";
 import { worksState } from "../../states/works";
 import { useNavigate } from "react-router";
+import SortableTable from "../../components/SortableTable";
 
 const Works = () => {
   const works = useRecoilState(worksState)[0];
   const navigate = useNavigate();
+  const schema = {
+    trackIds: { hide: true },
+    thumbnailPath: {
+      order: 0,
+      name: "icon",
+      render: (work) => <Avatar src={work.thumbnailPath} variant="square" />,
+    },
+    name: { order: 1, sortable: true },
+    numTracks: {
+      order: 2,
+      sortable: true,
+      comparator: (a, b) => a.trackIds.length - b.trackIds.length,
+      name: "# of tracks",
+      render: (work) => `${work.trackIds.length} tracks`,
+    },
+    addedAt: { hide: true },
+    $onRowClicked: (key) => navigate(`/works/${key}`),
+  };
   return (
     <Box>
       <h1>Works</h1>
-      <Table>
-        <TableHead></TableHead>
-        <TableBody>
-          {Object.keys(works).map((key) => (
-            <TableRow key={key} onClick={() => navigate(`/works/${key}`)}>
-              <TableCell>
-                <Avatar src={works[key].thumbnailPath} variant="square" />
-              </TableCell>
-              <TableCell>{works[key].name}</TableCell>
-              <TableCell>{`${works[key].trackIds.length} tracks`}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <SortableTable<Work> data={works} schema={schema} sortable />
     </Box>
   );
 };

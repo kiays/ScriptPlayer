@@ -24,6 +24,7 @@ type TableSchema<T> = {
   hide?: boolean;
   render?: (value: T) => React.ReactNode;
   sortable?: boolean;
+  comparator?: (a: T, b: T) => number;
 };
 
 type EventHandlerSpec = {
@@ -89,11 +90,11 @@ const SortableTable = <T,>({
       setOrderBy(key);
     }
   };
+  const comparator =
+    schema[orderBy].comparator ||
+    ((a: T, b: T) => (a[orderBy as keyof T] > b[orderBy as keyof T] ? 1 : -1));
   const sortedDataIdList: string[] = Object.keys(data).sort((k1, k2) => {
-    return (
-      (data[k1][orderBy] > data[k2][orderBy] ? 1 : -1) *
-      (order === "asc" ? -1 : 1)
-    );
+    return comparator(data[k1], data[k2]) * (order === "asc" ? -1 : 1);
   });
 
   return (
