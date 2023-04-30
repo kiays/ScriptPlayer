@@ -209,10 +209,10 @@ const Player = () => {
               disconnect
             </button>
             <button
-              onClick={() => device.writeValue(Buffer.from([5, 100, 100]))}>
+              onClick={() => device?.writeValue(Buffer.from([5, 100, 100]))}>
               test device
             </button>
-            <button onClick={() => device.writeValue(Buffer.from([5, 0, 0]))}>
+            <button onClick={() => device?.writeValue(Buffer.from([5, 0, 0]))}>
               stop device
             </button>
             <button onClick={() => setInverted(!inverted)}>左右反転</button>
