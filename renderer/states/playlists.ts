@@ -6,7 +6,6 @@ import update from "immutability-helper";
 const ipcEffect = ({ setSelf, onSet }) => {
   ipcRenderer.invoke("getAllPlaylists").then(setSelf);
   onSet(async (newValue, _prevValue, _isReset) => {
-    console.log("onSet: ", newValue);
     await ipcRenderer.invoke("setAllPlaylists", newValue);
   });
 };

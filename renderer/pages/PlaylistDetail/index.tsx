@@ -28,6 +28,7 @@ import {
   bindMenu,
 } from "material-ui-popup-state/hooks";
 import EditableHeader from "../../components/EditableHeader";
+import DraggableTable from "../../components/DraggableTable";
 
 type CsvFieldProps = {
   track: PlaylistTrack & Track;
@@ -160,11 +161,55 @@ const PlaylistDetail = () => {
 
   const changePlaylistName = (name: string) => {
     setPlaylist({ ...playlist, name });
-  }
+  };
+  const setTrackOrder = (tracks: PlaylistTrack & Track[]) => {
+    setPlaylist(update(playlist, { tracks: { $set: tracks } }));
+  };
 
+  const schema = {
+    id: { hide: true },
+    play: {
+      order: 0,
+      render: (track: Track, index) => (
+        <IconButton
+          onClick={(e) => {
+            e.stopPropagation();
+            play(track, index)();
+          }}>
+          <PlayIcon />{" "}
+        </IconButton>
+      ),
+    },
+    name: { order: 1 },
+    duration: { order: 2, render: (track) => formatTime(track.duration) },
+    csv: {
+      order: 3,
+      render: (track: PlaylistTrack & Track) => (
+        <CsvField track={track} setCsv={setCsv} />
+      ),
+    },
+    hash: { hide: true },
+    sheetId: { hide: true },
+    csvUrl: { hide: true },
+    csvName: { hide: true },
+    csvContent: { hide: true },
+    $onContextMenu: {
+      プレイリストからこのトラックを削除する: deleteTrack,
+    },
+    $onRowClicked: (id) => {
+      const track = tracks.find((t) => t.id == id);
+      navigate(`/tracks/${track.hash}`);
+    },
+  };
   return (
     <Box>
-      <h1>Playlist: <EditableHeader text={playlist.name} onChange={changePlaylistName} style={{ display: "inline" }} /></h1>
+      <span style={{ fontSize: 30 }}>Playlist:</span>
+      <EditableHeader
+        text={playlist.name}
+        onChange={changePlaylistName}
+        style={{ display: "inline" }}
+      />
+      <DraggableTable items={tracks} onSort={setTrackOrder} schema={schema} />
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -187,7 +232,9 @@ const PlaylistDetail = () => {
               {...bindMenu(popupState)}
               anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
               transformOrigin={{ vertical: "top", horizontal: "left" }}>
-              <MenuItem onClick={deleteTrack}>プレイリストからこのトラックを削除する</MenuItem>
+              <MenuItem onClick={deleteTrack}>
+                プレイリストからこのトラックを削除する
+              </MenuItem>
             </Menu>
           </TableBody>
         </Table>

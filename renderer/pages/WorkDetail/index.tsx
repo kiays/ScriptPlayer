@@ -13,7 +13,11 @@ import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { tracksState } from "../../states/tracks";
-import { currentWorkIdState, currentWorkState, worksState } from "../../states/works";
+import {
+  currentWorkIdState,
+  currentWorkState,
+  worksState,
+} from "../../states/works";
 import { formatTime } from "../../utils";
 import { playerState } from "../../states/player";
 import EditableHeader from "../../components/EditableHeader";
@@ -44,8 +48,10 @@ const WorkDetail = () => {
   };
 
   const changeTitle = (title: string) => {
-    setAllWorks(update(allWorks, { [currentWorkId]: { name: { $set: title } } }));
-  }
+    setAllWorks(
+      update(allWorks, { [currentWorkId]: { name: { $set: title } } })
+    );
+  };
 
   if (!work || !tracks) return <div>loading...</div>;
   const { thumbnailPath, trackIds } = work;

@@ -56,7 +56,9 @@ const TrackDetailPage = () => {
     const newSheets = await Promise.all(files.map(createTimeSheet));
 
     // delete duplicates
-    const sheets = newSheets.filter(s => (sheetIds.findIndex((id) => id === s.hash) === -1));
+    const sheets = newSheets.filter(
+      (s) => sheetIds.findIndex((id) => id === s.hash) === -1
+    );
 
     setDirty(true);
     setSheetDict(
@@ -70,7 +72,7 @@ const TrackDetailPage = () => {
   };
 
   const deleteSheet = (id: string) => () => {
-    const ids = sheetIds.filter(e => e != id);
+    const ids = sheetIds.filter((e) => e != id);
     setSheetIds(ids);
     setDirty(true);
   };
@@ -79,7 +81,9 @@ const TrackDetailPage = () => {
   return (
     <Box>
       <h1>{track.name}</h1>
-      <Button onClick={save} disabled={!dirty}>save</Button>
+      <Button onClick={save} disabled={!dirty}>
+        save
+      </Button>
       <Paper
         sx={{ width: "75%", minHeight: "5rem" }}
         onDrop={handleDrop}
@@ -98,7 +102,8 @@ const TrackDetailPage = () => {
               key={`sheet-${id}`}
               sheet={sheetDict[id]}
               onDelete={deleteSheet(id)}
-              allowReload />
+              allowReload
+            />
           ))}
         </TableBody>
       </Table>

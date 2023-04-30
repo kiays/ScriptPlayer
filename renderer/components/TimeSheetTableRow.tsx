@@ -2,19 +2,26 @@ import { TableCell, TableRow, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TimeSheetPreview from "./TimeSheetPreview";
 import { formatTime, readCsvFile } from "../utils";
-import { Delete as DeleteIcon, Cached as ReloadIcon } from "@mui/icons-material";
+import {
+  Delete as DeleteIcon,
+  Cached as ReloadIcon,
+} from "@mui/icons-material";
 
 type TimeSheetRowProps = {
   sheet?: TimeSheetMeta;
   onDelete?: () => void;
   allowReload?: boolean;
 };
-const TimeSheetTableRow = ({ sheet, onDelete, allowReload }: TimeSheetRowProps) => {
+const TimeSheetTableRow = ({
+  sheet,
+  onDelete,
+  allowReload,
+}: TimeSheetRowProps) => {
   const [content, setContent] = useState(null);
   const reload = () => {
     if (!sheet) return;
     readCsvFile(sheet.path).then(setContent);
-  }
+  };
   useEffect(() => {
     if (!sheet) return;
     readCsvFile(sheet.path).then(setContent);
@@ -28,10 +35,20 @@ const TimeSheetTableRow = ({ sheet, onDelete, allowReload }: TimeSheetRowProps) 
       <TableCell>
         <TimeSheetPreview content={content} />
       </TableCell>
-      {onDelete && (<TableCell >
-        <IconButton onClick={onDelete}><DeleteIcon /></IconButton></TableCell>)}
-      {allowReload && (<TableCell >
-        <IconButton onClick={reload}><ReloadIcon /></IconButton></TableCell>)}
+      {onDelete && (
+        <TableCell>
+          <IconButton onClick={onDelete}>
+            <DeleteIcon />
+          </IconButton>
+        </TableCell>
+      )}
+      {allowReload && (
+        <TableCell>
+          <IconButton onClick={reload}>
+            <ReloadIcon />
+          </IconButton>
+        </TableCell>
+      )}
     </TableRow>
   );
 };

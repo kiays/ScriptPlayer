@@ -61,7 +61,10 @@ const SortableTable = <T,>({
     .filter((key) => key !== "$onContextMenu" && key !== "$onRowClicked")
     .filter((key) => firstItem.hasOwnProperty(key) || schema[key].render);
 
-  const popupState = usePopupState({ variant: "popover", popupId: "playlist" });
+  const popupState = usePopupState({
+    variant: "popover",
+    popupId: "sortable_table",
+  });
   const [selectedId, setId] = useState<string | null>(null);
   const [order, setOrder] = useState<"asc" | "desc">("desc");
   const [orderBy, setOrderBy] = useState<keyof T | string>(schemaKeys[0]);
