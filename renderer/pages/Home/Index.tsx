@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
+import { IS_DEVELOPMENT } from "../../utils";
 
 const Home = () => {
   return (
@@ -16,6 +17,11 @@ const Home = () => {
         <Link to="/works/import">
           <Button variant="contained">音声作品のインポート</Button>
         </Link>
+        {IS_DEVELOPMENT && (
+          <Link to="/component-catalog">
+            <Button variant="contained">Component Catalog</Button>
+          </Link>
+        )}
       </Stack>
     </div>
   );

@@ -26,6 +26,7 @@ import TrackDetail from "./pages/TrackDetail";
 import Player from "./components/Player";
 import { ipcRenderer } from "electron";
 import Home from "./pages/Home/Index";
+import ComponentCatalog from "./pages/ComponentCatalog";
 
 const theme = createTheme();
 
@@ -53,6 +54,7 @@ const App = () => {
           <Route path="/tracks" element={<TrackList />} />
           <Route path="/tracks/:trackId" element={<TrackDetail />} />
           <Route path="/works" element={<Works />} />
+          <Route path="/component-catalog" element={<ComponentCatalog />} />
           <Route path="/works/:workId" element={<WorkDetail />} />
           <Route path="/works/import" element={<ImportWork />} />
           <Route path="/csvs/:csvId" element={<TimeSheetDetail />} />

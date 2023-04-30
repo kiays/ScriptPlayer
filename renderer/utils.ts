@@ -1,6 +1,8 @@
 import { format, fromUnixTime } from "date-fns";
 import { ipcRenderer } from "electron";
 
+export const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
+
 export const createTrack = (
   file: File | { name: string; path: string }
 ): Promise<TrackFile> =>

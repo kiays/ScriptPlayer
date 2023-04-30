@@ -9,7 +9,7 @@ import {
   Paper,
   IconButton,
   Menu,
-  MenuItem
+  MenuItem,
 } from "@mui/material";
 import { PlayArrow as PlayIcon } from "@mui/icons-material";
 import React, { useCallback, useState } from "react";
@@ -22,7 +22,11 @@ import update from "immutability-helper";
 import { readFile } from "../../utils";
 import { playerState } from "../../states/player";
 import FileDropArea from "../../components/FileDropArea";
-import { usePopupState, bindContextMenu, bindMenu } from "material-ui-popup-state/hooks";
+import {
+  usePopupState,
+  bindContextMenu,
+  bindMenu,
+} from "material-ui-popup-state/hooks";
 
 type CsvFieldProps = {
   track: PlaylistTrack & Track;
@@ -50,12 +54,19 @@ type TrackRowProps = {
   setCsv: (track: PlaylistTrack & Track, file: File) => void;
   onContextMenu: (e: React.SyntheticEvent) => void;
 };
-const TrackRow = ({ track, index, navigate, play, setCsv, onContextMenu }: TrackRowProps) => {
+const TrackRow = ({
+  track,
+  index,
+  navigate,
+  play,
+  setCsv,
+  onContextMenu,
+}: TrackRowProps) => {
   return (
     <TableRow
-    key={track.id}
-    onClick={() => navigate(`/tracks/${track.hash}`)}
-    onContextMenu={onContextMenu}>
+      key={track.id}
+      onClick={() => navigate(`/tracks/${track.hash}`)}
+      onContextMenu={onContextMenu}>
       <TableCell>
         <IconButton onClick={play(track, index)}>
           <PlayIcon />
@@ -78,8 +89,11 @@ const PlaylistDetail = () => {
   const tracks = useRecoilValue(tracksByPlaylist(playlistId));
   const trackDict = useRecoilValue(tracksState);
   const [_player, setPlayerState] = useRecoilState(playerState);
-  const popupState = usePopupState({ variant: "popover", popupId: "playlistDetail" });
-  const [selectedId, setSelectedId] = useState<number| null>(null);
+  const popupState = usePopupState({
+    variant: "popover",
+    popupId: "playlistDetail",
+  });
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const setCsv = useCallback(
     async (track, csv) => {
@@ -132,17 +146,16 @@ const PlaylistDetail = () => {
     };
   };
   const deleteTrack = () => {
-    const trackIndex = playlist.tracks.findIndex(e => e.id == selectedId);
+    const trackIndex = playlist.tracks.findIndex((e) => e.id == selectedId);
     setPlaylist(
       update(playlist, {
         tracks: {
-          $unset: [trackIndex]
+          $unset: [trackIndex],
         },
       })
     );
-    popupState.close()
-  }
-
+    popupState.close();
+  };
 
   return (
     <Box>
@@ -165,7 +178,7 @@ const PlaylistDetail = () => {
                 {...{ track, index, setCsv, play, navigate }}
               />
             ))}
-              <Menu
+            <Menu
               {...bindMenu(popupState)}
               anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
               transformOrigin={{ vertical: "top", horizontal: "left" }}>

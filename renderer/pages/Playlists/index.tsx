@@ -11,7 +11,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { playlistsState } from "../../states/playlists";
