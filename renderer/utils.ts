@@ -40,10 +40,7 @@ export const readFile = async (file: File): Promise<string> =>
 
 export const readCsvFile = async (
   file: File | string
-): Promise<
-  | Array<[number, number, number]>
-  | Array<[number, number, number, number, number]>
-> => {
+): Promise<TimeSheetData> => {
   let contentStr = "";
   if (typeof file == "string") {
     contentStr = await ipcRenderer.invoke("read-file-as-text", file);

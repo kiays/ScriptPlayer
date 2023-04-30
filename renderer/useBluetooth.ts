@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { ipcRenderer } from "electron";
 
 const detectDevice = (
-  setChar: (any) => void
-): Promise<BluetoothRemoteGATTCharacteristic> => {
+  setChar: (BluetoothRemoteGATTCharacteristic) => void
+): Promise<void> => {
   console.log("requestDevice");
   return new Promise((resolve, reject) => {
     navigator.bluetooth
@@ -54,7 +54,9 @@ export const useBluetooth = (): {
       char?.service.device?.gatt?.disconnect();
     };
     ipcRenderer.addListener("quit", disconnect);
-    return () => ipcRenderer.removeListener("quit", disconnect);
+    return () => {
+      ipcRenderer.removeListener("quit", disconnect);
+    };
   }, [char]);
   return {
     device: char,

@@ -8,7 +8,6 @@ const DropArea = () => {
   const [_path, setDroppedFilePath] = useRecoilState(droppedFilePathState);
 
   const handleDrop = (event: React.DragEvent) => {
-    console.log("drop", event);
     event.preventDefault();
     if (!event.dataTransfer.items) {
       return;
@@ -38,7 +37,6 @@ const DropArea = () => {
   const handleDragOver = (event: React.DragEvent) => {
     event.preventDefault();
   };
-  console.log("test");
   return (
     <Card
       onDrop={handleDrop}

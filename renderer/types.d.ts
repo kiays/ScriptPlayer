@@ -48,7 +48,8 @@ type Playlist = {
 
 type TimeSheetHashID = FileHash;
 type TimeSheetPoint = [number, number, number];
-type TimeSheetData = Array<TimeSheetPoint>;
+type TimeSheetPointLR = [number, number, number, number, number];
+type TimeSheetData = Array<TimeSheetPoint | TimeSheetPointLR>;
 type TimeSheet = {
   hash: TimeSheetHashID;
   path: string;
