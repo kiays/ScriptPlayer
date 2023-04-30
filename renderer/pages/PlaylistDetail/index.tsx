@@ -27,6 +27,7 @@ import {
   bindContextMenu,
   bindMenu,
 } from "material-ui-popup-state/hooks";
+import EditableHeader from "../../components/EditableHeader";
 
 type CsvFieldProps = {
   track: PlaylistTrack & Track;
@@ -157,9 +158,13 @@ const PlaylistDetail = () => {
     popupState.close();
   };
 
+  const changePlaylistName = (name: string) => {
+    setPlaylist({ ...playlist, name });
+  }
+
   return (
     <Box>
-      <h1>Playlist: {playlist.name}</h1>
+      <h1>Playlist: <EditableHeader text={playlist.name} onChange={changePlaylistName} style={{ display: "inline" }} /></h1>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -182,7 +187,7 @@ const PlaylistDetail = () => {
               {...bindMenu(popupState)}
               anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
               transformOrigin={{ vertical: "top", horizontal: "left" }}>
-              <MenuItem onClick={deleteTrack}>Delete {selectedId}</MenuItem>
+              <MenuItem onClick={deleteTrack}>プレイリストからこのトラックを削除する</MenuItem>
             </Menu>
           </TableBody>
         </Table>

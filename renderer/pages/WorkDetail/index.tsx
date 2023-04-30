@@ -13,15 +13,17 @@ import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { tracksState } from "../../states/tracks";
-import { currentWorkIdState, currentWorkState } from "../../states/works";
+import { currentWorkIdState, currentWorkState, worksState } from "../../states/works";
 import { formatTime } from "../../utils";
 import { playerState } from "../../states/player";
-
+import EditableHeader from "../../components/EditableHeader";
+import update from "immutability-helper";
 const WorkDetail = () => {
   const navigate = useNavigate();
   const { workId } = useParams();
   const [currentWorkId, setCurrentWork] = useRecoilState(currentWorkIdState);
   const work = useRecoilValue(currentWorkState);
+  const [allWorks, setAllWorks] = useRecoilState(worksState);
   const tracks = useRecoilValue(tracksState);
   const [_player, setPlayerState] = useRecoilState(playerState);
   useEffect(() => {
@@ -41,12 +43,16 @@ const WorkDetail = () => {
     });
   };
 
+  const changeTitle = (title: string) => {
+    setAllWorks(update(allWorks, { [currentWorkId]: { name: { $set: title } } }));
+  }
+
   if (!work || !tracks) return <div>loading...</div>;
   const { thumbnailPath, trackIds } = work;
   return (
     <Box>
       <Stack direction="row" spacing={2}>
-        <h1>{currentWorkId}</h1>
+        <EditableHeader text={work.name} onChange={changeTitle} />
         <img src={thumbnailPath} style={{ width: "25%" }} />
       </Stack>
       <Table>
