@@ -7,6 +7,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import { PlayArrow as PlayIcon } from "@mui/icons-material";
 import React, { useEffect } from "react";
@@ -80,9 +81,11 @@ const WorkDetail = () => {
                 onClick={() => navigate(`/tracks/${track.hash}`)}
                 hover>
                 <TableCell>
-                  <IconButton onClick={play(track, index)}>
-                    <PlayIcon />
-                  </IconButton>
+                  <Tooltip title="ここから再生する">
+                    <IconButton onClick={play(track, index)}>
+                      <PlayIcon />
+                    </IconButton>
+                  </Tooltip>
                 </TableCell>
                 <TableCell>{track.name}</TableCell>
                 <TableCell>{formatTime(track.duration)}</TableCell>

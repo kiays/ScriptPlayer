@@ -1,4 +1,4 @@
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Tooltip } from "@mui/material";
 import { PlayArrow as PlayIcon } from "@mui/icons-material";
 import React, { useCallback } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -119,13 +119,15 @@ const PlaylistDetail = () => {
     play: {
       order: 0,
       render: (track: Track, index) => (
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation();
-            play(track, index)();
-          }}>
-          <PlayIcon />{" "}
-        </IconButton>
+        <Tooltip title="ここから再生する">
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              play(track, index)();
+            }}>
+            <PlayIcon />
+          </IconButton>
+        </Tooltip>
       ),
     },
     name: { order: 1 },

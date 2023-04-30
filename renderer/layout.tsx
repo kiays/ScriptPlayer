@@ -10,7 +10,6 @@ import {
   Typography,
   Divider,
   IconButton,
-  ListItem,
   ListItemIcon,
   ListItemText,
   ListItemButton,
@@ -128,10 +127,11 @@ export default function Layout({ children }: LayoutProps) {
             }}>
             <MenuIcon />
           </IconButton>
-          <IconButton onClick={() => history.back()}>
-            <BackIcon color="inherit" />
-          </IconButton>
-
+          <Tooltip title="ひとつ前の画面に戻る">
+            <IconButton onClick={() => history.back()}>
+              <BackIcon color="inherit" />
+            </IconButton>
+          </Tooltip>
           <Typography variant="h6" noWrap component="div">
             Player
           </Typography>
@@ -150,42 +150,40 @@ export default function Layout({ children }: LayoutProps) {
         </DrawerHeader>
         <Divider />
         <List>
-          <ListItem
-            button
+          <ListItemButton
             key={"Playlists"}
             onClick={() => navigate("/playlists")}>
             <ListItemIcon>
               <PlaylistIcon />
             </ListItemIcon>
             <ListItemText primary={"Playlists"} />
-          </ListItem>
-          <ListItem button key={"Works"} onClick={() => navigate("/works")}>
+          </ListItemButton>
+          <ListItemButton key={"Works"} onClick={() => navigate("/works")}>
             <ListItemIcon>
               <AlbumIcon />
             </ListItemIcon>
             <ListItemText primary={"Works"} />
-          </ListItem>
-          <ListItem button key={"Tracks"} onClick={() => navigate("/tracks")}>
+          </ListItemButton>
+          <ListItemButton key={"Tracks"} onClick={() => navigate("/tracks")}>
             <ListItemIcon>
               <AudiotrackIcon />
             </ListItemIcon>
             <ListItemText primary={"Tracks"} />
-          </ListItem>
-          <ListItem button key={"CSVs"} onClick={() => navigate("/csvs")}>
+          </ListItemButton>
+          <ListItemButton key={"CSVs"} onClick={() => navigate("/csvs")}>
             <ListItemIcon>
               <CSVIcon />
             </ListItemIcon>
             <ListItemText primary={"CSVs"} />
-          </ListItem>
-          <ListItem
-            button
+          </ListItemButton>
+          <ListItemButton
             key={"Import"}
             onClick={() => navigate("/works/import")}>
             <ListItemIcon>
               <ImportIcon />
             </ListItemIcon>
             <ListItemText primary={"Import"} />
-          </ListItem>
+          </ListItemButton>
         </List>
         <Divider />
         <List></List>
