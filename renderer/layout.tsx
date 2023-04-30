@@ -13,6 +13,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  ListItemButton,
+  Tooltip,
 } from "@mui/material";
 import { AppBar as MuiAppBar, Drawer as MuiDrawer } from "@mui/material";
 import {
@@ -24,6 +26,7 @@ import {
   Description as CSVIcon,
   ArrowBack as BackIcon,
   Download as ImportIcon,
+  Cached as ReloadIcon,
 } from "@mui/icons-material";
 
 const drawerWidth = 240;
@@ -132,6 +135,11 @@ export default function Layout({ children }: LayoutProps) {
           <Typography variant="h6" noWrap component="div">
             Player
           </Typography>
+          <Tooltip title="reload">
+            <IconButton onClick={() => window.location.reload()}>
+              <ReloadIcon color="inherit" />
+            </IconButton>
+          </Tooltip>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
