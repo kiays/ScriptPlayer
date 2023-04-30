@@ -93,7 +93,10 @@ const TrackDetailPage = () => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>name</TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

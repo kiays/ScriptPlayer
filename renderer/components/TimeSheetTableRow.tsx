@@ -1,4 +1,4 @@
-import { TableCell, TableRow, IconButton } from "@mui/material";
+import { TableCell, TableRow, IconButton, Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TimeSheetPreview from "./TimeSheetPreview";
 import { formatTime, readCsvFile } from "../utils";
@@ -37,16 +37,20 @@ const TimeSheetTableRow = ({
       </TableCell>
       {onDelete && (
         <TableCell>
-          <IconButton onClick={onDelete}>
-            <DeleteIcon />
-          </IconButton>
+          <Tooltip title="CSVを削除">
+            <IconButton onClick={onDelete}>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
         </TableCell>
       )}
       {allowReload && (
         <TableCell>
-          <IconButton onClick={reload}>
-            <ReloadIcon />
-          </IconButton>
+          <Tooltip title="CSVファイルから再読み込み">
+            <IconButton onClick={reload}>
+              <ReloadIcon />
+            </IconButton>
+          </Tooltip>
         </TableCell>
       )}
     </TableRow>
