@@ -115,7 +115,7 @@ const Player = () => {
       if (leftScaled >= 100) leftScaled = 100;
       if (rightScaled >= 100) rightScaled = 100;
       if (inverted) {
-        device.writeValue(
+        device?.writeValue(
           Buffer.from([
             0x05,
             leftScaled + (leftDir ? 128 : 0),
@@ -123,7 +123,7 @@ const Player = () => {
           ])
         );
       } else {
-        device.writeValue(
+        device?.writeValue(
           Buffer.from([
             0x05,
             rightScaled + (rightDir ? 128 : 0),
