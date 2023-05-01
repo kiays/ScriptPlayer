@@ -14,6 +14,10 @@ import {
   ListItemText,
   ListItemButton,
   Tooltip,
+  Stack,
+  Snackbar,
+  Alert,
+  Grow,
 } from "@mui/material";
 import { AppBar as MuiAppBar, Drawer as MuiDrawer } from "@mui/material";
 import {
@@ -27,6 +31,9 @@ import {
   Download as ImportIcon,
   Cached as ReloadIcon,
 } from "@mui/icons-material";
+import { useRecoilState } from "recoil";
+import { notificationsState } from "./states/notifications";
+import update from "immutability-helper";
 
 const drawerWidth = 240;
 
@@ -102,6 +109,7 @@ export default function Layout({ children }: LayoutProps) {
   const _theme = useTheme();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const [notifications, setNotifications] = useRecoilState(notificationsState);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -112,86 +120,134 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: "36px",
-              ...(open && { display: "none" }),
-            }}>
-            <MenuIcon />
-          </IconButton>
-          <Tooltip title="ひとつ前の画面に戻る">
-            <IconButton onClick={() => history.back()}>
-              <BackIcon color="inherit" />
+    <>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar position="fixed" open={open}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{
+                marginRight: "36px",
+                ...(open && { display: "none" }),
+              }}>
+              <MenuIcon />
             </IconButton>
-          </Tooltip>
-          <Typography variant="h6" noWrap component="div">
-            Player
-          </Typography>
-          <Tooltip title="reload">
-            <IconButton onClick={() => window.location.reload()}>
-              <ReloadIcon color="inherit" />
+            <Tooltip title="ひとつ前の画面に戻る">
+              <IconButton onClick={() => history.back()}>
+                <BackIcon color="inherit" />
+              </IconButton>
+            </Tooltip>
+            <Typography variant="h6" noWrap component="div">
+              Player
+            </Typography>
+            <Tooltip title="reload">
+              <IconButton onClick={() => window.location.reload()}>
+                <ReloadIcon color="inherit" />
+              </IconButton>
+            </Tooltip>
+          </Toolbar>
+        </AppBar>
+        <Drawer variant="permanent" open={open}>
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              <ChevronLeftIcon />
             </IconButton>
-          </Tooltip>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          <ListItemButton
-            key={"Playlists"}
-            onClick={() => navigate("/playlists")}>
-            <ListItemIcon>
-              <PlaylistIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Playlists"} />
-          </ListItemButton>
-          <ListItemButton key={"Works"} onClick={() => navigate("/works")}>
-            <ListItemIcon>
-              <AlbumIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Works"} />
-          </ListItemButton>
-          <ListItemButton key={"Tracks"} onClick={() => navigate("/tracks")}>
-            <ListItemIcon>
-              <AudiotrackIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Tracks"} />
-          </ListItemButton>
-          <ListItemButton key={"CSVs"} onClick={() => navigate("/csvs")}>
-            <ListItemIcon>
-              <CSVIcon />
-            </ListItemIcon>
-            <ListItemText primary={"CSVs"} />
-          </ListItemButton>
-          <ListItemButton
-            key={"Import"}
-            onClick={() => navigate("/works/import")}>
-            <ListItemIcon>
-              <ImportIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Import"} />
-          </ListItemButton>
-        </List>
-        <Divider />
-        <List></List>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-        {children}
+          </DrawerHeader>
+          <Divider />
+          <List>
+            <ListItemButton
+              key={"Playlists"}
+              onClick={() => navigate("/playlists")}>
+              <ListItemIcon>
+                <PlaylistIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Playlists"} />
+            </ListItemButton>
+            <ListItemButton key={"Works"} onClick={() => navigate("/works")}>
+              <ListItemIcon>
+                <AlbumIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Works"} />
+            </ListItemButton>
+            <ListItemButton key={"Tracks"} onClick={() => navigate("/tracks")}>
+              <ListItemIcon>
+                <AudiotrackIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Tracks"} />
+            </ListItemButton>
+            <ListItemButton key={"CSVs"} onClick={() => navigate("/csvs")}>
+              <ListItemIcon>
+                <CSVIcon />
+              </ListItemIcon>
+              <ListItemText primary={"CSVs"} />
+            </ListItemButton>
+            <ListItemButton
+              key={"Import"}
+              onClick={() => navigate("/works/import")}>
+              <ListItemIcon>
+                <ImportIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Import"} />
+            </ListItemButton>
+          </List>
+          <Divider />
+          <List></List>
+        </Drawer>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <DrawerHeader />
+          {children}
+        </Box>
       </Box>
-    </Box>
+      <Snackbar
+        open={notifications.length > 0}
+        autoHideDuration={null}
+        transitionDuration={0}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        sx={{
+          mt: "env(safe-area-inset-top)",
+          mb: "env(safe-area-inset-bottom)",
+        }}>
+        <Stack flexDirection="column" gap={1}>
+          {notifications
+            .filter((n) => !n.done)
+            .map((notification, index) => {
+              const handleClose = () => {
+                setNotifications(
+                  update(notifications, {
+                    [index]: { done: { $set: true } },
+                  })
+                );
+              };
+              return (
+                <Grow
+                  key={notification.createdAt.toString()}
+                  in={!notification.done}
+                  timeout={300}>
+                  <Alert
+                    onClose={handleClose}
+                    severity={notification.severity}
+                    variant="filled"
+                    sx={{
+                      minWidth: 180,
+                      maxWidth: 380,
+                      width: { xs: 1, md: "auto" },
+                      mb: 1,
+                    }}>
+                    {notification.title} -{" "}
+                    {notification.createdAt.toLocaleString()}
+                  </Alert>
+                </Grow>
+              );
+            })}
+        </Stack>
+      </Snackbar>
+    </>
   );
 }

@@ -13,6 +13,7 @@ import {
 } from "@mui/icons-material";
 import { trackById } from "../states/tracks";
 import { useBluetooth } from "../useBluetooth";
+import { notificationsState } from "../states/notifications";
 
 const Player = () => {
   const [open, setOpen] = useState(false);
@@ -31,6 +32,7 @@ const Player = () => {
   const [values, setValues] = useState([]);
   const [inverted, setInverted] = useState(false);
   const setTrackInfo = useSetRecoilState(trackById(tracks[trackIndex]?.hash));
+  const setNotifications = useSetRecoilState(notificationsState);
 
   const setTrackIndex = (index) => {
     setPlayerState((s) => update(s, { trackIndex: { $set: index } }));
@@ -55,13 +57,23 @@ const Player = () => {
         duration: audioElem.duration,
         currentTime: 0,
       });
+      setNotifications((ns) => [
+        ...ns,
+        {
+          severity: "info",
+          createdAt: new Date(),
+          done: false,
+          title: `${tracks[trackIndex].name}`,
+          scope: "player:track_changed",
+        },
+      ]);
     }
     if (playing) {
       audioElem.play();
     } else {
       audioElem.pause();
     }
-  }, [audioRef, trackIndex, playing, audioSrc, tracks]);
+  }, [audioRef, trackIndex, playing, audioSrc, tracks, setNotifications]);
 
   useEffect(() => {
     if (!tracks || !tracks[trackIndex]) return;

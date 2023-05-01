@@ -67,7 +67,7 @@ const ImportWork = () => {
     setWorks(newWorks);
     setChecked({});
     setThumbnail(null);
-    navigate(`/works/${name}`);
+    navigate(`/works/${droppedFileInfo.name}`);
   };
   if (!droppedFile) return <DropArea />;
   return (

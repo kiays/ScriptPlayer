@@ -72,3 +72,11 @@ type PlayerState = {
   trackIndex: number;
   playing: boolean;
 };
+
+type SnackbarNotification = {
+  title: string;
+  severity: "error" | "warning" | "info" | "success";
+  createdAt: Date;
+  done: boolean;
+  scope: string;
+};

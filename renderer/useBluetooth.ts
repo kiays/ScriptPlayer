@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { ipcRenderer } from "electron";
+import { useSetRecoilState } from "recoil";
+import { notificationsState } from "./states/notifications";
 
 const detectDevice = (
   setChar: (BluetoothRemoteGATTCharacteristic) => void
@@ -48,16 +50,37 @@ export const useBluetooth = (): {
   const [char, setChar] = useState<BluetoothRemoteGATTCharacteristic | null>(
     null
   );
+  const setNotifications = useSetRecoilState(notificationsState);
   const [connecting, setConnecting] = useState(false);
   useEffect(() => {
+    if (char) {
+      setNotifications((ns) => [
+        ...ns,
+        {
+          title: "Bluetooth Device ready",
+          severity: "success",
+          createdAt: new Date(),
+          done: false,
+        },
+      ]);
+    }
     const disconnect = () => {
       char?.service.device?.gatt?.disconnect();
+      setNotifications((ns) => [
+        ...ns,
+        {
+          title: "Bluetooth Device disconnected",
+          severity: "success",
+          createdAt: new Date(),
+          done: false,
+        },
+      ]);
     };
     ipcRenderer.addListener("quit", disconnect);
     return () => {
       ipcRenderer.removeListener("quit", disconnect);
     };
-  }, [char]);
+  }, [char, setNotifications]);
   return {
     device: char,
     connected: char != null && char.service.device?.gatt?.connected,
