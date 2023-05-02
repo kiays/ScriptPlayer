@@ -30,6 +30,7 @@ import {
   ArrowBack as BackIcon,
   Download as ImportIcon,
   Cached as ReloadIcon,
+  Settings as SettingsIcon,
 } from "@mui/icons-material";
 import { useRecoilState } from "recoil";
 import { notificationsState } from "./states/notifications";
@@ -192,6 +193,14 @@ export default function Layout({ children }: LayoutProps) {
                 <ImportIcon />
               </ListItemIcon>
               <ListItemText primary={"Import"} />
+            </ListItemButton>
+            <ListItemButton
+              key={"Settings"}
+              onClick={() => navigate("/settings")}>
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Settings"} />
             </ListItemButton>
           </List>
           <Divider />

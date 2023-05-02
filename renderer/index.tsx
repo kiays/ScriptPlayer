@@ -26,6 +26,7 @@ import TrackDetail from "./pages/TrackDetail";
 import Player from "./components/Player";
 import { ipcRenderer } from "electron";
 import Home from "./pages/Home/Index";
+import Settings from "./pages/Settings";
 import ComponentCatalog from "./pages/ComponentCatalog";
 
 const theme = createTheme();
@@ -59,6 +60,7 @@ const App = () => {
           <Route path="/works/import" element={<ImportWork />} />
           <Route path="/csvs/:csvId" element={<TimeSheetDetail />} />
           <Route path="/csvs" element={<TimeSheets />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/" element={<Home />} />
           <Route path="*" element={<div>not found</div>} />
         </Routes>
