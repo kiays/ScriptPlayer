@@ -80,3 +80,25 @@ type SnackbarNotification = {
   done: boolean;
   scope: string;
 };
+
+interface MainProcAPI {
+  checkDroppedFile: (path: string) => Promise<any>;
+  importWork: (path: string) => Promise<any>;
+  getFileHash: (path: string) => Promise<string>;
+  readFileAsText: (path: string) => Promise<string>;
+  setAllPlaylists: (playlists: any) => Promise<any>;
+  getAllPlaylists: () => Promise<any>;
+  setAllCSVs: (csvs: any) => Promise<any>;
+  getAllCSVs: () => Promise<any>;
+  setAllTracks: (tracks: any) => Promise<any>;
+  getAllTracks: () => Promise<any>;
+  setAllWorks: (works: any) => Promise<any>;
+  getAllWorks: () => Promise<any>;
+  mainWindowReady: () => void;
+  addListener: (name: string, listener: () => void) => void;
+  removeListener: (name: string, listener: () => void) => void;
+}
+
+interface Window {
+  mainProc: MainProcAPI;
+}

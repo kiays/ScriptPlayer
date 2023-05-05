@@ -1,4 +1,3 @@
-import { ipcRenderer } from "electron";
 import { atom, selector } from "recoil";
 
 export const droppedFilePathState = atom({
@@ -11,6 +10,6 @@ export const droppedFileState = selector({
   get: async ({ get }) => {
     const fileInfo = get(droppedFilePathState);
     if (!fileInfo) return null;
-    return await ipcRenderer.invoke("check-dropped-file", fileInfo.path);
+    return await window.mainProc.checkDroppedFile(fileInfo.path);
   },
 });

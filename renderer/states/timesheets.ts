@@ -1,12 +1,11 @@
-import { ipcRenderer } from "electron";
 import { atom, AtomEffect, selectorFamily } from "recoil";
 import RecoilKeys from "./keys";
 import update from "immutability-helper";
 
 const ipcEffect: AtomEffect<AllTimeSheets> = ({ setSelf, onSet }) => {
-  ipcRenderer.invoke("getAllCSVs").then(setSelf);
+  window.mainProc.getAllCSVs().then(setSelf);
   onSet(async (newValue, _prevVarlue, _isReset) => {
-    await ipcRenderer.invoke("setAllCSVs", newValue);
+    await window.mainProc.setAllCSVs(newValue);
   });
 };
 

@@ -7,12 +7,11 @@ import {
 } from "../../states/droppedFile";
 import Item from "./Item";
 import { Button } from "@mui/material";
-import { ipcRenderer } from "electron";
 import { worksState } from "../../states/works";
 import { tracksState } from "../../states/tracks";
 import { createTrack } from "../../utils";
 import { useNavigate } from "react-router";
-import { dirname } from "path";
+import { dirname } from "../../utils";
 import NoImage from "../../assets/no_image.png";
 import DropArea from "./DropArea";
 
@@ -26,7 +25,7 @@ const ImportWork = () => {
   const navigate = useNavigate();
 
   const doImport = async () => {
-    const dest = await ipcRenderer.invoke("import-work", droppedFileInfo.path);
+    const dest = await window.mainProc.importWork(droppedFileInfo.path);
     const prevDirName = dirname(droppedFileInfo.path);
     const newDirName = dirname(dest);
     const newTrackPaths = Object.keys(checked)
@@ -38,7 +37,7 @@ const ImportWork = () => {
         const acc = await p;
         const name = trackPath.replace(dest + "/", "");
         const t = await createTrack({ name, path: trackPath });
-        const hash = await ipcRenderer.invoke("file-hash", trackPath);
+        const hash = await window.mainProc.getFileHash(trackPath);
         hashes.push(hash);
         return {
           ...acc,

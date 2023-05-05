@@ -1,10 +1,9 @@
-import { ipcRenderer } from "electron";
 import { atom, AtomEffect, selector } from "recoil";
 
 const ipcEffect: AtomEffect<AllWorks> = ({ setSelf, onSet }) => {
-  ipcRenderer.invoke("getAllWorks").then(setSelf);
+  window.mainProc.getAllWorks().then(setSelf);
   onSet(async (newValue, _prevVarlue, _isReset) => {
-    await ipcRenderer.invoke("setAllWorks", newValue);
+    await window.mainProc.setAllWorks(newValue);
   });
 };
 export const worksState = atom<AllWorks>({

@@ -1,12 +1,11 @@
-import { ipcRenderer } from "electron";
 import { atom, selectorFamily } from "recoil";
 import RecoilKeys from "./keys";
 import update from "immutability-helper";
 
 const ipcEffect = ({ setSelf, onSet }) => {
-  ipcRenderer.invoke("getAllPlaylists").then(setSelf);
+  window.mainProc.getAllPlaylists().then(setSelf);
   onSet(async (newValue, _prevValue, _isReset) => {
-    await ipcRenderer.invoke("setAllPlaylists", newValue);
+    await window.mainProc.setAllPlaylists(newValue);
   });
 };
 

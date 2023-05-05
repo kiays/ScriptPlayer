@@ -24,7 +24,6 @@ import TimeSheetDetail from "./pages/TimeSheetDetail";
 import TrackList from "./pages/Tracks";
 import TrackDetail from "./pages/TrackDetail";
 import Player from "./components/Player";
-import { ipcRenderer } from "electron";
 import Home from "./pages/Home/Index";
 import Settings from "./pages/Settings";
 import ComponentCatalog from "./pages/ComponentCatalog";
@@ -84,4 +83,4 @@ root.render(
     </ThemeProvider>
   </RecoilRoot>
 );
-ipcRenderer.invoke("main-window-ready");
+window.mainProc.mainWindowReady();

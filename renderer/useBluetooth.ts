@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { ipcRenderer } from "electron";
 import { useSetRecoilState } from "recoil";
 import { notificationsState } from "./states/notifications";
 
@@ -76,9 +75,9 @@ export const useBluetooth = (): {
         },
       ]);
     };
-    ipcRenderer.addListener("quit", disconnect);
+    window.mainProc.addListener("quit", disconnect);
     return () => {
-      ipcRenderer.removeListener("quit", disconnect);
+      window.mainProc.removeListener("quit", disconnect);
     };
   }, [char, setNotifications]);
   return {

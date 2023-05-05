@@ -32,11 +32,11 @@ const createWindow = () => {
     height: 1200,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
-      nodeIntegration: true,
-      contextIsolation: false,
+      nodeIntegration: false,
+      contextIsolation: true,
     },
   });
-  mainWindow.hide();
+  // mainWindow.hide();
   mainWindow.webContents.on(
     "select-bluetooth-device",
     (event, deviceList, callback) => {
