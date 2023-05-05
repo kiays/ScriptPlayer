@@ -36,7 +36,7 @@ const createWindow = () => {
       contextIsolation: true,
     },
   });
-  // mainWindow.hide();
+  mainWindow.hide();
   mainWindow.webContents.on(
     "select-bluetooth-device",
     (event, deviceList, callback) => {

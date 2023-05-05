@@ -22,6 +22,7 @@ const config = {
     new HtmlWebpackPlugin({
       template: "renderer/splash.html",
       filename: "splash.html",
+      inject: false,
     }),
 
     // Add your plugins here
