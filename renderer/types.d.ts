@@ -45,8 +45,10 @@ type PlaylistTrack = {
   csvContent?: Array<Array<number>>;
 };
 type Playlist = {
+  id: string;
   name: string;
   tracks: Array<PlaylistTrack>;
+  createdAt: number;
 };
 
 type TimeSheetHashID = FileHash;

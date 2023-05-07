@@ -24,6 +24,7 @@ import {
 const PlaylistNew = () => {
   const [editing, setEditing] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [id, _setId] = useState<string | null>(String(Date.now()));
   const [name, setName] = useState("New Playlist");
   const trackDict = useRecoilValue(tracksState);
   const [tracks, setTracks] = useState([]);
@@ -36,7 +37,6 @@ const PlaylistNew = () => {
   };
 
   const save = () => {
-    const id = String(Date.now());
     setPlaylists({
       ...allPlaylists,
       [id]: {
