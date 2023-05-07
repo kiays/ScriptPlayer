@@ -14,6 +14,7 @@ import {
 import { trackById } from "../states/tracks";
 import { useBluetooth } from "../useBluetooth";
 import { notificationsState } from "../states/notifications";
+import { Buffer } from "buffer";
 
 const Player = () => {
   const [open, setOpen] = useState(false);
