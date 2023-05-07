@@ -36,6 +36,7 @@ import {
 import { useRecoilState } from "recoil";
 import { notificationsState } from "./states/notifications";
 import update from "immutability-helper";
+import { IS_DEVELOPMENT } from "./utils";
 
 const drawerWidth = 240;
 
@@ -195,14 +196,16 @@ export default function Layout({ children }: LayoutProps) {
               </ListItemIcon>
               <ListItemText primary={"Import"} />
             </ListItemButton>
-            <ListItemButton
-              key={"Settings"}
-              onClick={() => navigate("/settings")}>
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Settings"} />
-            </ListItemButton>
+            {IS_DEVELOPMENT && (
+              <ListItemButton
+                key={"Settings"}
+                onClick={() => navigate("/settings")}>
+                <ListItemIcon>
+                  <SettingsIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Settings"} />
+              </ListItemButton>
+            )}
           </List>
           <Divider />
           <List></List>
