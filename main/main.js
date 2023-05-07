@@ -75,7 +75,9 @@ app.whenReady().then(() => {
 app.on("window-all-closed", async () => {
   if (process.platform !== "darwin") app.quit();
 });
-ipcMain.handle("send-to-device", (_, args) => {});
+ipcMain.handle("send-to-device", (_, _args) => {
+  return;
+});
 
 ipcMain.handle("check-dropped-file", async (e, arg) => {
   return await traverseDirectory(arg);
@@ -105,7 +107,7 @@ app.on("before-quit", async (e) => {
   console.log("before quit");
   mainWindow.send("quit");
   e.preventDefault();
-  return new Promise((res) => {
+  return new Promise(() => {
     console.log("send quit");
     setTimeout(() => {
       app.exit();

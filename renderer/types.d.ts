@@ -1,3 +1,5 @@
+import { MimeType } from "file-type";
+
 type FileHash = string;
 
 type TrackFile = {
@@ -32,6 +34,7 @@ type All<T> = { [key: string]: T };
 type AllTracksWithWork = All<TrackWithWork>;
 type AllTracks = All<Track>;
 type AllWorks = All<Work>;
+type AllPlaylists = All<Playlist>;
 
 type PlaylistTrack = {
   id: number;
@@ -81,24 +84,33 @@ type SnackbarNotification = {
   scope: string;
 };
 
+type FileInfo = {
+  name: string;
+  path: string;
+  type: "dir" | MimeType | null;
+  children?: FileInfo[];
+};
+
 interface MainProcAPI {
-  checkDroppedFile: (path: string) => Promise<any>;
-  importWork: (path: string) => Promise<any>;
+  checkDroppedFile: (path: string) => Promise<FileInfo[]>;
+  importWork: (path: string) => Promise<string>;
   getFileHash: (path: string) => Promise<string>;
   readFileAsText: (path: string) => Promise<string>;
-  setAllPlaylists: (playlists: any) => Promise<any>;
-  getAllPlaylists: () => Promise<any>;
-  setAllCSVs: (csvs: any) => Promise<any>;
-  getAllCSVs: () => Promise<any>;
-  setAllTracks: (tracks: any) => Promise<any>;
-  getAllTracks: () => Promise<any>;
-  setAllWorks: (works: any) => Promise<any>;
-  getAllWorks: () => Promise<any>;
+  setAllPlaylists: (playlists: AllPlaylists) => Promise<void>;
+  getAllPlaylists: () => Promise<AllPlaylists>;
+  setAllCSVs: (csvs: AllTimeSheets) => Promise<void>;
+  getAllCSVs: () => Promise<AllTimeSheets>;
+  setAllTracks: (tracks: AllTracks) => Promise<void>;
+  getAllTracks: () => Promise<AllTracks>;
+  setAllWorks: (works: AllWorks) => Promise<void>;
+  getAllWorks: () => Promise<AllWorks>;
   mainWindowReady: () => void;
   addListener: (name: string, listener: () => void) => void;
   removeListener: (name: string, listener: () => void) => void;
 }
 
-interface Window {
-  mainProc: MainProcAPI;
+declare global {
+  interface Window {
+    mainProc: MainProcAPI;
+  }
 }

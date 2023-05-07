@@ -6,6 +6,7 @@ import {
   Delete as DeleteIcon,
   Cached as ReloadIcon,
 } from "@mui/icons-material";
+import { TimeSheetMeta } from "../types";
 
 type TimeSheetRowProps = {
   sheet?: TimeSheetMeta;

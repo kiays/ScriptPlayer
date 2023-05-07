@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 import { notificationsState } from "./states/notifications";
+import { SnackbarNotification } from "./types";
 
 const detectDevice = (
   setChar: (BluetoothRemoteGATTCharacteristic) => void
@@ -52,28 +53,21 @@ export const useBluetooth = (): {
   const setNotifications = useSetRecoilState(notificationsState);
   const [connecting, setConnecting] = useState(false);
   useEffect(() => {
+    const newNotification: SnackbarNotification = {
+      title: "",
+      severity: "success",
+      createdAt: new Date(),
+      done: false,
+      scope: "bluetooth",
+    };
     if (char) {
-      setNotifications((ns) => [
-        ...ns,
-        {
-          title: "Bluetooth Device ready",
-          severity: "success",
-          createdAt: new Date(),
-          done: false,
-        },
-      ]);
+      newNotification.title = "Bluetooth Device connected";
+      setNotifications((ns) => [...ns, newNotification]);
     }
     const disconnect = () => {
       char?.service.device?.gatt?.disconnect();
-      setNotifications((ns) => [
-        ...ns,
-        {
-          title: "Bluetooth Device disconnected",
-          severity: "success",
-          createdAt: new Date(),
-          done: false,
-        },
-      ]);
+      newNotification.title = "Bluetooth Device disconnected";
+      setNotifications((ns) => [...ns, newNotification]);
     };
     window.mainProc.addListener("quit", disconnect);
     return () => {

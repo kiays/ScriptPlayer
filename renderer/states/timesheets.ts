@@ -1,6 +1,7 @@
 import { atom, AtomEffect, selectorFamily } from "recoil";
 import RecoilKeys from "./keys";
 import update from "immutability-helper";
+import { AllTimeSheets, TimeSheet, TimeSheetMeta } from "../types";
 
 const ipcEffect: AtomEffect<AllTimeSheets> = ({ setSelf, onSet }) => {
   window.mainProc.getAllCSVs().then(setSelf);

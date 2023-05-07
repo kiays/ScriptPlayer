@@ -4,6 +4,7 @@ import { useRecoilState } from "recoil";
 import { worksState } from "../../states/works";
 import { useNavigate } from "react-router";
 import SortableTable from "../../components/SortableTable";
+import { Work } from "../../types";
 
 const Works = () => {
   const works = useRecoilState(worksState)[0];

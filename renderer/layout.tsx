@@ -18,6 +18,7 @@ import {
   Snackbar,
   Alert,
   Grow,
+  Theme,
 } from "@mui/material";
 import { AppBar as MuiAppBar, Drawer as MuiDrawer } from "@mui/material";
 import {
@@ -70,7 +71,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }: { theme; open: boolean }) => ({
+})(({ theme, open }: { theme: Theme; open: boolean }) => ({
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
@@ -88,7 +89,7 @@ const AppBar = styled(MuiAppBar, {
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
+})(({ theme, open }: { theme: Theme; open: boolean }) => ({
   width: drawerWidth,
   flexShrink: 0,
   whiteSpace: "nowrap",

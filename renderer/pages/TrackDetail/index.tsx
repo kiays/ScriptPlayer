@@ -16,8 +16,11 @@ import { getFileHash, readCsvFile } from "../../utils";
 import update from "immutability-helper";
 import { allTimeSheets } from "../../states/timesheets";
 import SheetRow from "../../components/TimeSheetTableRow";
+import { TimeSheet } from "../../types";
 
-const createTimeSheet = async (file: File): Promise<TimeSheet> => {
+const createTimeSheet = async (
+  file: File & { path: string }
+): Promise<TimeSheet> => {
   const [content, hash] = await Promise.all([
     readCsvFile(file),
     getFileHash(file.path),
@@ -48,7 +51,7 @@ const TrackDetailPage = () => {
     const { items } = event.dataTransfer;
     const files = Array.from(items)
       .map((i) => i.getAsFile())
-      .filter((f) => f.type === "text/csv");
+      .filter((f) => f.type === "text/csv") as (File & { path: string })[];
     if (files.length === 0) {
       alert("No CSV file found");
       return;

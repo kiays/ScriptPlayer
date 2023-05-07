@@ -1,5 +1,6 @@
 import { atom } from "recoil";
 import RecoilKeys from "./keys";
+import { PlayerState } from "../types";
 
 export const playerState = atom<PlayerState>({
   key: RecoilKeys.PLAYER_STATE,

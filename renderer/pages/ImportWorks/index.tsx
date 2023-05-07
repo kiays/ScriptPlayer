@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { List } from "@mui/material";
-import { useRecoilValue, useRecoilState } from "recoil";
-import {
-  droppedFilePathState,
-  droppedFileState,
-} from "../../states/droppedFile";
+import { useRecoilState } from "recoil";
 import Item from "./Item";
 import { Button } from "@mui/material";
 import { worksState } from "../../states/works";
@@ -14,24 +10,28 @@ import { useNavigate } from "react-router";
 import { dirname } from "../../utils";
 import NoImage from "../../assets/no_image.png";
 import DropArea from "./DropArea";
+import { FileInfo, Track } from "../../types";
 
 const ImportWork = () => {
-  const droppedFile = useRecoilValue(droppedFileState);
-  const droppedFileInfo = useRecoilState(droppedFilePathState)[0];
+  const [droppedFolder, setDroppedFolder] = useState<
+    (File & { path: string }) | null
+  >(null);
+  const [fileList, setFileList] = useState<FileInfo[] | null>(null);
+
   const [works, setWorks] = useRecoilState(worksState);
   const [tracks, setTracks] = useRecoilState(tracksState);
   const [checked, setChecked] = useState({});
-  const [thumbnailPath, setThumbnail] = useState(NoImage);
+  const [thumbnailPath, setThumbnail] = useState<string | null>(NoImage);
   const navigate = useNavigate();
 
   const doImport = async () => {
-    const dest = await window.mainProc.importWork(droppedFileInfo.path);
-    const prevDirName = dirname(droppedFileInfo.path);
+    const dest = await window.mainProc.importWork(droppedFolder.path);
+    const prevDirName = dirname(droppedFolder.path);
     const newDirName = dirname(dest);
     const newTrackPaths = Object.keys(checked)
       .filter((k) => checked[k])
       .map((k) => k.replace(prevDirName, newDirName));
-    const hashes = [];
+    const hashes: string[] = [];
     const tracksInfo: { [key: string]: Track } = await newTrackPaths.reduce(
       async (p, trackPath) => {
         const acc = await p;
@@ -46,7 +46,7 @@ const ImportWork = () => {
             name,
             hash,
             duration: t.duration,
-            workName: droppedFileInfo.name,
+            workName: droppedFolder.name,
           },
         };
       },
@@ -54,25 +54,33 @@ const ImportWork = () => {
     );
     const newWorks = {
       ...works,
-      [droppedFileInfo.name]: {
+      [droppedFolder.name]: {
         path: dest,
-        name: droppedFileInfo.name,
+        name: droppedFolder.name,
         trackFiles: newTrackPaths,
         trackIds: hashes,
         thumbnailPath: thumbnailPath.replace(prevDirName, newDirName),
+        addedAt: Date.now(),
       },
     };
     setTracks({ ...tracks, ...tracksInfo });
     setWorks(newWorks);
     setChecked({});
     setThumbnail(null);
-    navigate(`/works/${droppedFileInfo.name}`);
+    navigate(`/works/${droppedFolder.name}`);
   };
-  if (!droppedFile) return <DropArea />;
+
+  const handleFileDrop = async (file: File & { path: string }) => {
+    setDroppedFolder(file);
+    const directory = await window.mainProc.checkDroppedFile(file.path);
+    setFileList(directory);
+  };
+  if (!droppedFolder || !fileList)
+    return <DropArea onFileDrop={handleFileDrop} />;
   return (
     <div>
       <div>
-        <h1>Import {droppedFileInfo.name}</h1>
+        <h1>Import {droppedFolder.name}</h1>
         {thumbnailPath && (
           <img
             src={thumbnailPath}
@@ -82,7 +90,7 @@ const ImportWork = () => {
       </div>
       <Button onClick={doImport}>Import</Button>
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-        {droppedFile.map((fileInfo) => (
+        {fileList.map((fileInfo) => (
           <Item
             key={fileInfo.path}
             fileInfo={fileInfo}

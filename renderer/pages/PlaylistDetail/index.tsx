@@ -12,6 +12,7 @@ import { playerState } from "../../states/player";
 import FileDropArea from "../../components/FileDropArea";
 import EditableHeader from "../../components/EditableHeader";
 import DraggableTable from "../../components/DraggableTable";
+import { PlaylistTrack, Track } from "../../types";
 
 type CsvFieldProps = {
   track: PlaylistTrack & Track;

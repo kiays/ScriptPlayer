@@ -3,6 +3,13 @@ import RecoilKeys from "./keys";
 import { playlistSelector } from "./playlists";
 import { worksState } from "./works";
 import update from "immutability-helper";
+import {
+  AllTracks,
+  AllTracksWithWork,
+  PlaylistTrack,
+  Track,
+  TrackWithWork,
+} from "../types";
 
 const ipcEffect = ({ setSelf, onSet }) => {
   window.mainProc.getAllTracks().then(setSelf);

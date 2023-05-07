@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { CSSProperties, useEffect, useRef, useState } from "react";
 import { formatTime } from "../utils";
+import { TimeSheetData } from "../types";
 
 type TimeSheetPreviewProps = {
   content: TimeSheetData;
@@ -47,7 +48,7 @@ const TimeSheetPreview = ({ content, onMouseDown }: TimeSheetPreviewProps) => {
     ctx.stroke();
   }, [ref, content]);
 
-  const style = {
+  const style: CSSProperties = {
     position: "fixed",
     top: mousePos.y - 30,
     left: mousePos.x,

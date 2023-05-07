@@ -2,6 +2,7 @@ import { Button, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { Track } from "../../types";
 type TrackRowPropType = {
   track: Track;
   id: number;

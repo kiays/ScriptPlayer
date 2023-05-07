@@ -12,6 +12,7 @@ const Playlists = () => {
   const playlists = useRecoilValue(playlistsState);
   const trackDict = useRecoilValue(tracksState);
   const setPlayLists = useSetRecoilState(playlistsState);
+  if (playlists === null) return <div>Loading...</div>;
 
   const createPlaylist = () => {
     navigate("/playlists/new");
@@ -73,15 +74,19 @@ const Playlists = () => {
     <Box>
       <h1>Playlists</h1>
       <Button onClick={createPlaylist}>New Playlist</Button>
-      <SortableTable
-        data={Object.keys(playlists).map((id, index) => ({
-          id,
-          index,
-          ...playlists[id],
-        }))}
-        schema={schema}
-        sortable={true}
-      />
+      {playlists ? (
+        <SortableTable
+          data={Object.keys(playlists).map((id, index) => ({
+            id,
+            index,
+            ...playlists[id],
+          }))}
+          schema={schema}
+          sortable={true}
+        />
+      ) : (
+        <div>プレイリストが存在しません</div>
+      )}
     </Box>
   );
 };

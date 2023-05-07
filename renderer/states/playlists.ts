@@ -1,15 +1,16 @@
 import { atom, selectorFamily } from "recoil";
 import RecoilKeys from "./keys";
 import update from "immutability-helper";
+import { AllPlaylists, Playlist } from "../types";
 
 const ipcEffect = ({ setSelf, onSet }) => {
   window.mainProc.getAllPlaylists().then(setSelf);
-  onSet(async (newValue, _prevValue, _isReset) => {
+  onSet(async (newValue: AllPlaylists) => {
     await window.mainProc.setAllPlaylists(newValue);
   });
 };
 
-export const playlistsState = atom({
+export const playlistsState = atom<AllPlaylists>({
   key: RecoilKeys.PLAYLISTS,
   default: {},
   effects: [ipcEffect],
@@ -25,7 +26,7 @@ export const playlistSelector = selectorFamily<Playlist | null, string>({
     },
   set:
     (id) =>
-    ({ get, set }, newPlaylist) => {
+    ({ get, set }, newPlaylist: Playlist) => {
       const playlists = get(playlistsState);
       set(playlistsState, update(playlists, { [id]: { $set: newPlaylist } }));
     },

@@ -5,6 +5,7 @@ import { useRecoilValue } from "recoil";
 import { tracksWithWork } from "../../states/tracks";
 import { formatTime } from "../../utils";
 import SortableTable from "../../components/SortableTable";
+import { TrackWithWork } from "../../types";
 
 const TrackListPage = () => {
   const navigate = useNavigate();

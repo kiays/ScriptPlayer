@@ -13,6 +13,7 @@ import {
 import FileTypeIcon from "./FileTypeIcon";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import update from "immutability-helper";
+import { FileInfo } from "../../types";
 
 const style = {
   position: "absolute",
@@ -45,13 +46,6 @@ const LightBox = ({ open, onClose, src }: LightBoxProps) => (
     </Box>
   </Modal>
 );
-
-type FileInfo = {
-  name: string;
-  path: string;
-  type: string;
-  children?: Array<FileInfo>;
-};
 
 type ItemProps = {
   fileInfo: FileInfo;

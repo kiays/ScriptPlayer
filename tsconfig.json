@@ -1,11 +1,13 @@
 {
   "include": ["renderer/**/*"],
+  "exclude": ["node_modules", "**/node_modules/*"],
   "compilerOptions": {
     "experimentalDecorators": true,
     "jsx": "react",
     "allowJs": false,
     "sourceMap": true,
     "esModuleInterop": true,
-    "strict": false
+    "strict": false,
+    "skipLibCheck": true
   }
 }

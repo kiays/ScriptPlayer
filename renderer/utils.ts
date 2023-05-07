@@ -1,10 +1,17 @@
 import { format, fromUnixTime } from "date-fns";
+import {
+  TimeSheetData,
+  TimeSheetPoint,
+  TimeSheetPointLR,
+  TrackFile,
+} from "./types";
 
 export const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
-export const createTrack = (
-  file: File | { name: string; path: string }
-): Promise<TrackFile> =>
+export const createTrack = (file: {
+  name: string;
+  path: string;
+}): Promise<TrackFile> =>
   new Promise((resolve, _reject) => {
     const filePath = file.path;
     const audio = new Audio(filePath);
@@ -58,7 +65,7 @@ export const readCsvFile = async (
             number | undefined,
             number | undefined,
             number | undefined
-          ] => [time * 0.1, ...rest]
+          ] => [time * 0.1, ...rest] as TimeSheetPoint | TimeSheetPointLR
     )
     .filter(
       ([time, dir, val, ..._rest]) =>
@@ -78,7 +85,7 @@ export const formatTime = (time: number) => {
 export const formatDate = (date: number) =>
   format(fromUnixTime(date * 0.001 || 0), "yyyy-MM-dd");
 
-function assertPath(path) {
+function assertPath(path: string) {
   if (typeof path !== "string") {
     throw new TypeError(
       "Path must be a string. Received " + JSON.stringify(path)
@@ -110,7 +117,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 // https://github.com/browserify/path-browserify/blob/master/LICENSE
 // from https://github.com/browserify/path-browserify/blob/872fec31a8bac7b9b43be0e54ef3037e0202c5fb/index.js
-export function dirname(path) {
+export function dirname(path: string): string {
   assertPath(path);
   if (path.length === 0) return ".";
   let code = path.charCodeAt(0);

@@ -15,6 +15,7 @@ import { tracksState } from "../../states/tracks";
 import { worksState } from "../../states/works";
 import { Add } from "@mui/icons-material";
 import { ArrowBack } from "@mui/icons-material";
+import { Track, Work } from "../../types";
 
 const style = {
   position: "absolute",

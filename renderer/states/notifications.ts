@@ -1,5 +1,6 @@
 import { AtomEffect, atom } from "recoil";
 import update from "immutability-helper";
+import { type SnackbarNotification } from "../types";
 
 const timerEffect: AtomEffect<SnackbarNotification[]> = ({
   setSelf,

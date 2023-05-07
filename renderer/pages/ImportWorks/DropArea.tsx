@@ -1,18 +1,19 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-
-import { droppedFilePathState } from "../../states/droppedFile";
 import { Card, CardContent, Typography } from "@mui/material";
 
-const DropArea = () => {
-  const [_path, setDroppedFilePath] = useRecoilState(droppedFilePathState);
-
+const DropArea = ({
+  onFileDrop,
+}: {
+  onFileDrop: (file: File & { path: string }) => void;
+}) => {
   const handleDrop = (event: React.DragEvent) => {
     event.preventDefault();
     if (!event.dataTransfer.items) {
       return;
     }
-    const file = event.dataTransfer.items[0].getAsFile();
+    const file = event.dataTransfer.items[0].getAsFile() as File & {
+      path: string;
+    };
 
     if (file.type == "application/zip") {
       alert(
@@ -26,8 +27,14 @@ const DropArea = () => {
       );
       return;
     }
+    if (file.path == "") {
+      alert(
+        "ファイルのパスが取得できませんでした。音声ファイルの含まれたフォルダをドロップしてください"
+      );
+      return;
+    }
     if (file.type == "") {
-      setDroppedFilePath(file);
+      onFileDrop(file);
       return;
     }
     alert(

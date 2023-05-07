@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
 const path = require("path");
@@ -10,11 +11,8 @@ const config = {
   output: {
     path: path.resolve(__dirname, "dist"),
   },
-  devServer: {
-    open: true,
-    host: "localhost",
-  },
   target: "electron-renderer",
+  devtool: "eval-source-map",
   plugins: [
     new HtmlWebpackPlugin({
       template: "renderer/index.html",

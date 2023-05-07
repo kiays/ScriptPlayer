@@ -23,6 +23,7 @@ import { formatTime } from "../../utils";
 import { playerState } from "../../states/player";
 import EditableHeader from "../../components/EditableHeader";
 import update from "immutability-helper";
+import { Track } from "../../types";
 const WorkDetail = () => {
   const navigate = useNavigate();
   const { workId } = useParams();
