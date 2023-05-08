@@ -24,7 +24,15 @@ const traverseDirectory = async (dirPath) => {
         type = res.mime;
       }
     }
-    return [...acc, { path: p, type, children, name }];
+    return [
+      ...acc,
+      {
+        path: p,
+        type,
+        children,
+        name: name.replace(/[#/*\\\s\t,:;+'"@=%?]/g, "_"),
+      },
+    ];
   }, Promise.resolve([]));
 };
 
