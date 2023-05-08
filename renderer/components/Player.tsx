@@ -14,7 +14,14 @@ import {
 import { trackById } from "../states/tracks";
 import { useBluetooth } from "../useBluetooth";
 import { notificationsState } from "../states/notifications";
-import { Buffer } from "buffer";
+
+const createBuffer = (values: number[]): Uint8Array => {
+  const buf = new Uint8Array(values.length);
+  for (let i = 0; i < values.length; i++) {
+    buf[i] = values[i] & 255;
+  }
+  return buf;
+};
 
 const Player = () => {
   const [open, setOpen] = useState(false);
@@ -129,7 +136,7 @@ const Player = () => {
       if (rightScaled >= 100) rightScaled = 100;
       if (inverted) {
         device?.writeValue(
-          Buffer.from([
+          createBuffer([
             0x05,
             leftScaled + (leftDir ? 128 : 0),
             rightScaled + (rightDir ? 128 : 0),
@@ -137,7 +144,7 @@ const Player = () => {
         );
       } else {
         device?.writeValue(
-          Buffer.from([
+          createBuffer([
             0x05,
             rightScaled + (rightDir ? 128 : 0),
             leftScaled + (leftDir ? 128 : 0),
@@ -151,7 +158,7 @@ const Player = () => {
       let scaled = Math.floor(power * ufoScaleFactor);
       if (scaled >= 100) scaled = 100;
       device.writeValue(
-        Buffer.from([0x05, scaled + (dir ? 128 : 0), scaled + (dir ? 128 : 0)])
+        createBuffer([0x05, scaled + (dir ? 128 : 0), scaled + (dir ? 128 : 0)])
       );
     }
   };
@@ -222,10 +229,10 @@ const Player = () => {
               disconnect
             </button>
             <button
-              onClick={() => device?.writeValue(Buffer.from([5, 100, 100]))}>
+              onClick={() => device?.writeValue(createBuffer([5, 100, 100]))}>
               test device
             </button>
-            <button onClick={() => device?.writeValue(Buffer.from([5, 0, 0]))}>
+            <button onClick={() => device?.writeValue(createBuffer([5, 0, 0]))}>
               stop device
             </button>
             <button onClick={() => setInverted(!inverted)}>左右反転</button>
