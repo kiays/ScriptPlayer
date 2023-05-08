@@ -1,3 +1,6 @@
+require("dotenv").config({ path: __dirname + "/../.env" });
+console.log(`start script-player version: ${process.env.VERSION}`);
+
 const { app, BrowserWindow, ipcMain } = require("electron");
 const { DEVICE_UUID, APP_NAME } = require("../common/constants");
 const path = require("path");
