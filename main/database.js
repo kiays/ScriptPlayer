@@ -5,6 +5,7 @@ const dataRoot = app.getPath("userData");
 console.log("path:", dataRoot);
 
 const dbPath = path.join(dataRoot, "app_database.json");
+const dbBackupPath = path.join(dataRoot, "app_database.backup.json");
 if (!fs.existsSync(dbPath)) {
   console.log("app_database.json not found");
   const initialJsonStr = JSON.stringify({
@@ -31,6 +32,7 @@ if (data.tracks) {
   }
 }
 if (!data.version) {
+  fs.writeFileSync(dbBackupPath, JSON.stringify(data));
   data.version = process.env.VERSION;
 }
 
