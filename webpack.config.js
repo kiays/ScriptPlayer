@@ -12,7 +12,7 @@ const config = {
     path: path.resolve(__dirname, "dist"),
   },
   target: "electron-renderer",
-  devtool: "eval-source-map",
+  devtool: isProduction ? "none" : "eval-source-map",
   plugins: [
     new HtmlWebpackPlugin({
       template: "renderer/index.html",
