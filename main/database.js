@@ -8,6 +8,7 @@ const dbPath = path.join(dataRoot, "app_database.json");
 if (!fs.existsSync(dbPath)) {
   console.log("app_database.json not found");
   const initialJsonStr = JSON.stringify({
+    version: process.env.VERSION,
     tracks: {},
     works: {},
     csvs: {},
@@ -28,6 +29,9 @@ if (data.tracks) {
     if (!track.sheetIds) data.tracks[k].sheetIds = [];
     if (!track.numPlayed) data.tracks[k].numPlayed = 0;
   }
+}
+if (!data.version) {
+  data.version = process.env.VERSION;
 }
 
 const getAll = () => data;
