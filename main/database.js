@@ -57,9 +57,13 @@ const setAllPlaylists = (playlists) => {
   data.playlists = playlists;
   save();
 };
+const getJsonDataString = () => {
+  return JSON.stringify(data);
+};
 const save = () => fs.writeFileSync(dbPath, JSON.stringify(data));
 const dump = () => ({ data });
 module.exports = {
+  getJsonDataString,
   getAll,
   getAllCSVs,
   getAllPlaylists,

@@ -106,6 +106,7 @@ interface MainProcAPI {
   getAllTracks: () => Promise<AllTracks>;
   setAllWorks: (works: AllWorks) => Promise<void>;
   getAllWorks: () => Promise<AllWorks>;
+  getJsonDataString: () => Promise<string>;
   mainWindowReady: () => void;
   addListener: (name: string, listener: () => void) => void;
   removeListener: (name: string, listener: () => void) => void;

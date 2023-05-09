@@ -18,6 +18,7 @@ contextBridge.exposeInMainWorld("mainProc", {
   setAllTracks: (value) => ipcRenderer.invoke("setAllTracks", value),
   getAllWorks: () => ipcRenderer.invoke("getAllWorks"),
   setAllWorks: (value) => ipcRenderer.invoke("setAllWorks", value),
+  getJsonDataString: () => ipcRenderer.invoke("getJsonDataString"),
   mainWindowReady: () => ipcRenderer.invoke("main-window-ready"),
   addListener: (eventName, listener) =>
     ipcRenderer.addListener(eventName, listener),

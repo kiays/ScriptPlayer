@@ -1,8 +1,10 @@
 import {
+  Button,
   FormControl,
   FormControlLabel,
   FormGroup,
   FormLabel,
+  Input,
   Paper,
   Slider,
   Switch,
@@ -26,6 +28,16 @@ const Settings = () => {
     defaultUfoScale: 1.0,
     autoReconnect: true,
   });
+
+  const download = async () => {
+    const jsonString = await window.mainProc.getJsonDataString();
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "data.json";
+    a.click();
+  };
 
   console.log(state);
   return (
@@ -83,6 +95,10 @@ const Settings = () => {
             label="音声作品の保存先"
           />
         </FormGroup>
+      </FormControl>
+      <FormControl>
+        <Button onClick={() => download()}>download</Button>
+        <Input type="file" />
       </FormControl>
     </Paper>
   );
