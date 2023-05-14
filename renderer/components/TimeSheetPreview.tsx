@@ -29,14 +29,19 @@ const TimeSheetPreview = ({ content, onMouseDown }: TimeSheetPreviewProps) => {
   };
   useEffect(() => {
     const cvs: HTMLCanvasElement | null = ref.current;
-    if (!cvs || content.length == 0) return;
+    if (!cvs) return;
     const ctx = cvs.getContext("2d");
-    const lastPoint = content[content.length - 1];
     const { width, height } = cvs;
+    ctx.clearRect(0, 0, width, height);
+    if (content.length == 0) {
+      return;
+    }
+    const lastPoint = content[content.length - 1];
     const scaleFactorX = width / lastPoint[0];
     const scaleFactorY = height / 256;
     let lastY = 128;
     let nextY = lastY;
+    ctx.beginPath();
     ctx.moveTo(0, 128);
     for (let i = 0; i < content.length; i++) {
       const [time, dir, val] = content[i];
