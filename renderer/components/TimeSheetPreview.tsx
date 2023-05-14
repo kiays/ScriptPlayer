@@ -42,13 +42,38 @@ const TimeSheetPreview = ({ content, onMouseDown }: TimeSheetPreviewProps) => {
     let lastY = height * 0.5;
     let nextY = lastY;
     ctx.beginPath();
-    ctx.moveTo(0, height * 0.5);
-    for (let i = 0; i < content.length; i++) {
-      const [time, dir, val] = content[i];
-      ctx.lineTo(time * scaleFactorX, lastY);
-      nextY = ((dir ? val : -val) + 128) * scaleFactorY;
-      ctx.lineTo(time * scaleFactorX, nextY);
-      lastY = nextY;
+    if (lastPoint.length == 5) {
+      lastY = height * 0.25;
+      ctx.moveTo(0, lastY);
+
+      for (let i = 0; i < content.length; i++) {
+        const [time, dir, val, _dir2, _val2] = content[i];
+        ctx.lineTo(time * scaleFactorX, lastY);
+        nextY = ((dir ? val : -val) + 128) * scaleFactorY * 0.5;
+        ctx.lineTo(time * scaleFactorX, nextY);
+        lastY = nextY;
+      }
+      ctx.stroke();
+      ctx.beginPath();
+      lastY = height * 0.75;
+      ctx.moveTo(0, lastY);
+      for (let i = 0; i < content.length; i++) {
+        const [time, _dir, _val, dir2, val2] = content[i];
+        ctx.lineTo(time * scaleFactorX, lastY);
+        nextY =
+          ((dir2 ? val2 : -val2) + 128) * scaleFactorY * 0.5 + height * 0.5;
+        ctx.lineTo(time * scaleFactorX, nextY);
+        lastY = nextY;
+      }
+    } else {
+      ctx.moveTo(0, height * 0.5);
+      for (let i = 0; i < content.length; i++) {
+        const [time, dir, val] = content[i];
+        ctx.lineTo(time * scaleFactorX, lastY);
+        nextY = ((dir ? val : -val) + 128) * scaleFactorY;
+        ctx.lineTo(time * scaleFactorX, nextY);
+        lastY = nextY;
+      }
     }
     ctx.stroke();
   }, [ref, content]);
