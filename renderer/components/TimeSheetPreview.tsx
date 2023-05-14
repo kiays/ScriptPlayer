@@ -39,10 +39,10 @@ const TimeSheetPreview = ({ content, onMouseDown }: TimeSheetPreviewProps) => {
     const lastPoint = content[content.length - 1];
     const scaleFactorX = width / lastPoint[0];
     const scaleFactorY = height / 256;
-    let lastY = 128;
+    let lastY = height * 0.5;
     let nextY = lastY;
     ctx.beginPath();
-    ctx.moveTo(0, 128);
+    ctx.moveTo(0, height * 0.5);
     for (let i = 0; i < content.length; i++) {
       const [time, dir, val] = content[i];
       ctx.lineTo(time * scaleFactorX, lastY);
