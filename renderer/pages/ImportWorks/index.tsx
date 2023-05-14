@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { List } from "@mui/material";
+import { List, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
 import { useRecoilState } from "recoil";
 import Item from "./Item";
 import { Button } from "@mui/material";
@@ -22,10 +22,14 @@ const ImportWork = () => {
   const [tracks, setTracks] = useRecoilState(tracksState);
   const [checked, setChecked] = useState({});
   const [thumbnailPath, setThumbnail] = useState<string | null>(NoImage);
+  const [shouldCopy, setShouldCopy] = useState(true);
   const navigate = useNavigate();
 
   const doImport = async () => {
-    const dest = await window.mainProc.importWork(droppedFolder.path);
+    const dest = await window.mainProc.importWork(
+      droppedFolder.path,
+      shouldCopy
+    );
     const prevDirName = dirname(droppedFolder.path);
     const newDirName = dirname(dest);
     const newTrackPaths = Object.keys(checked)
@@ -88,6 +92,17 @@ const ImportWork = () => {
           />
         )}
       </div>
+      <FormGroup>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={shouldCopy}
+              onChange={() => setShouldCopy(!shouldCopy)}
+            />
+          }
+          label="ライブラリへコピーする"
+        />
+      </FormGroup>
       <Button onClick={doImport}>Import</Button>
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
         {fileList.map((fileInfo) => (

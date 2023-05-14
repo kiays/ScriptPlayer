@@ -95,7 +95,7 @@ type FileInfo = {
 
 interface MainProcAPI {
   checkDroppedFile: (path: string) => Promise<FileInfo[]>;
-  importWork: (path: string) => Promise<string>;
+  importWork: (path: string, shouldCopy: boolean) => Promise<string>;
   getFileHash: (path: string) => Promise<string>;
   readFileAsText: (path: string) => Promise<string>;
   setAllPlaylists: (playlists: AllPlaylists) => Promise<void>;

@@ -87,7 +87,11 @@ ipcMain.handle("check-dropped-file", async (e, arg) => {
 });
 
 ipcMain.handle("import-work", async (e, arg) => {
-  return await copyToDataDir(arg);
+  const { filePath, shouldCopy } = JSON.parse(arg);
+  if (shouldCopy) {
+    return await copyToDataDir(filePath);
+  }
+  return filePath;
 });
 
 ipcMain.handle("file-hash", async (_, filePath) => {

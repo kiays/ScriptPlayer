@@ -6,7 +6,8 @@ const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("mainProc", {
   checkDroppedFile: (filePath) =>
     ipcRenderer.invoke("check-dropped-file", filePath),
-  importWork: (filePath) => ipcRenderer.invoke("import-work", filePath),
+  importWork: (filePath, shouldCopy) =>
+    ipcRenderer.invoke("import-work", JSON.stringify({ filePath, shouldCopy })),
   getFileHash: (filePath) => ipcRenderer.invoke("file-hash", filePath),
   readFileAsText: (filePath) =>
     ipcRenderer.invoke("read-file-as-text", filePath),
