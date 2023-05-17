@@ -36,24 +36,31 @@ const ImportWork = () => {
       .filter((k) => checked[k])
       .map((k) => k.replace(prevDirName, newDirName));
     const hashes: string[] = [];
+    const reducer = async (
+      p: Promise<{ [key: string]: Track }>,
+      trackPath: string
+    ) => {
+      const acc = await p;
+      const name = trackPath.replace(dest + "/", "");
+      const t = await createTrack({ name, path: trackPath });
+      const hash = await window.mainProc.getFileHash(trackPath);
+      hashes.push(hash);
+      const track: Track = {
+        path: trackPath,
+        name,
+        hash,
+        duration: t.duration,
+        workName: droppedFolder.name,
+        numPlayed: 0,
+        sheetIds: [],
+      };
+      return {
+        ...acc,
+        [hash]: track,
+      };
+    };
     const tracksInfo: { [key: string]: Track } = await newTrackPaths.reduce(
-      async (p, trackPath) => {
-        const acc = await p;
-        const name = trackPath.replace(dest + "/", "");
-        const t = await createTrack({ name, path: trackPath });
-        const hash = await window.mainProc.getFileHash(trackPath);
-        hashes.push(hash);
-        return {
-          ...acc,
-          [hash]: {
-            path: trackPath,
-            name,
-            hash,
-            duration: t.duration,
-            workName: droppedFolder.name,
-          },
-        };
-      },
+      reducer,
       Promise.resolve({})
     );
     const newWorks = {
