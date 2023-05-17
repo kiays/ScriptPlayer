@@ -70,7 +70,9 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "ignore": "^/(?!(dist|node_modules|common|main|package.json))"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",

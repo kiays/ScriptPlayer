@@ -7,8 +7,12 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const isProduction = process.env.NODE_ENV == "production";
 
 const config = {
-  entry: "./renderer/index.tsx",
+  entry: {
+    index: "./renderer/index.tsx",
+    app: "./renderer/app.tsx",
+  },
   output: {
+    filename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist"),
   },
   target: "electron-renderer",
