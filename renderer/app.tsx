@@ -72,7 +72,4 @@ const App = () => {
   );
 };
 
-const render = (root) => {
-  root.render(<App />);
-};
-export default render;
+export default App;

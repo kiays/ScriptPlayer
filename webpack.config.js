@@ -9,7 +9,6 @@ const isProduction = process.env.NODE_ENV == "production";
 const config = {
   entry: {
     index: "./renderer/index.tsx",
-    app: "./renderer/app.tsx",
   },
   output: {
     filename: "[name].bundle.js",

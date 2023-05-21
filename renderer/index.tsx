@@ -1,8 +1,8 @@
+import React from "react";
 import { createRoot } from "react-dom/client";
+import App from "./app";
 
 const root = createRoot(document.getElementById("root"));
-import("./app").then(({ default: render }) => {
-  render(root);
-  document.getElementById("loader")?.remove();
-});
+root.render(<App />);
+document.getElementById("loader")?.remove();
 window.mainProc.mainWindowReady();
