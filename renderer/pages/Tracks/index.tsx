@@ -50,7 +50,7 @@ const TrackListPage = () => {
       sortable: true,
       render: (track: TrackWithWork) => track.work?.addedAt,
     },
-    id: {},
+    id: { hide: true },
     hash: { hide: true },
     path: { hide: true },
     sheetIds: { hide: true },

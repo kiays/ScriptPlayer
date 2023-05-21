@@ -11,22 +11,6 @@ const { traverseDirectory, copyToDataDir } = require("./directory");
 const crypto = require("crypto");
 const fs = require("fs/promises");
 let mainWindow;
-let splashScreen;
-
-function createSplash() {
-  splashScreen = new BrowserWindow({
-    show: false,
-    frame: false,
-    width: 600,
-    height: 322,
-  });
-
-  splashScreen.loadFile("dist/splash.html");
-
-  splashScreen.once("ready-to-show", () => {
-    splashScreen.show();
-  });
-}
 
 const createWindow = () => {
   // Create the browser window.
@@ -39,7 +23,6 @@ const createWindow = () => {
       contextIsolation: true,
     },
   });
-  mainWindow.hide();
   mainWindow.webContents.on(
     "select-bluetooth-device",
     (event, deviceList, callback) => {
@@ -60,13 +43,8 @@ app.whenReady().then(() => {
   // })
   //   .then((name) => console.log(`Added Extension:  ${name}`))
   //   .catch((err) => console.log("An error occurred: ", err));
-  createSplash();
   ipcMain.handle("main-window-ready", () => {
-    if (splashScreen) {
-      splashScreen.destroy();
-      splashScreen = null;
-    }
-    mainWindow.show();
+    console.log("main window ready");
   });
   createWindow();
 

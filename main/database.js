@@ -5,7 +5,10 @@ const dataRoot = app.getPath("userData");
 console.log("path:", dataRoot);
 
 const dbPath = path.join(dataRoot, "app_database.json");
-const dbBackupPath = path.join(dataRoot, "app_database.backup.json");
+const dbBackupPath = path.join(
+  dataRoot,
+  `app_database.backup${Date.now()}.json`
+);
 if (!fs.existsSync(dbPath)) {
   console.log("app_database.json not found");
   const initialJsonStr = JSON.stringify({
@@ -24,16 +27,26 @@ if (!fs.existsSync(dbPath)) {
 const data = JSON.parse(fs.readFileSync(dbPath, { encoding: "utf8" }));
 
 // data migration
+let dirty = false;
 if (data.tracks) {
   for (let k in data.tracks) {
     const track = data.tracks[k];
+    if (!track.sheetIds || !track.numPlayed || !track.id) dirty = true;
     if (!track.sheetIds) data.tracks[k].sheetIds = [];
     if (!track.numPlayed) data.tracks[k].numPlayed = 0;
+    if (!track.id) data.tracks[k].id = Date.now() + Math.random();
   }
 }
+
+// create backup
 if (!data.version) {
   fs.writeFileSync(dbBackupPath, JSON.stringify(data));
   data.version = process.env.VERSION;
+}
+
+if (dirty) {
+  fs.writeFileSync(dbBackupPath, JSON.stringify(data));
+  fs.writeFileSync(dbPath, JSON.stringify(data));
 }
 
 const getAll = () => data;

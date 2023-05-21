@@ -50,6 +50,7 @@ const ImportWork = () => {
         const hash = await window.mainProc.getFileHash(trackPath);
         hashes.push(hash);
         const track: Track = {
+          id: Date.now() * Math.random(),
           path: trackPath,
           name,
           hash,

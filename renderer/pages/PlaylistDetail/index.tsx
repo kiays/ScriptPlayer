@@ -40,7 +40,7 @@ const PlaylistDetail = () => {
   const [_player, setPlayerState] = useRecoilState(playerState);
 
   const setCsv = useCallback(
-    async (track, csv) => {
+    async (track: PlaylistTrack, csv) => {
       const csvContentStr = await readFile(csv);
       const csvContent = csvContentStr
         .split("\r\n")

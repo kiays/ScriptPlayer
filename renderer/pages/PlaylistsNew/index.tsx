@@ -30,7 +30,9 @@ const PlaylistNew = () => {
   const [tracks, setTracks] = useState([]);
   const [allPlaylists, setPlaylists] = useRecoilState(playlistsState);
   const addTrack = (hash) => {
-    setTracks((t) => update(t, { $push: [{ hash, id: Date.now() }] }));
+    setTracks((t) =>
+      update(t, { $push: [{ hash, id: Date.now() * Math.random() }] })
+    );
   };
   const removeTrack = (id) => {
     setTracks((t) => t.filter((tr) => tr.id != id));
