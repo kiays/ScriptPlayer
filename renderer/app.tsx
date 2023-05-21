@@ -1,6 +1,5 @@
 import React, { Suspense } from "react";
-import { RecoilRoot, useRecoilValue } from "recoil";
-import { loadingState } from "./states/loading";
+import { RecoilRoot } from "recoil";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import Loading from "./components/Loading";
 import { ThemeProvider, createTheme } from "@mui/material";
@@ -24,11 +23,6 @@ import ComponentCatalog from "./pages/ComponentCatalog";
 
 const theme = createTheme();
 
-const LoadingOverlay = () => {
-  const loading = useRecoilValue(loadingState);
-  return <Loading loading={loading} />;
-};
-
 const App = () => {
   return (
     <>
@@ -37,7 +31,6 @@ const App = () => {
           <HashRouter>
             <Suspense fallback={<Loading loading={true} />}>
               <Layout>
-                <LoadingOverlay />
                 <div style={{ width: "100%", height: "100%" }}>
                   <Routes>
                     <Route path="/playlists" element={<Playlists />} />

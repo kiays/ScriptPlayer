@@ -11,6 +11,7 @@ import { dirname } from "../../utils";
 import NoImage from "../../assets/no_image.png";
 import DropArea from "./DropArea";
 import { FileInfo, Track } from "../../types";
+import Loading from "../../components/Loading";
 
 const ImportWork = () => {
   const [droppedFolder, setDroppedFolder] = useState<
@@ -23,62 +24,70 @@ const ImportWork = () => {
   const [checked, setChecked] = useState({});
   const [thumbnailPath, setThumbnail] = useState<string | null>(NoImage);
   const [shouldCopy, setShouldCopy] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const doImport = async () => {
-    const dest = await window.mainProc.importWork(
-      droppedFolder.path,
-      shouldCopy
-    );
-    const prevDirName = dirname(droppedFolder.path);
-    const newDirName = dirname(dest);
-    const newTrackPaths = Object.keys(checked)
-      .filter((k) => checked[k])
-      .map((k) => k.replace(prevDirName, newDirName));
-    const hashes: string[] = [];
-    const reducer = async (
-      p: Promise<{ [key: string]: Track }>,
-      trackPath: string
-    ) => {
-      const acc = await p;
-      const name = trackPath.replace(dest + "/", "");
-      const t = await createTrack({ name, path: trackPath });
-      const hash = await window.mainProc.getFileHash(trackPath);
-      hashes.push(hash);
-      const track: Track = {
-        path: trackPath,
-        name,
-        hash,
-        duration: t.duration,
-        workName: droppedFolder.name,
-        numPlayed: 0,
-        sheetIds: [],
+    setLoading(true);
+    try {
+      const dest = await window.mainProc.importWork(
+        droppedFolder.path,
+        shouldCopy
+      );
+      const prevDirName = dirname(droppedFolder.path);
+      const newDirName = dirname(dest);
+      const newTrackPaths = Object.keys(checked)
+        .filter((k) => checked[k])
+        .map((k) => k.replace(prevDirName, newDirName));
+      const hashes: string[] = [];
+      const reducer = async (
+        p: Promise<{ [key: string]: Track }>,
+        trackPath: string
+      ) => {
+        const acc = await p;
+        const name = trackPath.replace(dest + "/", "");
+        const t = await createTrack({ name, path: trackPath });
+        const hash = await window.mainProc.getFileHash(trackPath);
+        hashes.push(hash);
+        const track: Track = {
+          path: trackPath,
+          name,
+          hash,
+          duration: t.duration,
+          workName: droppedFolder.name,
+          numPlayed: 0,
+          sheetIds: [],
+        };
+        return {
+          ...acc,
+          [hash]: track,
+        };
       };
-      return {
-        ...acc,
-        [hash]: track,
+      const tracksInfo: { [key: string]: Track } = await newTrackPaths.reduce(
+        reducer,
+        Promise.resolve({})
+      );
+      const newWorks = {
+        ...works,
+        [droppedFolder.name]: {
+          path: dest,
+          name: droppedFolder.name,
+          trackFiles: newTrackPaths,
+          trackIds: hashes,
+          thumbnailPath: thumbnailPath.replace(prevDirName, newDirName),
+          addedAt: Date.now(),
+        },
       };
-    };
-    const tracksInfo: { [key: string]: Track } = await newTrackPaths.reduce(
-      reducer,
-      Promise.resolve({})
-    );
-    const newWorks = {
-      ...works,
-      [droppedFolder.name]: {
-        path: dest,
-        name: droppedFolder.name,
-        trackFiles: newTrackPaths,
-        trackIds: hashes,
-        thumbnailPath: thumbnailPath.replace(prevDirName, newDirName),
-        addedAt: Date.now(),
-      },
-    };
-    setTracks({ ...tracks, ...tracksInfo });
-    setWorks(newWorks);
-    setChecked({});
-    setThumbnail(null);
-    navigate(`/works/${droppedFolder.name}`);
+      setTracks({ ...tracks, ...tracksInfo });
+      setWorks(newWorks);
+      setChecked({});
+      setThumbnail(null);
+      navigate(`/works/${droppedFolder.name}`);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleFileDrop = async (file: File & { path: string }) => {
@@ -89,41 +98,44 @@ const ImportWork = () => {
   if (!droppedFolder || !fileList)
     return <DropArea onFileDrop={handleFileDrop} />;
   return (
-    <div>
+    <>
+      <Loading loading={loading} />
       <div>
-        <h1>Import {droppedFolder.name}</h1>
-        {thumbnailPath && (
-          <img
-            src={thumbnailPath}
-            style={{ width: "25%", objectFit: "contain" }}
-          />
-        )}
-      </div>
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={shouldCopy}
-              onChange={() => setShouldCopy(!shouldCopy)}
+        <div>
+          <h1>Import {droppedFolder.name}</h1>
+          {thumbnailPath && (
+            <img
+              src={thumbnailPath}
+              style={{ width: "25%", objectFit: "contain" }}
             />
-          }
-          label="ライブラリへコピーする"
-        />
-      </FormGroup>
-      <Button onClick={doImport}>Import</Button>
-      <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-        {fileList.map((fileInfo) => (
-          <Item
-            key={fileInfo.path}
-            fileInfo={fileInfo}
-            checked={checked}
-            setChecked={setChecked}
-            thumbnailPath={thumbnailPath}
-            setThumbnail={setThumbnail}
+          )}
+        </div>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={shouldCopy}
+                onChange={() => setShouldCopy(!shouldCopy)}
+              />
+            }
+            label="ライブラリへコピーする"
           />
-        ))}
-      </List>
-    </div>
+        </FormGroup>
+        <Button onClick={doImport}>Import</Button>
+        <List sx={{ width: "100%", bgcolor: "background.paper" }}>
+          {fileList.map((fileInfo) => (
+            <Item
+              key={fileInfo.path}
+              fileInfo={fileInfo}
+              checked={checked}
+              setChecked={setChecked}
+              thumbnailPath={thumbnailPath}
+              setThumbnail={setThumbnail}
+            />
+          ))}
+        </List>
+      </div>
+    </>
   );
 };
 export default ImportWork;
