@@ -10,6 +10,7 @@ import {
   TableSortLabel,
   Menu,
   MenuItem,
+  TablePagination,
 } from "@mui/material";
 import {
   bindContextMenu,
@@ -69,6 +70,8 @@ const SortableTable = <T,>({
   const [selectedId, setId] = useState<string | null>(null);
   const [order, setOrder] = useState<"asc" | "desc">("desc");
   const [orderBy, setOrderBy] = useState<keyof T | string>(schemaKeys[0]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleContextMenu = (id: string) => {
     const { onContextMenu } = bindContextMenu(popupState);
@@ -93,69 +96,97 @@ const SortableTable = <T,>({
   const comparator =
     schema[orderBy].comparator ||
     ((a: T, b: T) => (a[orderBy as keyof T] > b[orderBy as keyof T] ? 1 : -1));
+
   const sortedDataIdList: string[] = Object.keys(data).sort((k1, k2) => {
     return comparator(data[k1], data[k2]) * (order === "asc" ? -1 : 1);
   });
 
+  const handleChangePage = (
+    _event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const currentItemIndex = page * rowsPerPage;
+
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            {schemaKeys.map((key) => (
-              <TableCell key={`table-head-${key}`}>
-                {sortable && schema[key].sortable ? (
-                  <TableSortLabel
-                    active={orderBy === key}
-                    direction={orderBy === key ? order : "asc"}
-                    onClick={createSortHandler(key)}>
-                    {schema[key].name || key}
-                  </TableSortLabel>
-                ) : (
-                  schema[key].name || key
-                )}
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {sortedDataIdList.map((id) => (
-            <TableRow
-              hover
-              key={`table-row-${id}`}
-              onClick={() => onRowClicked(id)}
-              onContextMenu={handleContextMenu(id)}>
-              {schemaKeys.map((k) => (
-                <TableCell key={`table-cell-${k}`}>
-                  {schema[k].render
-                    ? schema[k].render(data[id])
-                    : data[id].hasOwnProperty(k)
-                    ? data[id][k]
-                    : ""}
+    <>
+      <TablePagination
+        component="div"
+        page={page}
+        rowsPerPage={rowsPerPage}
+        count={sortedDataIdList.length}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        color="primary"
+      />
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {schemaKeys.map((key) => (
+                <TableCell key={`table-head-${key}`}>
+                  {sortable && schema[key].sortable ? (
+                    <TableSortLabel
+                      active={orderBy === key}
+                      direction={orderBy === key ? order : "asc"}
+                      onClick={createSortHandler(key)}>
+                      {schema[key].name || key}
+                    </TableSortLabel>
+                  ) : (
+                    schema[key].name || key
+                  )}
                 </TableCell>
               ))}
             </TableRow>
-          ))}
-          {schema.$onContextMenu && (
-            <Menu
-              {...bindMenu(popupState)}
-              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-              transformOrigin={{ vertical: "top", horizontal: "left" }}>
-              {Object.keys(contextMenuItems).map((name) => (
-                <MenuItem
-                  key={`context-menu-item-${name}`}
-                  onClick={() => {
-                    contextMenuItems[name](selectedId);
-                    popupState.close();
-                  }}>
-                  {name}
-                </MenuItem>
+          </TableHead>
+          <TableBody>
+            {sortedDataIdList
+              .slice(currentItemIndex, currentItemIndex + rowsPerPage)
+              .map((id) => (
+                <TableRow
+                  hover
+                  key={`table-row-${id}`}
+                  onClick={() => onRowClicked(id)}
+                  onContextMenu={handleContextMenu(id)}>
+                  {schemaKeys.map((k) => (
+                    <TableCell key={`table-cell-${k}`}>
+                      {schema[k].render
+                        ? schema[k].render(data[id])
+                        : data[id].hasOwnProperty(k)
+                        ? data[id][k]
+                        : ""}
+                    </TableCell>
+                  ))}
+                </TableRow>
               ))}
-            </Menu>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            {schema.$onContextMenu && (
+              <Menu
+                {...bindMenu(popupState)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                transformOrigin={{ vertical: "top", horizontal: "left" }}>
+                {Object.keys(contextMenuItems).map((name) => (
+                  <MenuItem
+                    key={`context-menu-item-${name}`}
+                    onClick={() => {
+                      contextMenuItems[name](selectedId);
+                      popupState.close();
+                    }}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Menu>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
 
