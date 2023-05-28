@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import {
   styled,
   useTheme,
@@ -32,6 +32,7 @@ import {
   Download as ImportIcon,
   Cached as ReloadIcon,
   Settings as SettingsIcon,
+  Home as HomeIcon,
 } from "@mui/icons-material";
 import { useRecoilState } from "recoil";
 import { notificationsState } from "./states/notifications";
@@ -113,6 +114,7 @@ export default function Layout({ children }: LayoutProps) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const [notifications, setNotifications] = useRecoilState(notificationsState);
+  const { pathname } = useLocation();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -163,26 +165,47 @@ export default function Layout({ children }: LayoutProps) {
           <Divider />
           <List>
             <ListItemButton
+              key={"Home"}
+              onClick={() => navigate("/")}
+              selected={pathname === "/"}>
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Home"} />
+            </ListItemButton>
+            <ListItemButton
               key={"Playlists"}
-              onClick={() => navigate("/playlists")}>
+              onClick={() => navigate("/playlists")}
+              selected={pathname.startsWith("/playlists")}>
               <ListItemIcon>
                 <PlaylistIcon />
               </ListItemIcon>
               <ListItemText primary={"Playlists"} />
             </ListItemButton>
-            <ListItemButton key={"Works"} onClick={() => navigate("/works")}>
+            <ListItemButton
+              key={"Works"}
+              onClick={() => navigate("/works")}
+              selected={
+                pathname.startsWith("/works") && pathname !== "/works/import"
+              }>
               <ListItemIcon>
                 <AlbumIcon />
               </ListItemIcon>
               <ListItemText primary={"Works"} />
             </ListItemButton>
-            <ListItemButton key={"Tracks"} onClick={() => navigate("/tracks")}>
+            <ListItemButton
+              key={"Tracks"}
+              onClick={() => navigate("/tracks")}
+              selected={pathname.startsWith("/tracks")}>
               <ListItemIcon>
                 <AudiotrackIcon />
               </ListItemIcon>
               <ListItemText primary={"Tracks"} />
             </ListItemButton>
-            <ListItemButton key={"CSVs"} onClick={() => navigate("/csvs")}>
+            <ListItemButton
+              key={"CSVs"}
+              onClick={() => navigate("/csvs")}
+              selected={pathname.startsWith("/csvs")}>
               <ListItemIcon>
                 <CSVIcon />
               </ListItemIcon>
@@ -190,7 +213,8 @@ export default function Layout({ children }: LayoutProps) {
             </ListItemButton>
             <ListItemButton
               key={"Import"}
-              onClick={() => navigate("/works/import")}>
+              onClick={() => navigate("/works/import")}
+              selected={pathname === "/works/import"}>
               <ListItemIcon>
                 <ImportIcon />
               </ListItemIcon>
@@ -199,7 +223,8 @@ export default function Layout({ children }: LayoutProps) {
             {IS_DEVELOPMENT && (
               <ListItemButton
                 key={"Settings"}
-                onClick={() => navigate("/settings")}>
+                onClick={() => navigate("/settings")}
+                selected={pathname === "/settings"}>
                 <ListItemIcon>
                   <SettingsIcon />
                 </ListItemIcon>
