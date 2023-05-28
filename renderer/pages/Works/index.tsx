@@ -1,13 +1,13 @@
 import React from "react";
 import { Avatar, Box } from "@mui/material";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { worksState } from "../../states/works";
 import { useNavigate } from "react-router";
 import SortableTable from "../../components/SortableTable";
 import { Work } from "../../types";
 
 const Works = () => {
-  const works = useRecoilState(worksState)[0];
+  const works = useRecoilValue(worksState);
   const navigate = useNavigate();
   const schema = {
     trackIds: { hide: true },

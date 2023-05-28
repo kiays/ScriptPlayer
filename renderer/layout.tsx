@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import {
   styled,
-  useTheme,
   Box,
   CssBaseline,
   Toolbar,
@@ -110,7 +109,6 @@ type LayoutProps = {
   children: React.ReactNode;
 };
 export default function Layout({ children }: LayoutProps) {
-  const _theme = useTheme();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const [notifications, setNotifications] = useRecoilState(notificationsState);
@@ -235,7 +233,18 @@ export default function Layout({ children }: LayoutProps) {
           <Divider />
           <List></List>
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            backgroundColor: (theme) =>
+              theme.palette.mode === "light"
+                ? theme.palette.grey[100]
+                : theme.palette.grey[900],
+            height: "100vh",
+            overflow: "auto",
+          }}>
           <DrawerHeader />
           {children}
         </Box>
