@@ -110,6 +110,7 @@ interface MainProcAPI {
   mainWindowReady: () => void;
   addListener: (name: string, listener: () => void) => void;
   removeListener: (name: string, listener: () => void) => void;
+  openFolder: (path: string) => void;
 }
 
 declare global {

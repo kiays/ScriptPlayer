@@ -45,6 +45,9 @@ const Settings = () => {
       <Typography variant="h4" component="h1" sx={{ my: 2 }}>
         Settings
       </Typography>
+      <Button onClick={() => window.mainProc.openFolder("$data.json")}>
+        data.json
+      </Button>
       <FormControl component="fieldset" variant="standard" sx={{}}>
         <FormLabel component="legend" sx={{ mt: 4 }}>
           UFO関連設定

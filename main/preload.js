@@ -21,6 +21,7 @@ contextBridge.exposeInMainWorld("mainProc", {
   setAllWorks: (value) => ipcRenderer.invoke("setAllWorks", value),
   getJsonDataString: () => ipcRenderer.invoke("getJsonDataString"),
   mainWindowReady: () => ipcRenderer.invoke("main-window-ready"),
+  openFolder: (folderPath) => ipcRenderer.invoke("open-folder", folderPath),
   addListener: (eventName, listener) =>
     ipcRenderer.addListener(eventName, listener),
   removeListener: (eventName, listener) =>

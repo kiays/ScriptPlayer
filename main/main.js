@@ -82,6 +82,16 @@ ipcMain.handle("read-file-as-text", async (_, filePath) => {
   const fileContentStr = await fs.readFile(filePath, { encoding: "utf8" });
   return fileContentStr;
 });
+ipcMain.handle("open-folder", async (_, folderPath) => {
+  const { shell } = require("electron");
+  if (folderPath == "$data.json") {
+    const { app } = require("electron");
+    const dataRoot = app.getPath("userData");
+    shell.openPath(dataRoot);
+    return;
+  }
+  shell.openPath(folderPath);
+});
 require("./menu");
 
 Object.keys(database).forEach((method) => {
