@@ -37,6 +37,14 @@ if (data.tracks) {
     if (!track.id) data.tracks[k].id = Date.now() + Math.random();
   }
 }
+if (data.works) {
+  for (let k in data.works) {
+    const work = data.works[k];
+    console.log(work, k, work.addedAt);
+    if (!work.addedAt) dirty = true;
+    if (!work.addedAt) data.works[k].addedAt = Date.now();
+  }
+}
 
 // create backup
 if (!data.version) {
