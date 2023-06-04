@@ -18,6 +18,7 @@ import {
   bindMenu,
 } from "material-ui-popup-state/hooks";
 import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 type TableSchema<T> = {
   name?: string;
@@ -67,11 +68,29 @@ const SortableTable = <T,>({
     variant: "popover",
     popupId: "sortable_table",
   });
+
+  const [params, setSearchParams] = useSearchParams();
   const [selectedId, setId] = useState<string | null>(null);
-  const [order, setOrder] = useState<"asc" | "desc">("desc");
-  const [orderBy, setOrderBy] = useState<keyof T | string>(schemaKeys[0]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const state = {
+    order: (params.get("order") as "asc" | "desc") || "desc",
+    orderBy: params.get("orderBy") || schemaKeys[0],
+    page: params.get("page") || "0",
+    rowsPerPage: params.get("rowsPerPage") || "10",
+  };
+  const setOrder = (order) => {
+    setSearchParams({ ...state, order });
+  };
+  const setOrderBy = (orderBy) => {
+    setSearchParams({ ...state, orderBy });
+  };
+  const setPage = (page) => {
+    setSearchParams({ ...state, page: String(page) });
+  };
+  const setRowsPerPage = (rowsPerPage) =>
+    setSearchParams({ ...state, rowsPerPage: String(rowsPerPage), page: "0" });
+  const { order, orderBy } = state;
+  const page = parseInt(state.page);
+  const rowsPerPage = parseInt(state.rowsPerPage);
 
   const handleContextMenu = (id: string) => {
     const { onContextMenu } = bindContextMenu(popupState);
@@ -110,7 +129,6 @@ const SortableTable = <T,>({
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
   };
 
   const currentItemIndex = page * rowsPerPage;
