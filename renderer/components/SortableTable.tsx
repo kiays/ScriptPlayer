@@ -27,6 +27,9 @@ type TableSchema<T> = {
   render?: (value: T) => React.ReactNode;
   sortable?: boolean;
   comparator?: (a: T, b: T) => number;
+  width?: number | string;
+  minWidth?: number | string;
+  maxWidth?: number | string;
 };
 
 type EventHandlerSpec = {
@@ -148,20 +151,29 @@ const SortableTable = <T,>({
         <Table>
           <TableHead>
             <TableRow>
-              {schemaKeys.map((key) => (
-                <TableCell key={`table-head-${key}`}>
-                  {sortable && schema[key].sortable ? (
-                    <TableSortLabel
-                      active={orderBy === key}
-                      direction={orderBy === key ? order : "asc"}
-                      onClick={createSortHandler(key)}>
-                      {schema[key].name || key}
-                    </TableSortLabel>
-                  ) : (
-                    schema[key].name || key
-                  )}
-                </TableCell>
-              ))}
+              {schemaKeys.map((key) => {
+                const s = schema[key];
+                return (
+                  <TableCell
+                    key={`table-head-${key}`}
+                    sx={{
+                      maxWidth: s.maxWidth,
+                      minWidth: s.minWidth,
+                      width: s.width,
+                    }}>
+                    {sortable && s.sortable ? (
+                      <TableSortLabel
+                        active={orderBy === key}
+                        direction={orderBy === key ? order : "asc"}
+                        onClick={createSortHandler(key)}>
+                        {s.name || key}
+                      </TableSortLabel>
+                    ) : (
+                      s.name || key
+                    )}
+                  </TableCell>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>

@@ -13,7 +13,8 @@ const Works = () => {
     trackIds: { hide: true },
     thumbnailPath: {
       order: 0,
-      name: "アイコン",
+      name: " ",
+      width: "3rem",
       render: (work) => <Avatar src={work.thumbnailPath} variant="square" />,
     },
     name: {
@@ -26,12 +27,14 @@ const Works = () => {
       sortable: true,
       comparator: (a, b) => a.trackIds.length - b.trackIds.length,
       name: "トラック数",
+      width: "10rem",
       render: (work) => `${work.trackIds.length} tracks`,
     },
     addedAt: {
       order: 3,
       sortable: true,
       name: "追加日",
+      width: "8rem",
       render: (work) => new Date(work.addedAt).toLocaleDateString(),
     },
     $onRowClicked: (key) => navigate(`/works/${key}`),
