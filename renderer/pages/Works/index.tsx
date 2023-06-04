@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Box } from "@mui/material";
+import { Avatar, Box, Rating } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { worksState } from "../../states/works";
 import { useNavigate } from "react-router";
@@ -21,6 +21,12 @@ const Works = () => {
       order: 1,
       sortable: true,
       name: "作品名",
+    },
+    rating: {
+      order: 4,
+      sortable: true,
+      name: "評価",
+      render: (work) => <Rating value={work.rating} readOnly />,
     },
     numTracks: {
       order: 2,

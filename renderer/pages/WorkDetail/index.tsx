@@ -1,6 +1,7 @@
 import {
   Box,
   IconButton,
+  Rating,
   Stack,
   Table,
   TableBody,
@@ -54,6 +55,11 @@ const WorkDetail = () => {
       update(allWorks, { [currentWorkId]: { name: { $set: title } } })
     );
   };
+  const changeRating = (rating: number) => {
+    setAllWorks(
+      update(allWorks, { [currentWorkId]: { rating: { $set: rating } } })
+    );
+  };
 
   if (!work || !tracks) return <div>loading...</div>;
   const { thumbnailPath, trackIds } = work;
@@ -63,6 +69,10 @@ const WorkDetail = () => {
         <EditableHeader text={work.name} onChange={changeTitle} />
         <img src={thumbnailPath} style={{ width: "25%" }} />
       </Stack>
+      <Rating
+        value={work.rating}
+        onChange={(_e, value) => changeRating(value)}
+      />
       <Table>
         <TableHead>
           <TableRow>

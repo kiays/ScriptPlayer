@@ -6,6 +6,7 @@ import {
   CardContent,
   CardMedia,
   Grid,
+  Rating,
   Stack,
   Typography,
 } from "@mui/material";
@@ -69,12 +70,13 @@ const Home = () => {
         flexGrow={1}
         sx={{ marginY: 4 }}
         alignItems="stretch">
-        {resentWorks.map(({ key, name, thumbnailPath }) => (
+        {resentWorks.map(({ key, name, rating, thumbnailPath }) => (
           <Grid key={key} item xs={4}>
             <Card>
               <CardActionArea onClick={() => navigate(`/works/${key}`)}>
                 <CardMedia sx={{ height: 140 }} image={thumbnailPath} />
                 <CardContent sx={{ height: 100 }}>
+                  <Rating value={rating} readOnly />
                   <Typography
                     gutterBottom
                     component="div"

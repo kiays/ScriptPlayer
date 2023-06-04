@@ -77,6 +77,7 @@ const ImportWork = () => {
           trackIds: hashes,
           thumbnailPath: thumbnailPath.replace(prevDirName, newDirName),
           addedAt: Date.now(),
+          rating: null,
         },
       };
       setTracks({ ...tracks, ...tracksInfo });

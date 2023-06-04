@@ -46,6 +46,7 @@ const PlaylistNew = () => {
         id,
         tracks,
         createdAt: Date.now(),
+        rating: null,
       },
     });
   };

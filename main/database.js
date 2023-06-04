@@ -40,9 +40,16 @@ if (data.tracks) {
 if (data.works) {
   for (let k in data.works) {
     const work = data.works[k];
-    console.log(work, k, work.addedAt);
-    if (!work.addedAt) dirty = true;
+    if (!work.addedAt || !("rating" in work)) dirty = true;
     if (!work.addedAt) data.works[k].addedAt = Date.now();
+    if (!("rating" in work)) data.works[k].rating = null;
+  }
+}
+if (data.playlists) {
+  for (let k in data.playlists) {
+    const playlist = data.playlists[k];
+    if (!("rating" in playlist)) dirty = true;
+    if (!("rating" in playlist)) data.playlists[k].rating = null;
   }
 }
 

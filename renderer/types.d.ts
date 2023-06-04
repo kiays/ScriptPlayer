@@ -25,6 +25,7 @@ type Work = {
   thumbnailPath: string;
   name: string;
   addedAt: number;
+  rating: number;
 };
 
 type TrackWithWork = Track & {
@@ -49,6 +50,7 @@ type Playlist = {
   name: string;
   tracks: Array<PlaylistTrack>;
   createdAt: number;
+  rating: number | null;
 };
 
 type TimeSheetHashID = FileHash;
