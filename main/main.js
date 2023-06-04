@@ -10,13 +10,16 @@ const database = require("./database");
 const { traverseDirectory, copyToDataDir } = require("./directory");
 const crypto = require("crypto");
 const fs = require("fs/promises");
+const { state, saveState } = require("./preferences");
 let mainWindow;
 
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 1200,
+    width: state.width,
+    height: state.height,
+    x: state.x,
+    y: state.y,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
@@ -34,6 +37,18 @@ const createWindow = () => {
       }
     }
   );
+  const saveSizeAndPosition = () => {
+    const [width, height] = mainWindow.getSize();
+    const [x, y] = mainWindow.getPosition();
+    state.width = width;
+    state.height = height;
+    state.x = x;
+    state.y = y;
+    saveState(state);
+  };
+
+  mainWindow.on("resize", saveSizeAndPosition);
+  mainWindow.on("move", saveSizeAndPosition);
   mainWindow.loadFile("dist/index.html");
 };
 
