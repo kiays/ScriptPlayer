@@ -1,4 +1,4 @@
-import { Box, IconButton, Tooltip } from "@mui/material";
+import { Box, IconButton, Rating, Tooltip } from "@mui/material";
 import { PlayArrow as PlayIcon } from "@mui/icons-material";
 import React, { useCallback } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -114,6 +114,9 @@ const PlaylistDetail = () => {
   const setTrackOrder = (tracks: PlaylistTrack & Track[]) => {
     setPlaylist(update(playlist, { tracks: { $set: tracks } }));
   };
+  const setRating = (rating: number) => {
+    setPlaylist(update(playlist, { rating: { $set: rating } }));
+  };
 
   const schema = {
     id: { hide: true },
@@ -161,6 +164,12 @@ const PlaylistDetail = () => {
         onChange={changePlaylistName}
         style={{ display: "inline" }}
       />
+      <Box>
+        <Rating
+          value={playlist.rating}
+          onChange={(_e, value) => setRating(value)}
+        />
+      </Box>
       <DraggableTable items={tracks} onSort={setTrackOrder} schema={schema} />
     </Box>
   );

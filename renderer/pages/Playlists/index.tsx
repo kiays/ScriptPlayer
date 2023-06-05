@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Rating } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -27,21 +27,29 @@ const Playlists = () => {
       name: "#",
       sortable: true,
       render: (playlist) => playlist.index + 1,
+      width: "3rem",
     },
     name: {
       order: 1,
-      name: "name",
+      name: "名前",
       sortable: true,
+    },
+    rating: {
+      order: 2,
+      sortable: true,
+      name: "評価",
+      render: (playlist) => <Rating value={playlist.rating} readOnly />,
     },
     tracks: {
-      order: 2,
-      name: "tracks",
+      order: 3,
+      name: "トラック数",
       sortable: true,
       render: (playlist) => playlist.tracks.length,
+      width: "8.2rem",
     },
     duration: {
-      order: 3,
-      name: "duration",
+      order: 4,
+      name: "再生時間",
       sortable: false,
       render: (playlist) => {
         const duration = playlist.tracks
@@ -50,11 +58,13 @@ const Playlists = () => {
           .reduce((acc, t) => acc + t.duration, 0);
         return formatTime(duration);
       },
+      width: "7rem",
     },
     createdAt: {
-      order: 4,
-      name: "Created At",
+      order: 5,
+      name: "作成日",
       sortable: true,
+      width: "10rem",
       render: (playlist) => formatDate(playlist.createdAt),
     },
     $onRowClicked: (id) => selectPlaylist(Object.keys(playlists)[id]),

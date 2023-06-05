@@ -96,12 +96,13 @@ const Home = () => {
         display={"flex"}
         flexGrow={1}
         alignItems="stretch">
-        {recentPlaylists.map(({ key, name, thumbnailPath }) => (
+        {recentPlaylists.map(({ key, name, rating, thumbnailPath }) => (
           <Grid key={key} item xs={4}>
             <Card>
               <CardActionArea onClick={() => navigate(`/playlists/${key}`)}>
                 <CardMedia sx={{ height: 140 }} image={thumbnailPath} />
                 <CardContent sx={{ height: 100 }}>
+                  <Rating value={rating} readOnly />
                   <Typography
                     gutterBottom
                     component="div"

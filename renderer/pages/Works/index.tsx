@@ -23,13 +23,13 @@ const Works = () => {
       name: "作品名",
     },
     rating: {
-      order: 4,
+      order: 2,
       sortable: true,
       name: "評価",
       render: (work) => <Rating value={work.rating} readOnly />,
     },
     numTracks: {
-      order: 2,
+      order: 3,
       sortable: true,
       comparator: (a, b) => a.trackIds.length - b.trackIds.length,
       name: "トラック数",
@@ -37,7 +37,7 @@ const Works = () => {
       render: (work) => `${work.trackIds.length} tracks`,
     },
     addedAt: {
-      order: 3,
+      order: 4,
       sortable: true,
       name: "追加日",
       width: "8rem",
