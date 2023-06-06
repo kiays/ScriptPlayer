@@ -20,15 +20,20 @@ const TrackListPage = () => {
 
   const schema = {
     icon: {
-      name: "icon",
+      name: " ",
       order: 0,
+      width: "3rem",
       render: (track) => (
         <Avatar src={track.work?.thumbnailPath} variant="square" />
       ),
     },
-    name: { name: "name", order: 1, sortable: true },
+    name: {
+      name: "トラック名",
+      order: 1,
+      sortable: true,
+    },
     workName: {
-      name: "work",
+      name: "音声作品",
       order: 2,
       hide: false,
       sortable: true,
@@ -37,14 +42,21 @@ const TrackListPage = () => {
       ),
     },
     duration: {
-      name: "duration",
+      name: "再生時間",
       order: 3,
       render: (track: TrackWithWork) => formatTime(track.duration),
       sortable: true,
+      width: "7.5rem",
     },
-    numPlayed: { name: "# of played", order: 4, hide: false, sortable: true },
+    numPlayed: {
+      name: "再生回数",
+      order: 4,
+      hide: false,
+      sortable: true,
+      width: "7.5rem",
+    },
     addedAt: {
-      name: "added at",
+      name: "追加日",
       order: 5,
       hide: true,
       sortable: true,
