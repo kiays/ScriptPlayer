@@ -6,6 +6,7 @@
   "scripts": {
     "watch": "webpack --watch",
     "build": "webpack --mode=production --node-env=production",
+    "build:main": "esbuild  --bundle main/main.js --outfile=dist/main.js --platform=node",
     "start": "electron .",
     "start:forge": "electron-forge start",
     "rebuild:arm64": "electron-rebuild --arch arm64",

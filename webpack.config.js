@@ -19,14 +19,6 @@ const config = {
     new HtmlWebpackPlugin({
       template: "renderer/index.html",
     }),
-    new HtmlWebpackPlugin({
-      template: "renderer/splash.html",
-      filename: "splash.html",
-      inject: false,
-    }),
-
-    // Add your plugins here
-    // Learn more about plugins from https://webpack.js.org/configuration/plugins/
   ],
   module: {
     rules: [
