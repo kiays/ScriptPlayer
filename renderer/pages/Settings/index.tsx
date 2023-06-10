@@ -11,9 +11,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Settings = () => {
+  const [qrcode, setQrcode] = useState("");
+  useEffect(() => {
+    window.mainProc.getWSEndpoint().then((qrcode) => {
+      setQrcode(qrcode);
+    });
+  }, []);
   const handleChange = (e) => {
     console.log(e.target.name, e.target.value, e.target.type);
     if (e.target.type === "checkbox") {
@@ -45,6 +51,7 @@ const Settings = () => {
       <Typography variant="h4" component="h1" sx={{ my: 2 }}>
         Settings
       </Typography>
+      <img src={qrcode} />
       <Button onClick={() => window.mainProc.openFolder("$data.json")}>
         data.json
       </Button>

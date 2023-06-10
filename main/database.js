@@ -26,6 +26,12 @@ if (!fs.existsSync(dbPath)) {
 }
 const data = JSON.parse(fs.readFileSync(dbPath, { encoding: "utf8" }));
 
+// create backup
+if (!data.version || data.version !== process.env.VERSION) {
+  fs.writeFileSync(dbBackupPath, JSON.stringify(data));
+  data.version = process.env.VERSION;
+}
+
 // data migration
 let dirty = false;
 if (data.tracks) {
@@ -53,14 +59,7 @@ if (data.playlists) {
   }
 }
 
-// create backup
-if (!data.version) {
-  fs.writeFileSync(dbBackupPath, JSON.stringify(data));
-  data.version = process.env.VERSION;
-}
-
 if (dirty) {
-  fs.writeFileSync(dbBackupPath, JSON.stringify(data));
   fs.writeFileSync(dbPath, JSON.stringify(data));
 }
 

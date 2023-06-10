@@ -113,6 +113,7 @@ interface MainProcAPI {
   addListener: (name: string, listener: () => void) => void;
   removeListener: (name: string, listener: () => void) => void;
   openFolder: (path: string) => void;
+  getWSEndpoint: () => Promise<string>;
 }
 
 declare global {

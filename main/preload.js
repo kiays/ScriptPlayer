@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld("mainProc", {
   getJsonDataString: () => ipcRenderer.invoke("getJsonDataString"),
   mainWindowReady: () => ipcRenderer.invoke("main-window-ready"),
   openFolder: (folderPath) => ipcRenderer.invoke("open-folder", folderPath),
+  getWSEndpoint: () => ipcRenderer.invoke("get-ws-endpoint-qrcode"),
   addListener: (eventName, listener) =>
     ipcRenderer.addListener(eventName, listener),
   removeListener: (eventName, listener) =>

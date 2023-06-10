@@ -26,8 +26,8 @@ const config = {
         test: /\.(ts|tsx)$/i,
         loader: "esbuild-loader",
         options: {
-         target: "es2015"
-        }
+          target: "es2015",
+        },
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
