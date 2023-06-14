@@ -172,7 +172,7 @@ const Home = () => {
             name={name}
             rating={rating}
             thumbnailPath={thumbnailPath}
-            onClick={() => navigate(`/playlists/${key}`)}
+            onClick={() => navigate(`/works/${key}`)}
           />
         ))}
       </Grid>
