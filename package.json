@@ -38,7 +38,7 @@
     "esbuild-loader": "^3.0.1",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.9.0",
-    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react": "^7.33.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "html-webpack-plugin": "^5.5.3",
     "playwright": "^1.36.2",
