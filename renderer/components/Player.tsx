@@ -122,7 +122,7 @@ const Player = () => {
     }
     if (!lastVal) return;
     if (!device) return;
-    const data = generateUfoData(values);
+    const data = generateUfoData(lastVal);
     device?.writeValue(createBuffer(data));
   };
 
