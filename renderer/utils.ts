@@ -64,7 +64,7 @@ export const readCsvFile = async (
             number | undefined,
             number | undefined,
             number | undefined,
-            number | undefined
+            number | undefined,
           ] => [time * 0.1, ...rest] as TimeSheetPoint | TimeSheetPointLR
     )
     .filter(

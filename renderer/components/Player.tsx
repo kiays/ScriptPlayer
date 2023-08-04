@@ -14,14 +14,7 @@ import {
 import { trackById } from "../states/tracks";
 import { useBluetooth } from "../useBluetooth";
 import { notificationsState } from "../states/notifications";
-
-const createBuffer = (values: number[]): Uint8Array => {
-  const buf = new Uint8Array(values.length);
-  for (let i = 0; i < values.length; i++) {
-    buf[i] = values[i] & 255;
-  }
-  return buf;
-};
+import { useUfoDataGenerator, createBuffer, runDevice } from "../devices/ufo";
 
 const Player = () => {
   const [open, setOpen] = useState(false);
@@ -41,6 +34,7 @@ const Player = () => {
   const [inverted, setInverted] = useState(false);
   const setTrackInfo = useSetRecoilState(trackById(tracks[trackIndex]?.hash));
   const setNotifications = useSetRecoilState(notificationsState);
+  const generateUfoData = useUfoDataGenerator(ufoScaleFactor, inverted);
 
   const setTrackIndex = (index) => {
     setPlayerState((s) => update(s, { trackIndex: { $set: index } }));
@@ -128,39 +122,8 @@ const Player = () => {
     }
     if (!lastVal) return;
     if (!device) return;
-    if (lastVal.length === 5) {
-      const [_time, leftDir, leftPower, rightDir, rightPower] = lastVal;
-      let leftScaled = Math.floor(leftPower * ufoScaleFactor);
-      let rightScaled = Math.floor(rightPower * ufoScaleFactor);
-      if (leftScaled >= 100) leftScaled = 100;
-      if (rightScaled >= 100) rightScaled = 100;
-      if (inverted) {
-        device?.writeValue(
-          createBuffer([
-            0x05,
-            leftScaled + (leftDir ? 128 : 0),
-            rightScaled + (rightDir ? 128 : 0),
-          ])
-        );
-      } else {
-        device?.writeValue(
-          createBuffer([
-            0x05,
-            rightScaled + (rightDir ? 128 : 0),
-            leftScaled + (leftDir ? 128 : 0),
-          ])
-        );
-      }
-      return;
-    }
-    if (lastVal.length === 3) {
-      const [_time, dir, power] = lastVal;
-      let scaled = Math.floor(power * ufoScaleFactor);
-      if (scaled >= 100) scaled = 100;
-      device.writeValue(
-        createBuffer([0x05, scaled + (dir ? 128 : 0), scaled + (dir ? 128 : 0)])
-      );
-    }
+    const data = generateUfoData(lastVal);
+    device?.writeValue(createBuffer(data));
   };
 
   const durationChanged = () => {
@@ -229,11 +192,51 @@ const Player = () => {
               disconnect
             </button>
             <button
-              onClick={() => device?.writeValue(createBuffer([5, 100, 100]))}>
-              test device
+              onClick={() => {
+                const records = [
+                  [500, 0, 90, 0, 100],
+                  [500, 0, 0, 0, 0],
+                  [500, 0, 100, 0, 90],
+                  [500, 0, 0, 0, 0],
+                  [500, 0, 90, 0, 100],
+                  [500, 0, 0, 0, 0],
+                  [500, 0, 100, 0, 90],
+                  [500, 0, 0, 0, 0],
+                ];
+                runDevice(records, device, generateUfoData);
+              }}>
+              動作確認同時
+            </button>
+            <button
+              onClick={() => {
+                const records = [
+                  [500, 0, 100, 0, 0],
+                  [500, 0, 0, 0, 0],
+                  [500, 0, 100, 0, 0],
+                  [500, 0, 0, 0, 0],
+                  [500, 0, 100, 0, 0],
+                  [500, 0, 0, 0, 0],
+                ];
+                runDevice(records, device, generateUfoData);
+              }}>
+              動作確認左
+            </button>
+            <button
+              onClick={() => {
+                const records = [
+                  [500, 0, 0, 0, 100],
+                  [500, 0, 0, 0, 0],
+                  [500, 0, 0, 0, 100],
+                  [500, 0, 0, 0, 0],
+                  [500, 0, 0, 0, 100],
+                  [500, 0, 0, 0, 0],
+                ];
+                runDevice(records, device, generateUfoData);
+              }}>
+              動作確認右
             </button>
             <button onClick={() => device?.writeValue(createBuffer([5, 0, 0]))}>
-              stop device
+              停止
             </button>
             <button onClick={() => setInverted(!inverted)}>左右反転</button>
             <input
