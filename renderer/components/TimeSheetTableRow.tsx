@@ -5,6 +5,7 @@ import { formatTime, readCsvFile } from "../utils";
 import {
   Delete as DeleteIcon,
   Cached as ReloadIcon,
+  Error as ErrorIcon,
 } from "@mui/icons-material";
 import { TimeSheetMeta } from "../types";
 
@@ -19,23 +20,37 @@ const TimeSheetTableRow = ({
   allowReload,
 }: TimeSheetRowProps) => {
   const [content, setContent] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
   const reload = () => {
     if (!sheet) return;
-    readCsvFile(sheet.path).then(setContent);
+    readCsvFile(sheet.path).then(setContent).catch(setError);
   };
   useEffect(() => {
     if (!sheet) return;
-    readCsvFile(sheet.path).then(setContent);
+    readCsvFile(sheet.path).then(setContent).catch(setError);
   }, [sheet, setContent]);
   if (!sheet) return null;
-  if (!content) return null;
   return (
     <TableRow>
-      <TableCell>{sheet.name}</TableCell>
-      <TableCell>{formatTime(content[content.length - 1][0])}</TableCell>
       <TableCell>
-        <TimeSheetPreview content={content} />
+        {sheet.name}
+        {error && (
+          <Tooltip title={error.message}>
+            <ErrorIcon
+              sx={{
+                color: "red",
+                width: "1rem",
+                height: "1rem",
+                marginBottom: "-0.25rem",
+              }}
+            />
+          </Tooltip>
+        )}
       </TableCell>
+      <TableCell>
+        {content && formatTime(content[content.length - 1][0])}
+      </TableCell>
+      <TableCell>{content && <TimeSheetPreview content={content} />}</TableCell>
       {onDelete && (
         <TableCell>
           <Tooltip title="CSVを削除">

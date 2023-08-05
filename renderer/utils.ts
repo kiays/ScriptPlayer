@@ -5,6 +5,7 @@ import {
   TimeSheetPointLR,
   TrackFile,
 } from "./types";
+import { FileNotFoundError } from "./errors";
 
 export const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
@@ -49,7 +50,11 @@ export const readCsvFile = async (
 ): Promise<TimeSheetData> => {
   let contentStr = "";
   if (typeof file == "string") {
-    contentStr = await window.mainProc.readFileAsText(file);
+    try {
+      contentStr = await window.mainProc.readFileAsText(file);
+    } catch (e) {
+      throw new FileNotFoundError(e);
+    }
   } else {
     contentStr = await readFile(file);
   }
