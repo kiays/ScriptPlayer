@@ -1,13 +1,25 @@
-import React from "react";
-import { Avatar, Box, Rating } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Avatar,
+  Box,
+  InputAdornment,
+  Rating,
+  TextField,
+  IconButton,
+} from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { worksState } from "../../states/works";
 import { useNavigate } from "react-router";
 import SortableTable from "../../components/SortableTable";
 import { Work } from "../../types";
+import {
+  Search as SearchIcon,
+  Cancel as CancelIcon,
+} from "@mui/icons-material";
 
 const Works = () => {
   const works = useRecoilValue(worksState);
+  const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
   const schema = {
     trackIds: { hide: true },
@@ -45,10 +57,41 @@ const Works = () => {
     },
     $onRowClicked: (key) => navigate(`/works/${key}`),
   };
+  const filteredWorks = Object.fromEntries(
+    Object.entries(works).filter(([_key, work]) =>
+      searchText ? work.name.includes(searchText) : true
+    )
+  );
   return (
     <Box>
-      <h1>Works</h1>
-      <SortableTable<Work> data={works} schema={schema} sortable />
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}>
+        <h1>Works</h1>
+        <TextField
+          onChange={(e) => setSearchText(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                {searchText && (
+                  <IconButton onClick={() => setSearchText("")}>
+                    <CancelIcon />
+                  </IconButton>
+                )}
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
+      <SortableTable<Work> data={filteredWorks} schema={schema} sortable />
     </Box>
   );
 };
