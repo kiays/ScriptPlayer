@@ -32,15 +32,20 @@ jobs:
     - run: npm ci
     - run: |
         node build-info.js ${{ github.ref }} ${{ github.sha }} > .env
+      env:
+        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
     - run: npm run lint
     - run: npm run build
       env:
+        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         SENTRY_ORG: kiays
         SENTRY_PROJECT: script-player
     - run: npm test
       if: runner.os == 'macOS' || runner.os == 'Windows'
     - run: npm run package
+      env:
+        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
     - run: npm run make
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
