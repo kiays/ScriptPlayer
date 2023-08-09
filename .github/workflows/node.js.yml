@@ -34,6 +34,10 @@ jobs:
         node build-info.js ${{ github.ref }} ${{ github.sha }} > .env
     - run: npm run lint
     - run: npm run build
+      env:
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: kiays
+        SENTRY_PROJECT: script-player
     - run: npm test
       if: runner.os == 'macOS' || runner.os == 'Windows'
     - run: npm run package

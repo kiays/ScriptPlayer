@@ -1,4 +1,5 @@
 require("dotenv").config({ path: __dirname + "/../.env" });
+require("@sentry/electron/main").init({ dsn: process.env.SENTRY_DSN });
 console.log(`start script-player version: ${process.env.VERSION}`);
 
 const { app, BrowserWindow, ipcMain } = require("electron");

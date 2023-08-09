@@ -5,5 +5,6 @@ VERSION="${version}"
 BUILD="${sha}"
 REF="${ref}"
 RELEASED="${String(new Date())}"
+SENTRY_DSN="${process.env.SENTRY_DSN}"
 `;
 console.log(info);
