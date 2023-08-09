@@ -78,7 +78,7 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "ignore": "^/(?!(dist|node_modules|common|main|package.json))"
+        "ignore": "^/(?!(dist|node_modules|common|main|package.json|.env))"
       },
       "makers": [
         {
