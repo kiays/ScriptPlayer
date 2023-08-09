@@ -3,6 +3,8 @@
 
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
+const { sentryWebpackPlugin } = require("@sentry/webpack-plugin");
 
 const isProduction = process.env.NODE_ENV == "production";
 
@@ -18,6 +20,12 @@ const config = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "renderer/index.html",
+    }),
+    new Dotenv(),
+    sentryWebpackPlugin({
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
     }),
   ],
   module: {
@@ -43,6 +51,7 @@ const config = {
 module.exports = () => {
   if (isProduction) {
     config.mode = "production";
+    config.devtool = "source-map";
   } else {
     config.mode = "development";
     config.devtool = "eval-source-map";
