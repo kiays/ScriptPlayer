@@ -26,14 +26,8 @@ const config = {
       org: process.env.SENTRY_ORG,
       project: process.env.SENTRY_PROJECT,
       authToken: process.env.SENTRY_AUTH_TOKEN,
-      finalize: process.env.SENTRY_FINALIZE == "true",
+      finalize: (process.env.REF || "").startsWith("refs/tags/"),
       debug: true,
-      release: {
-        name: process.env.VERSION,
-        setCommits: {
-          auto: true,
-        }
-      }
     }),
   ],
   module: {
