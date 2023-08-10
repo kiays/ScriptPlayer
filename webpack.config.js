@@ -8,6 +8,14 @@ const { sentryWebpackPlugin } = require("@sentry/webpack-plugin");
 
 const isProduction = process.env.NODE_ENV == "production";
 
+let releaseVersion = "dev";
+if (isProduction) {
+  const { execSync } = require("child_process");
+  const version = require("./package.json").version;
+  const commitHash = execSync("git rev-parse HEAD").toString().trim();
+  releaseVersion = `${version}-${commitHash}`;
+}
+
 const config = {
   entry: {
     index: "./renderer/index.tsx",
@@ -26,8 +34,11 @@ const config = {
       org: process.env.SENTRY_ORG,
       project: process.env.SENTRY_PROJECT,
       authToken: process.env.SENTRY_AUTH_TOKEN,
-      finalize: (process.env.REF || "").startsWith("refs/tags/"),
       debug: true,
+      release: {
+        name: releaseVersion,
+        finalize: (process.env.REF || "").startsWith("refs/tags/"),
+      },
     }),
   ],
   module: {
