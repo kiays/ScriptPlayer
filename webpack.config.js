@@ -38,6 +38,9 @@ const config = {
       release: {
         name: releaseVersion,
         finalize: (process.env.REF || "").startsWith("refs/tags/"),
+        setCommits: {
+          auto: true,
+        }
       },
     }),
   ],
