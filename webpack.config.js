@@ -30,6 +30,9 @@ const config = {
       debug: true,
       release: {
         name: process.env.VERSION,
+        setCommits: {
+          auto: true,
+        }
       }
     }),
   ],
