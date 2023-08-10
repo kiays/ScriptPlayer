@@ -2,6 +2,7 @@ const { _electron: electron } = require("playwright");
 const { test, expect } = require("@playwright/test");
 
 test("example test", async () => {
+  test.slow();
   const electronApp = await electron.launch({ args: ["."] });
   const isPackaged = await electronApp.evaluate(async ({ app }) => {
     return app.isPackaged;

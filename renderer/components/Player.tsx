@@ -14,7 +14,7 @@ import {
 import { trackById } from "../states/tracks";
 import { useBluetooth } from "../useBluetooth";
 import { notificationsState } from "../states/notifications";
-import { useUfoDataGenerator, createBuffer, runDevice } from "../devices/ufo";
+import { useUfoDataGenerator, createBuffer, runDevice, handleDeviceError } from "../devices/ufo";
 
 const Player = () => {
   const [open, setOpen] = useState(false);
@@ -123,7 +123,7 @@ const Player = () => {
     if (!lastVal) return;
     if (!device) return;
     const data = generateUfoData(lastVal);
-    device?.writeValue(createBuffer(data));
+    device?.writeValue(createBuffer(data)).catch(handleDeviceError);
   };
 
   const durationChanged = () => {
@@ -235,7 +235,7 @@ const Player = () => {
               }}>
               動作確認右
             </button>
-            <button onClick={() => device?.writeValue(createBuffer([5, 0, 0]))}>
+            <button onClick={() => device?.writeValue(createBuffer([5, 0, 0])).catch(handleDeviceError)}>
               停止
             </button>
             <button onClick={() => setInverted(!inverted)}>左右反転</button>

@@ -59,9 +59,26 @@ export const runDevice = (
     return p.then(
       () =>
         new Promise((resolve) => {
-          device?.writeValue(createBuffer(generateUfoData(record)));
+          device?.writeValue(createBuffer(generateUfoData(record))).catch(handleDeviceError);
           setTimeout(resolve, record[0]);
         })
     );
   }, Promise.resolve());
 };
+
+const ALLOWED_ERROR = [
+  "GATT operation already in progress.",
+  "GATT operation failed for unknown reason.",
+  "GATT Server is disconnected. Cannot perform GATT operations. (Re)connect first with `device.gatt.connect`.",
+  "GATT Server is disconnected. Cannot retrieve services. (Re)connect first with `device.gatt.connect`.",
+  "Connection Error: Connection attempt failed.",
+  "Failed to execute 'writeValue' on 'BluetoothRemoteGATTCharacteristic': GATT Server is disconnected. Cannot perform GATT operations. (Re)connect first with `device.gatt.connect`.",
+]
+
+export const handleDeviceError = (error: DOMException) => {
+  if (ALLOWED_ERROR.includes(error.message)){
+    return;
+  };
+  console.error("Device error: ", error);
+  throw error;
+}
