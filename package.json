@@ -20,7 +20,8 @@
     "check": "tsc -p tsconfig.json --noEmit",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",
-    "serve": "webpack serve"
+    "serve": "webpack serve",
+    "release": "release-it"
   },
   "author": "",
   "license": "ISC",
@@ -43,6 +44,7 @@
     "html-webpack-plugin": "^5.5.3",
     "playwright": "^1.36.2",
     "prettier": "3.0.1",
+    "release-it": "^16.1.4",
     "typescript": "^5.1.6",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.3"
@@ -101,5 +103,10 @@
   "alias": {
     "react/jsx-runtime.js": "react/jsx-runtime",
     "react/jsx-dev-runtime.js": "react/jsx-dev-runtime"
+  },
+  "release-it": {
+    "npm": {
+      "publish": false
+    }
   }
 }
