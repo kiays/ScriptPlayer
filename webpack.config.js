@@ -27,6 +27,10 @@ const config = {
       project: process.env.SENTRY_PROJECT,
       authToken: process.env.SENTRY_AUTH_TOKEN,
       finalize: process.env.SENTRY_FINALIZE == "true",
+      debug: true,
+      release: {
+        name: process.env.VERSION,
+      }
     }),
   ],
   module: {
