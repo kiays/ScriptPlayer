@@ -50,6 +50,9 @@ const createWindow = () => {
 
   mainWindow.on("resize", saveSizeAndPosition);
   mainWindow.on("move", saveSizeAndPosition);
+  mainWindow.on("close", () => {
+    mainWindow = null;
+  });
   mainWindow.loadFile("dist/index.html");
 };
 
@@ -116,7 +119,7 @@ Object.keys(database).forEach((method) => {
 
 app.on("before-quit", async (e) => {
   console.log("before quit");
-  mainWindow.send("quit");
+  if (mainWindow) mainWindow.send("quit");
   e.preventDefault();
   return new Promise(() => {
     console.log("send quit");
