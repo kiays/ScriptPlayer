@@ -12,7 +12,7 @@ let releaseVersion = "dev";
 if (isProduction) {
   const { execSync } = require("child_process");
   const version = require("./package.json").version;
-  const commitHash = execSync("git rev-parse HEAD").toString().trim();
+  const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
   releaseVersion = `${version}-${commitHash}`;
 }
 
