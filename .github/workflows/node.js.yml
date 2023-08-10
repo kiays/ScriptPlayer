@@ -44,15 +44,6 @@ jobs:
         SENTRY_ORG: kiays
         SENTRY_PROJECT: script-player
         SENTRY_FINALIZE: ${{ github.ref_type == 'tag' }}
-    - name: Create Sentry release
-      uses: getsentry/action-release@v1
-      if: runner.os == 'Linux'
-      env:
-        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        SENTRY_ORG: kiays
-        SENTRY_PROJECT: script-player
-      with:
-        finalize: ${{ github.ref_type == 'tag' }}
     - run: npm test
       if: runner.os == 'macOS' || runner.os == 'Windows'
     - run: npm run package
