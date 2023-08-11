@@ -60,7 +60,7 @@
     "@mui/material": "^5.14.4",
     "@sentry/electron": "^4.9.0",
     "@sentry/react": "^7.62.0",
-    "@sentry/webpack-plugin": "^2.6.1",
+    "@sentry/webpack-plugin": "^2.6.2",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "@types/web-bluetooth": "^0.0.17",
