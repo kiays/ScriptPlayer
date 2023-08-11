@@ -10,10 +10,8 @@ const isProduction = process.env.NODE_ENV == "production";
 
 let releaseVersion = "dev";
 if (isProduction) {
-  const { execSync } = require("child_process");
   const version = require("./package.json").version;
-  const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
-  releaseVersion = `${version}-${commitHash}`;
+  releaseVersion = `${version}`;
 }
 
 const config = {
