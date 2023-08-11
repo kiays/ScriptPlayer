@@ -21,7 +21,7 @@ jobs:
     - name: Use Node.js 
       uses: actions/setup-node@v3
       with:
-        node-version: 16.x
+        node-version: 20.x
         cache: 'npm'
     - run: npm ci
     - run: npm run format:check
@@ -32,7 +32,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest]
-        node-version: [16.x]
+        node-version: [20.x]
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
@@ -66,7 +66,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        node-version: [16.x]
+        node-version: [20.x]
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
