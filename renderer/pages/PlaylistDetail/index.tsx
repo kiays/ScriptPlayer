@@ -42,6 +42,9 @@ const PlaylistDetail = () => {
   const setCsv = useCallback(
     async (track: PlaylistTrack, csv) => {
       const csvContentStr = await readFile(csv);
+      if (!csvContentStr) {
+        return;
+      }
       const csvContent = csvContentStr
         .split("\r\n")
         .map((l) => l.split(",").map(Number))
