@@ -91,7 +91,7 @@ jobs:
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         SENTRY_ORG: kiays
         SENTRY_PROJECT: script-player
-        SENTRY_FINALIZE: ${{ github.ref_type == 'tag' }}
+        SENTRY_FINALIZE: ${{ github.event_name == 'release' }}
     - run: npm run package
       env:
         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
@@ -102,11 +102,20 @@ jobs:
         name: dist-without-markdown
         path: |
           out/make/zip/*
+    - name: List and upload files in artifacts directory
+      run: |
+        FILES=""
+        for file in out/make/zip/*; do
+          if [ -f "$file" ]; then
+            FILES="$FILES$file,"
+          fi
+        done
+        echo "FILES_TO_UPLOAD=$FILES" >> $GITHUB_ENV
+      shell: bash
     - name: Upload artifacts to release
       uses: softprops/action-gh-release@v1
       if: github.event_name == 'release'
       with:
-        files: |
-          out/make/zip/*
+         files: ${{ env.FILES_TO_UPLOAD }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
