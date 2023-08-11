@@ -40,7 +40,7 @@ const config = {
         finalize: (process.env.REF || "").startsWith("refs/tags/"),
         setCommits: {
           auto: true,
-        }
+        },
       },
     }),
   ],
