@@ -1,6 +1,6 @@
 {
   "name": "script-player",
-  "version": "0.1.25",
+  "version": "0.1.26-0",
   "description": "",
   "main": "main/main.js",
   "scripts": {
