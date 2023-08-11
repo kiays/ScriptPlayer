@@ -12,6 +12,53 @@ on:
     branches: [ master ]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js 
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run format:check
+    - run: npm run lint:check
+
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+        node-version: [16.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: path node gyp
+      shell: powershell
+      if: matrix.os == 'windows-latest'
+      run: |
+        npm install --global node-gyp@latest
+        npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
+    - run: npm ci
+    - run: |
+        node build-info.js ${{ github.ref }} ${{ github.sha }} > .env
+      env:
+        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+    - run: npm run build
+      env:
+        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: kiays
+        SENTRY_PROJECT: script-player
+        SENTRY_FINALIZE: false
+    - run: npm test
+      if: runner.os == 'macOS' || runner.os == 'Windows'
+
   build:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -36,7 +83,6 @@ jobs:
         node build-info.js ${{ github.ref }} ${{ github.sha }} > .env
       env:
         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-    - run: npm run lint
     - run: npm run build
       env:
         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
@@ -44,8 +90,6 @@ jobs:
         SENTRY_ORG: kiays
         SENTRY_PROJECT: script-player
         SENTRY_FINALIZE: ${{ github.ref_type == 'tag' }}
-    - run: npm test
-      if: runner.os == 'macOS' || runner.os == 'Windows'
     - run: npm run package
       env:
         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
