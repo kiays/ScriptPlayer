@@ -105,11 +105,9 @@ jobs:
     - name: List and upload files in artifacts directory
       run: |
         FILES=""
-        for file in out/make/zip/*; do
-          if [ -f "$file" ]; then
-            FILES="$FILES$file,"
-          fi
-        done
+        while IFS= read -r -d '' file; do
+          FILES="$FILES$file,"
+        done < <(find ./artifacts -type f -print0)
         echo "FILES_TO_UPLOAD=$FILES" >> $GITHUB_ENV
       shell: bash
     - name: Upload artifacts to release
