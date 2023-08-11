@@ -1,4 +1,5 @@
 import { MimeType } from "file-type";
+import { Edge, Node } from "react-flow-renderer";
 
 type FileHash = string;
 
@@ -53,6 +54,15 @@ type Playlist = {
   rating: number | null;
 };
 
+type GraphPlaylist = {
+  id: string;
+  name: string;
+  createdAt: number;
+  rating: number | null;
+  nodes: Node[];
+  edges: Edge[];
+};
+
 type TimeSheetHashID = FileHash;
 type TimeSheetPoint = [number, number, number];
 type TimeSheetPointLR = [number, number, number, number, number];
@@ -78,6 +88,9 @@ type PlayerState = {
   tracks: Array<Track & PlaylistTrack>;
   trackIndex: number;
   playing: boolean;
+  playlistId: string | null;
+  playlistType: "playlist" | "work" | "graph" | null;
+  transitions: { next: number[] }[];
 };
 
 type SnackbarNotification = {

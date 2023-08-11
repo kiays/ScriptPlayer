@@ -10,5 +10,8 @@ export const playerState = atom<PlayerState>({
     tracks: [],
     trackIndex: 0,
     playing: false,
+    playlistType: null,
+    playlistId: null,
+    transitions: [],
   },
 });

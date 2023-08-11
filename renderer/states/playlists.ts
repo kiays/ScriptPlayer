@@ -1,7 +1,9 @@
 import { atom, selectorFamily } from "recoil";
 import RecoilKeys from "./keys";
 import update from "immutability-helper";
-import { AllPlaylists, Playlist } from "../types";
+import { AllPlaylists, GraphPlaylist, Playlist } from "../types";
+
+import { testPlaylist } from "../pages/GraphPlaylistDetail/testdata";
 
 const ipcEffect = ({ setSelf, onSet }) => {
   window.mainProc.getAllPlaylists().then(setSelf);
@@ -16,11 +18,17 @@ export const playlistsState = atom<AllPlaylists>({
   effects: [ipcEffect],
 });
 
-export const playlistSelector = selectorFamily<Playlist | null, string>({
+export const playlistSelector = selectorFamily<
+  Playlist | GraphPlaylist | null,
+  string
+>({
   key: RecoilKeys.PLAYLIST_SELECTOR,
   get:
     (id) =>
     ({ get }) => {
+      if (id === "test-graph-playlist") {
+        return testPlaylist;
+      }
       const playlists = get(playlistsState);
       return playlists[id] || null;
     },

@@ -23,8 +23,10 @@ import {
 
 const Player = () => {
   const [open, setOpen] = useState(false);
-  const [{ tracks, trackIndex, playing }, setPlayerState] =
-    useRecoilState(playerState);
+  const [
+    { tracks, trackIndex, playing, transitions, playlistType },
+    setPlayerState,
+  ] = useRecoilState(playerState);
   const [audioSrc, setTrack] = useState(null);
   const sheetDict = useRecoilValue(allTimeSheets);
   const [ufoScaleFactor, setScaleFactor] = useState(1.0);
@@ -150,11 +152,27 @@ const Player = () => {
   };
 
   const next = () => {
+    if (playlistType == "graph") {
+      if (transitions[trackIndex].next.length === 0) return;
+      if (transitions[trackIndex].next.length === 1)
+        setTrackIndex(transitions[trackIndex].next[0]);
+      else {
+        const nextTrackIndex =
+          transitions[trackIndex].next[
+            Math.floor(Math.random() * transitions[trackIndex].next.length)
+          ];
+        setTrackIndex(nextTrackIndex);
+      }
+      return;
+    }
     if (trackIndex >= tracks.length - 1) return;
     setTrackIndex(trackIndex + 1);
   };
 
   const prev = () => {
+    if (playlistType == "graph") {
+      return;
+    }
     if (trackIndex <= 0) return;
     setTrackIndex(trackIndex - 1);
   };

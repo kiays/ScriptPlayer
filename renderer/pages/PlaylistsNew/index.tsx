@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, List } from "@mui/material";
-import TrackPickModal from "./TrackPickModal";
+import TrackPickModal from "../../components/TrackPickModal";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { tracksState } from "../../states/tracks";
 import update from "immutability-helper";
