@@ -31,6 +31,7 @@ import {
   Download as ImportIcon,
   Cached as ReloadIcon,
   Settings as SettingsIcon,
+  CallSplit as GraphIcon,
   Home as HomeIcon,
 } from "@mui/icons-material";
 import { useRecoilState } from "recoil";
@@ -177,6 +178,15 @@ export default function Layout({ children }: LayoutProps) {
               selected={pathname.startsWith("/playlists")}>
               <ListItemIcon>
                 <PlaylistIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Playlists"} />
+            </ListItemButton>
+            <ListItemButton
+              key={"GraphPlaylists"}
+              onClick={() => navigate("/graphplaylists")}
+              selected={pathname.startsWith("/graphplaylists")}>
+              <ListItemIcon>
+                <GraphIcon />
               </ListItemIcon>
               <ListItemText primary={"Playlists"} />
             </ListItemButton>

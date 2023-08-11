@@ -20,6 +20,8 @@ import Player from "./components/Player";
 import Home from "./pages/Home/Index";
 import Settings from "./pages/Settings";
 import ComponentCatalog from "./pages/ComponentCatalog";
+import GraphPlaylistDetail from "./pages/GraphPlaylistDetail";
+import GraphPlaylists from "./pages/GraphPlaylists";
 
 const theme = createTheme();
 
@@ -34,10 +36,18 @@ const App = () => {
                 <div style={{ width: "100%", height: "100%" }}>
                   <Routes>
                     <Route path="/playlists" element={<Playlists />} />
+                    <Route
+                      path="/graphplaylists"
+                      element={<GraphPlaylists />}
+                    />
                     <Route path="/playlists/new" element={<PlaylistNew />} />
                     <Route
                       path="/playlists/:playlistId"
                       element={<PlaylistDetail />}
+                    />
+                    <Route
+                      path="/graphplaylists/:playlistId"
+                      element={<GraphPlaylistDetail />}
                     />
                     <Route path="/tracks" element={<TrackList />} />
                     <Route path="/tracks/:trackId" element={<TrackDetail />} />

@@ -55,6 +55,19 @@ const config = {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
         type: "asset",
       },
+      {
+        test: /\.css$/i,
+        use: [
+          "style-loader",
+          "css-loader",
+          {
+            loader: "esbuild-loader",
+            options: {
+              minify: true,
+            },
+          },
+        ],
+      },
     ],
   },
   resolve: {

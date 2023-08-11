@@ -1,0 +1,8 @@
+.branch-node {
+    position: relative;
+    overflow: hidden;
+    background-color: white;
+    border-radius: 0.5rem;
+    border: 1px solid black;
+    padding: 1rem;
+}
