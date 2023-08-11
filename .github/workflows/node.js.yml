@@ -10,6 +10,8 @@ on:
       - v*
   pull_request:
     branches: [ master ]
+  release:
+    types: [created, published]
 
 jobs:
   lint:
@@ -100,3 +102,11 @@ jobs:
         name: dist-without-markdown
         path: |
           out/make/zip/*
+    - name: Upload artifacts to release
+      uses: actions/upload-release-asset@v1
+      if: github.event_name == 'release'
+      with:
+        files: |
+          out/make/zip/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
