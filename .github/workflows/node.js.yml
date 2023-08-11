@@ -107,7 +107,7 @@ jobs:
         FILES=""
         while IFS= read -r -d '' file; do
           FILES="$FILES$file,"
-        done < <(find ./artifacts -type f -print0)
+        done < <(find out/make/zip -type f -print0)
         echo "FILES_TO_UPLOAD=$FILES" >> $GITHUB_ENV
       shell: bash
     - name: Upload artifacts to release
