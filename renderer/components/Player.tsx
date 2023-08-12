@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import * as Sentry from "@sentry/browser";
 import update from "immutability-helper";
 import PlayerControl from "./PlayerControl";
 import { IconButton, Paper } from "@mui/material";
@@ -63,6 +64,11 @@ const Player = () => {
         title: tracks[trackIndex].name,
         duration: audioElem.duration,
         currentTime: 0,
+      });
+      Sentry.addBreadcrumb({
+        category: "player",
+        message: `track changed: ${tracks[trackIndex].name}`,
+        level: "info",
       });
       setNotifications((ns) => [
         ...ns,
