@@ -22,6 +22,10 @@ import {
   handleDeviceError,
 } from "../devices/ufo";
 
+const PlayerSingleton = {
+  promise: Promise.resolve(),
+};
+
 const Player = () => {
   const [open, setOpen] = useState(false);
   const [{ tracks, trackIndex, playing }, setPlayerState] =
@@ -82,9 +86,13 @@ const Player = () => {
       ]);
     }
     if (playing) {
-      audioElem.play();
+      (PlayerSingleton.promise || Promise.resolve()).then(() => {
+        PlayerSingleton.promise = audioElem.play();
+      });
     } else {
-      audioElem.pause();
+      (PlayerSingleton.promise || Promise.resolve()).then(() => {
+        PlayerSingleton.promise = audioElem.pause();
+      });
     }
   }, [audioRef, trackIndex, playing, audioSrc, tracks, setNotifications]);
 
