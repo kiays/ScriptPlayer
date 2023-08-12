@@ -4,7 +4,12 @@ import update from "immutability-helper";
 import { AllPlaylists, Playlist } from "../types";
 
 const ipcEffect = ({ setSelf, onSet }) => {
-  window.mainProc.getAllPlaylists().then(setSelf);
+  window.mainProc.getAllPlaylists().then((playlists) => {
+    for (const k in playlists) {
+      playlists[k].tracks = playlists[k].tracks.filter(Boolean);
+    }
+    setSelf(playlists);
+  });
   onSet(async (newValue: AllPlaylists) => {
     await window.mainProc.setAllPlaylists(newValue);
   });
