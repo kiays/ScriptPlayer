@@ -115,7 +115,7 @@
       "releaseName": "Release ${version}",
       "releaseNotes": null,
       "autoGenerate": true,
-      "preRelease": true,
+      "preRelease": false,
       "draft": false,
       "tokenRef": "GITHUB_TOKEN",
       "skipChecks": false
