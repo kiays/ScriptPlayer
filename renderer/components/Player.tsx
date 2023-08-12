@@ -86,16 +86,37 @@ const Player = () => {
     if (!tracks || !tracks[trackIndex]) return;
     const track = tracks[trackIndex];
     const sheetIds = track.sheetIds || [];
+    const handleReadCsvFileError = (e) => {
+      if (!e) return false;
+      setNotifications((ns) => [
+        ...ns,
+        {
+          severity: "error",
+          createdAt: new Date(),
+          done: false,
+          title: e.message,
+          scope: "player:read_csv_file",
+        },
+      ]);
+      return true;
+    };
+    let shouldFallThrough = Promise.resolve(true);
     if (sheetIds.length != 0) {
       const sheetId = sheetIds[0];
       const sheet = sheetDict[sheetId];
       if (!sheet) return;
-      readCsvFile(sheet.path).then(setValues);
+      shouldFallThrough = readCsvFile(sheet.path)
+        .then(setValues)
+        .then(() => false)
+        .catch(handleReadCsvFileError);
     }
     if (track.csvUrl) {
-      readCsvFile(track.csvUrl).then(setValues);
+      shouldFallThrough
+        .then((go) => (go ? readCsvFile(track.csvUrl) : Promise.reject()))
+        .then(setValues)
+        .catch(handleReadCsvFileError);
     }
-  }, [tracks, trackIndex, sheetDict]);
+  }, [tracks, trackIndex, sheetDict, setNotifications]);
 
   const onTimeSheetClicked = (time: number) => {
     const audioElem = audioRef.current;
