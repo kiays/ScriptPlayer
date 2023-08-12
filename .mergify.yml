@@ -2,9 +2,10 @@ pull_request_rules:
   - name: Automatic merge on approval
     conditions:
       - author~=^dependabot(|-preview)\[bot\]$
-      - check-success=build (macos-latest, 16.x)
-      - check-success=build (ubuntu-latest, 16.x)
-      - check-success=build (windows-latest, 16.x)
+      - check-success=test (macos-latest, 20.x)
+      - check-success=test (ubuntu-latest, 20.x)
+      - check-success=test (windows-latest, 20.x)
+      - check-success=lint
     actions:
       merge:
         method: merge
