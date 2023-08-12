@@ -44,7 +44,7 @@
     "eslint-plugin-react": "^7.33.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "html-webpack-plugin": "^5.5.3",
-    "playwright": "^1.36.2",
+    "playwright": "^1.37.0",
     "prettier": "3.0.1",
     "release-it": "^16.1.4",
     "typescript": "^5.1.6",
