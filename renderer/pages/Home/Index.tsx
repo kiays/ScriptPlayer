@@ -80,6 +80,7 @@ const Home = () => {
       const thumbnails = Array.from(
         new Set(
           tracks
+            .filter(Boolean)
             .map((track) => {
               const k = Object.keys(works).find((workKey) =>
                 works[workKey].trackIds.includes(track.hash)
