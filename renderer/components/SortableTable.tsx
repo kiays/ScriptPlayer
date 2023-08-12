@@ -146,6 +146,7 @@ const SortableTable = <T,>({
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
         color="primary"
+        aria-label="テーブルのページネーション"
       />
       <TableContainer component={Paper}>
         <Table>
@@ -165,6 +166,7 @@ const SortableTable = <T,>({
                       <TableSortLabel
                         active={orderBy === key}
                         direction={orderBy === key ? order : "asc"}
+                        aria-label={`テーブルソート:${key}`}
                         onClick={createSortHandler(key)}>
                         {s.name || key}
                       </TableSortLabel>
@@ -183,6 +185,7 @@ const SortableTable = <T,>({
                 <TableRow
                   hover
                   key={`table-row-${id}`}
+                  aria-label={`テーブル行:${id}`}
                   onClick={() => onRowClicked(id)}
                   onContextMenu={handleContextMenu(id)}>
                   {schemaKeys.map((k) => (
@@ -204,6 +207,7 @@ const SortableTable = <T,>({
                 {Object.keys(contextMenuItems).map((name) => (
                   <MenuItem
                     key={`context-menu-item-${name}`}
+                    aria-label={`テーブルコンテクストメニュー:${name}`}
                     onClick={() => {
                       contextMenuItems[name](selectedId);
                       popupState.close();

@@ -54,7 +54,9 @@ const TimeSheetTableRow = ({
       {onDelete && (
         <TableCell>
           <Tooltip title="CSVを削除">
-            <IconButton onClick={onDelete}>
+            <IconButton
+              aria-label="プレイリストトラックからCSVを削除"
+              onClick={onDelete}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -63,7 +65,9 @@ const TimeSheetTableRow = ({
       {allowReload && (
         <TableCell>
           <Tooltip title="CSVファイルから再読み込み">
-            <IconButton onClick={reload}>
+            <IconButton
+              aria-label="プレイリストトラックからCSVを再読み込み"
+              onClick={reload}>
               <ReloadIcon />
             </IconButton>
           </Tooltip>

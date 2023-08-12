@@ -25,10 +25,17 @@ const PlayerControl = ({
   return (
     <>
       {formatTime(playerInfo.currentTime)} / {formatTime(playerInfo.duration)}
-      <button onClick={onPlayPause}>{playing ? "pause" : "play"}</button>
-      <button onClick={onPrev}>prev</button>
-      <button onClick={onNext}>next</button>
+      <button aria-label="再生/停止" onClick={onPlayPause}>
+        {playing ? "pause" : "play"}
+      </button>
+      <button aria-label="次のトラックを再生する" onClick={onPrev}>
+        prev
+      </button>
+      <button aria-label="前のトラックを再生する" onClick={onNext}>
+        next
+      </button>
       <input
+        aria-label="再生位置"
         type="range"
         value={playerInfo.currentTime}
         max={playerInfo.duration || 0}

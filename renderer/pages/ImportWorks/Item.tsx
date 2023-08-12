@@ -95,7 +95,9 @@ const Item = ({
                 sx={{ bgColor: "primary.main" }}
               />
             ) : (
-              <ListItemButton onClick={() => setThumbnail(path)}>
+              <ListItemButton
+                aria-label="サムネイルとしてこの画像を指定する"
+                onClick={() => setThumbnail(path)}>
                 <ListItemText primary="set as thumbnail" />
               </ListItemButton>
             )

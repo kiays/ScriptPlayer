@@ -178,18 +178,22 @@ const Player = () => {
         onPlayPause={() => setPlaying(!playing)}
         playing={playing}
       />
-      <IconButton onClick={() => setOpen(!open)}>
+      <IconButton
+        aria-label="プレイヤーコントロールをトグルする"
+        onClick={() => setOpen(!open)}>
         {open ? <CloseIcon /> : <OpenIcon />}
       </IconButton>
       {open && (
         <div>
           <div>
             <button
+              aria-label="デバイスに接続する"
               onClick={() => requestDevice()}
               disabled={connected || connecting}>
               connect
             </button>
             <button
+              aria-label="デバイスから切断する"
               onClick={() => {
                 device.service.device.gatt.disconnect();
               }}
@@ -197,6 +201,7 @@ const Player = () => {
               disconnect
             </button>
             <button
+              aria-label="デバイスの動作確認を行う"
               onClick={() => {
                 const records = [
                   [500, 0, 90, 0, 100],
@@ -213,6 +218,7 @@ const Player = () => {
               動作確認同時
             </button>
             <button
+              aria-label="デバイスの左側の動作確認を行う"
               onClick={() => {
                 const records = [
                   [500, 0, 100, 0, 0],
@@ -227,6 +233,7 @@ const Player = () => {
               動作確認左
             </button>
             <button
+              aria-label="デバイスの右側の動作確認を行う"
               onClick={() => {
                 const records = [
                   [500, 0, 0, 0, 100],
@@ -241,6 +248,7 @@ const Player = () => {
               動作確認右
             </button>
             <button
+              aria-label="デバイスの動作停止"
               onClick={() =>
                 device
                   ?.writeValue(createBuffer([5, 0, 0]))
@@ -248,8 +256,13 @@ const Player = () => {
               }>
               停止
             </button>
-            <button onClick={() => setInverted(!inverted)}>左右反転</button>
+            <button
+              aria-label="デバイスの左右を入れ替える"
+              onClick={() => setInverted(!inverted)}>
+              左右反転
+            </button>
             <input
+              aria-label="デバイスの強度を変更する"
               onChange={(e) => setScaleFactor(Number(e.target.value))}
               type="range"
               min={0.1}

@@ -116,6 +116,7 @@ const ImportWork = () => {
           <FormControlLabel
             control={
               <Checkbox
+                aria-label="ライブラリへコピーするかどうかのチェックボックス"
                 checked={shouldCopy}
                 onChange={() => setShouldCopy(!shouldCopy)}
               />
