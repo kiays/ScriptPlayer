@@ -47,7 +47,7 @@ const GridItem = ({ name, rating, thumbnailPath, onClick }: GridItemProps) => {
   return (
     <Grid item xs={4}>
       <Card>
-        <CardActionArea onClick={onClick}>
+        <CardActionArea aria-label="ホーム画面のカード" onClick={onClick}>
           <CardMedia sx={{ height: 140 }} image={thumbnailPath} />
           <CardContent sx={{ height: 100 }}>
             <Rating value={rating} readOnly />

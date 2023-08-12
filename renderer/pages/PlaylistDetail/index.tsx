@@ -128,6 +128,7 @@ const PlaylistDetail = () => {
       render: (track: Track, index) => (
         <Tooltip title="ここから再生する">
           <IconButton
+            aria-label="プレイリストをここから再生する"
             onClick={(e) => {
               e.stopPropagation();
               play(track, index)();

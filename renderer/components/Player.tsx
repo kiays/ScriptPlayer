@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import * as Sentry from "@sentry/browser";
 import update from "immutability-helper";
 import PlayerControl from "./PlayerControl";
 import { IconButton, Paper } from "@mui/material";
@@ -64,6 +65,11 @@ const Player = () => {
         duration: audioElem.duration,
         currentTime: 0,
       });
+      Sentry.addBreadcrumb({
+        category: "player",
+        message: `track changed: ${tracks[trackIndex].name}`,
+        level: "info",
+      });
       setNotifications((ns) => [
         ...ns,
         {
@@ -86,16 +92,37 @@ const Player = () => {
     if (!tracks || !tracks[trackIndex]) return;
     const track = tracks[trackIndex];
     const sheetIds = track.sheetIds || [];
+    const handleReadCsvFileError = (e) => {
+      if (!e) return false;
+      setNotifications((ns) => [
+        ...ns,
+        {
+          severity: "error",
+          createdAt: new Date(),
+          done: false,
+          title: e.message,
+          scope: "player:read_csv_file",
+        },
+      ]);
+      return true;
+    };
+    let shouldFallThrough = Promise.resolve(true);
     if (sheetIds.length != 0) {
       const sheetId = sheetIds[0];
       const sheet = sheetDict[sheetId];
       if (!sheet) return;
-      readCsvFile(sheet.path).then(setValues);
+      shouldFallThrough = readCsvFile(sheet.path)
+        .then(setValues)
+        .then(() => false)
+        .catch(handleReadCsvFileError);
     }
     if (track.csvUrl) {
-      readCsvFile(track.csvUrl).then(setValues);
+      shouldFallThrough
+        .then((go) => (go ? readCsvFile(track.csvUrl) : Promise.reject()))
+        .then(setValues)
+        .catch(handleReadCsvFileError);
     }
-  }, [tracks, trackIndex, sheetDict]);
+  }, [tracks, trackIndex, sheetDict, setNotifications]);
 
   const onTimeSheetClicked = (time: number) => {
     const audioElem = audioRef.current;
@@ -178,18 +205,22 @@ const Player = () => {
         onPlayPause={() => setPlaying(!playing)}
         playing={playing}
       />
-      <IconButton onClick={() => setOpen(!open)}>
+      <IconButton
+        aria-label="プレイヤーコントロールをトグルする"
+        onClick={() => setOpen(!open)}>
         {open ? <CloseIcon /> : <OpenIcon />}
       </IconButton>
       {open && (
         <div>
           <div>
             <button
+              aria-label="デバイスに接続する"
               onClick={() => requestDevice()}
               disabled={connected || connecting}>
               connect
             </button>
             <button
+              aria-label="デバイスから切断する"
               onClick={() => {
                 device.service.device.gatt.disconnect();
               }}
@@ -197,6 +228,7 @@ const Player = () => {
               disconnect
             </button>
             <button
+              aria-label="デバイスの動作確認を行う"
               onClick={() => {
                 const records = [
                   [500, 0, 90, 0, 100],
@@ -213,6 +245,7 @@ const Player = () => {
               動作確認同時
             </button>
             <button
+              aria-label="デバイスの左側の動作確認を行う"
               onClick={() => {
                 const records = [
                   [500, 0, 100, 0, 0],
@@ -227,6 +260,7 @@ const Player = () => {
               動作確認左
             </button>
             <button
+              aria-label="デバイスの右側の動作確認を行う"
               onClick={() => {
                 const records = [
                   [500, 0, 0, 0, 100],
@@ -241,6 +275,7 @@ const Player = () => {
               動作確認右
             </button>
             <button
+              aria-label="デバイスの動作停止"
               onClick={() =>
                 device
                   ?.writeValue(createBuffer([5, 0, 0]))
@@ -248,8 +283,13 @@ const Player = () => {
               }>
               停止
             </button>
-            <button onClick={() => setInverted(!inverted)}>左右反転</button>
+            <button
+              aria-label="デバイスの左右を入れ替える"
+              onClick={() => setInverted(!inverted)}>
+              左右反転
+            </button>
             <input
+              aria-label="デバイスの強度を変更する"
               onChange={(e) => setScaleFactor(Number(e.target.value))}
               type="range"
               min={0.1}

@@ -88,6 +88,7 @@ const TimeSheetPreview = ({ content, onMouseDown }: TimeSheetPreviewProps) => {
   return (
     <>
       <canvas
+        aria-label="CSVプレビュー"
         ref={ref}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
