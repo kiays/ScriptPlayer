@@ -48,6 +48,7 @@ export const tracksByPlaylist = selectorFamily<
       const playlist = get(playlistSelector(id));
       if (!playlist) return [];
       return playlist.tracks
+        .filter(Boolean)
         .map(({ hash, id, csvName, csvUrl, csvContent }) => {
           if (!trackDict[hash]) return null;
           return {

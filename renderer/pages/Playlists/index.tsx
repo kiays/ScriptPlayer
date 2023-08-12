@@ -53,6 +53,7 @@ const Playlists = () => {
       sortable: false,
       render: (playlist) => {
         const duration = playlist.tracks
+          .filter(Boolean)
           .map(({ hash }) => trackDict[hash])
           .filter(Boolean)
           .reduce((acc, t) => acc + t.duration, 0);
