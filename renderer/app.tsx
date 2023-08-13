@@ -24,6 +24,7 @@ import ComponentCatalog from "./pages/ComponentCatalog";
 const theme = createTheme();
 
 const App = () => {
+  const [isPlayerOpen, setIsPlayerOpen] = React.useState(false);
   return (
     <>
       <RecoilRoot>
@@ -31,7 +32,12 @@ const App = () => {
           <HashRouter>
             <Suspense fallback={<Loading loading={true} />}>
               <Layout>
-                <div style={{ width: "100%", height: "100%" }}>
+                <div
+                  style={{
+                    width: "100%",
+                    height: `calc(100% - ${isPlayerOpen ? "20rem" : "8.5rem"})`,
+                    overflow: "scroll",
+                  }}>
                   <Routes>
                     <Route path="/playlists" element={<Playlists />} />
                     <Route path="/playlists/new" element={<PlaylistNew />} />
@@ -55,8 +61,8 @@ const App = () => {
                     <Route path="*" element={<div>not found</div>} />
                   </Routes>
                 </div>
+                <Player open={isPlayerOpen} setOpen={setIsPlayerOpen} />
               </Layout>
-              <Player />
             </Suspense>
           </HashRouter>
         </ThemeProvider>

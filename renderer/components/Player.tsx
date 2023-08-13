@@ -26,8 +26,11 @@ const PlayerSingleton = {
   promise: Promise.resolve(),
 };
 
-const Player = () => {
-  const [open, setOpen] = useState(false);
+type PlayerProps = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
+const Player: React.FC<PlayerProps> = ({ open, setOpen }) => {
   const [{ tracks, trackIndex, playing }, setPlayerState] =
     useRecoilState(playerState);
   const [audioSrc, setTrack] = useState(null);
@@ -198,9 +201,8 @@ const Player = () => {
     <Paper
       sx={{
         zIndex: 1250,
-        position: "fixed",
         bottom: 0,
-        margin: 2,
+        margin: 0,
         padding: 2,
         color: "info.contrastText",
         bgcolor: "info.main",
