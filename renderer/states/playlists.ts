@@ -6,7 +6,12 @@ import { AllPlaylists, GraphPlaylist, Playlist } from "../types";
 import { testPlaylist } from "../pages/GraphPlaylistDetail/testdata";
 
 const ipcEffect = ({ setSelf, onSet }) => {
-  window.mainProc.getAllPlaylists().then(setSelf);
+  window.mainProc.getAllPlaylists().then((playlists) => {
+    for (const k in playlists) {
+      playlists[k].tracks = playlists[k].tracks.filter(Boolean);
+    }
+    setSelf(playlists);
+  });
   onSet(async (newValue: AllPlaylists) => {
     await window.mainProc.setAllPlaylists(newValue);
   });

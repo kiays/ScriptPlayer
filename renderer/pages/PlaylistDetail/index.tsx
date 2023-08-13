@@ -73,12 +73,14 @@ const PlaylistDetail = () => {
     setPlayerState({
       currentTrackId: track.hash,
       trackIndex: index,
-      tracks: playlist.tracks.map(({ hash, csvName, csvUrl, csvContent }) => ({
-        ...trackDict[hash],
-        csvName,
-        csvUrl,
-        csvContent,
-      })),
+      tracks: playlist.tracks
+        .filter(Boolean)
+        .map(({ hash, csvName, csvUrl, csvContent }) => ({
+          ...trackDict[hash],
+          csvName,
+          csvUrl,
+          csvContent,
+        })),
       playlistPath: location.hash,
       playing: true,
     });
@@ -86,7 +88,9 @@ const PlaylistDetail = () => {
   if (!playlist) return <div>loading</div>;
 
   const deleteTrack = (id) => {
-    const trackIndex = playlist.tracks.findIndex((e) => e.id == id);
+    const trackIndex = playlist.tracks
+      .filter(Boolean)
+      .findIndex((e) => e.id == id);
     setPlaylist(
       update(playlist, {
         tracks: {
@@ -97,7 +101,9 @@ const PlaylistDetail = () => {
   };
 
   const deleteCsvOnTrack = (id) => {
-    const trackIndex = playlist.tracks.findIndex((e) => e.id == id);
+    const trackIndex = playlist.tracks
+      .filter(Boolean)
+      .findIndex((e) => e.id == id);
     setPlaylist(
       update(playlist, {
         tracks: {
@@ -128,6 +134,7 @@ const PlaylistDetail = () => {
       render: (track: Track, index) => (
         <Tooltip title="ここから再生する">
           <IconButton
+            aria-label="プレイリストをここから再生する"
             onClick={(e) => {
               e.stopPropagation();
               play(track, index)();

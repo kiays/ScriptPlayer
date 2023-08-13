@@ -39,7 +39,10 @@ const WorkList = ({ works, setWorkId }: WorkListProps) => {
         const work = works[workId];
         if (!work) return null;
         return (
-          <ListItemButton onClick={() => setWorkId(workId)} key={workId}>
+          <ListItemButton
+            aria-label="トラック選択モーダルで作品を開く"
+            onClick={() => setWorkId(workId)}
+            key={workId}>
             <ListItemAvatar>
               <Avatar src={work.thumbnailPath} variant="square" />
             </ListItemAvatar>
@@ -71,7 +74,7 @@ const TrackList = ({
 
   return (
     <>
-      <IconButton onClick={onBack}>
+      <IconButton aria-label="トラック選択モーダル中で戻る" onClick={onBack}>
         <ArrowBack />
       </IconButton>
       <List sx={{ height: "100%", overflowY: "scroll" }}>
@@ -80,7 +83,9 @@ const TrackList = ({
             <ListItem
               key={track.hash}
               secondaryAction={
-                <IconButton onClick={() => addTrack(track.hash)}>
+                <IconButton
+                  aria-label="プレイリストにトラックを追加する"
+                  onClick={() => addTrack(track.hash)}>
                   <Add />
                 </IconButton>
               }>

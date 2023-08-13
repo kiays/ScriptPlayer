@@ -18,6 +18,15 @@ Sentry.init(
       }
       return event;
     },
+    beforeBreadcrumb(breadcrumb, hint) {
+      if (breadcrumb.category === "ui.click") {
+        const { target } = hint.event;
+        if (target.ariaLabel) {
+          breadcrumb.message = target.ariaLabel;
+        }
+      }
+      return breadcrumb;
+    },
   },
   reactInit
 );

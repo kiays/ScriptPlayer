@@ -89,6 +89,7 @@ const DraggableTableRow = <T extends ItemWithId>({
     <TableRow
       hover
       key={`table-row-${id}`}
+      aria-label={`テーブル行: ${id}`}
       onClick={(e) => {
         e.stopPropagation();
         onRowClicked(id);
@@ -202,6 +203,7 @@ const DraggableTable = <T extends ItemWithId>({
                 {Object.keys(contextMenuItems).map((name) => (
                   <MenuItem
                     key={`context-menu-item-${name}`}
+                    aria-label={`コンテキストメニュー: ${name}`}
                     onClick={() => {
                       contextMenuItems[name](selectedId);
                       popupState.close();

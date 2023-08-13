@@ -17,6 +17,7 @@ export const SearchFiled: FC<SearchFieldProps> = ({ onChange }) => {
   };
   return (
     <TextField
+      aria-label="検索"
       onChange={(e) => handleChange(e.target.value)}
       InputProps={{
         startAdornment: (
@@ -27,7 +28,9 @@ export const SearchFiled: FC<SearchFieldProps> = ({ onChange }) => {
         endAdornment: (
           <InputAdornment position="end">
             {searchText && (
-              <IconButton onClick={() => handleChange("")}>
+              <IconButton
+                aria-label="検索文字をクリアする"
+                onClick={() => handleChange("")}>
                 <CancelIcon />
               </IconButton>
             )}

@@ -91,8 +91,15 @@ const PlaylistNew = () => {
           {name}
         </h1>
       )}
-      <Button onClick={() => setModalOpen(true)}>add track</Button>
-      <Button onClick={() => save()} disabled={tracks.length == 0}>
+      <Button
+        aria-label="トラック選択モーダルを開く"
+        onClick={() => setModalOpen(true)}>
+        add track
+      </Button>
+      <Button
+        aria-label="新規作成したプレイリストを保存する"
+        onClick={() => save()}
+        disabled={tracks.length == 0}>
         save
       </Button>
       <List>
