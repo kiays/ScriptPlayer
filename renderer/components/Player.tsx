@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, forwardRef } from "react";
 import * as Sentry from "@sentry/browser";
 import update from "immutability-helper";
 import PlayerControl from "./PlayerControl";
@@ -30,7 +30,10 @@ type PlayerProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
 };
-const Player: React.FC<PlayerProps> = ({ open, setOpen }) => {
+const Player = forwardRef<HTMLDivElement, PlayerProps>(function Player(
+  { open, setOpen },
+  ref
+) {
   const [{ tracks, trackIndex, playing }, setPlayerState] =
     useRecoilState(playerState);
   const [audioSrc, setTrack] = useState(null);
@@ -199,6 +202,7 @@ const Player: React.FC<PlayerProps> = ({ open, setOpen }) => {
 
   return (
     <Paper
+      ref={ref}
       sx={{
         zIndex: 1250,
         bottom: 0,
@@ -319,6 +323,6 @@ const Player: React.FC<PlayerProps> = ({ open, setOpen }) => {
       />
     </Paper>
   );
-};
+});
 
 export default Player;
