@@ -48,6 +48,7 @@ export const useUfoDataGenerator =
       ];
     }
     console.error("Invalid UFO data format: ", record);
+    return [];
   };
 
 export const runDevice = (
