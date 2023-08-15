@@ -91,7 +91,12 @@ const Works = () => {
           }}
         />
       </Box>
-      <SortableTable<Work> data={filteredWorks} schema={schema} sortable />
+      <SortableTable<Work>
+        data={filteredWorks}
+        schema={schema}
+        sortable
+        defaultSearchParams={new URLSearchParams("order=asc&orderBy=addedAt")}
+      />
     </Box>
   );
 };
