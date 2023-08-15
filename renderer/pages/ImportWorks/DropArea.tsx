@@ -14,6 +14,16 @@ const DropArea = ({
     const file = event.dataTransfer.items[0].getAsFile() as File & {
       path: string;
     };
+    if (file == null) {
+      alert("ファイルが取得できませんでした");
+      console.log(
+        "ファイルが取得できませんでした",
+        event.dataTransfer.items,
+        event.dataTransfer.items[0],
+        event.dataTransfer.files
+      );
+      return;
+    }
 
     if (file.type == "application/zip") {
       alert(
