@@ -18,7 +18,7 @@ import {
   bindMenu,
 } from "material-ui-popup-state/hooks";
 import React, { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { URLSearchParamsInit, useSearchParams } from "react-router-dom";
 
 type TableSchema<T> = {
   name?: string;
@@ -46,6 +46,7 @@ type SortableTableProps<T> =
         [id: string]: TableSchema<T>;
       } & EventHandlerSpec;
       sortable?: boolean;
+      defaultSearchParams?: URLSearchParamsInit;
     }
   | {
       data: T[];
@@ -53,12 +54,14 @@ type SortableTableProps<T> =
         [id: string]: TableSchema<T>;
       } & EventHandlerSpec;
       sortable?: boolean;
+      defaultSearchParams?: URLSearchParamsInit;
     };
 
 const SortableTable = <T,>({
   data,
   schema,
   sortable = false,
+  defaultSearchParams = "",
 }: SortableTableProps<T>) => {
   const firstItem = Object.values(data)[0] || {};
   const schemaKeys = Object.keys(schema)
@@ -72,7 +75,7 @@ const SortableTable = <T,>({
     popupId: "sortable_table",
   });
 
-  const [params, setSearchParams] = useSearchParams();
+  const [params, setSearchParams] = useSearchParams(defaultSearchParams);
   const [selectedId, setId] = useState<string | null>(null);
   const state = {
     order: (params.get("order") as "asc" | "desc") || "desc",
