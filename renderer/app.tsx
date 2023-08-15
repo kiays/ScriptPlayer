@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useRef } from "react";
 import { RecoilRoot } from "recoil";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import Loading from "./components/Loading";
@@ -24,6 +24,17 @@ import ComponentCatalog from "./pages/ComponentCatalog";
 const theme = createTheme();
 
 const App = () => {
+  const [isPlayerOpen, setIsPlayerOpen] = React.useState(false);
+  const [playerHeight, setPlayerHeight] = React.useState(0);
+  const playerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!playerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      setPlayerHeight(entries[0]?.target?.clientHeight || 0);
+    });
+    observer.observe(playerRef.current);
+    return () => observer.disconnect();
+  }, [playerRef]);
   return (
     <>
       <RecoilRoot>
@@ -31,7 +42,12 @@ const App = () => {
           <HashRouter>
             <Suspense fallback={<Loading loading={true} />}>
               <Layout>
-                <div style={{ width: "100%", height: "100%" }}>
+                <div
+                  style={{
+                    width: "100%",
+                    height: `calc(100% - ${playerHeight + 65}px)`,
+                    overflow: "scroll",
+                  }}>
                   <Routes>
                     <Route path="/playlists" element={<Playlists />} />
                     <Route path="/playlists/new" element={<PlaylistNew />} />
@@ -55,8 +71,12 @@ const App = () => {
                     <Route path="*" element={<div>not found</div>} />
                   </Routes>
                 </div>
+                <Player
+                  ref={playerRef}
+                  open={isPlayerOpen}
+                  setOpen={setIsPlayerOpen}
+                />
               </Layout>
-              <Player />
             </Suspense>
           </HashRouter>
         </ThemeProvider>

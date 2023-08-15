@@ -49,7 +49,7 @@ const DropArea = ({
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       sx={{ backgroundColor: "primary.light", color: "primary.contrastText" }}>
-      <CardContent sx={{ height: "75vh" }}>
+      <CardContent sx={{ height: "60vh", margin: 0 }}>
         <Typography sx={{ fontSize: 24 }}>
           音声作品フォルダをドロップしてください
         </Typography>
