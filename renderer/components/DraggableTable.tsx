@@ -6,6 +6,7 @@ import {
   closestCenter,
   useSensors,
   useSensor,
+  DragEndEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -128,8 +129,9 @@ const DraggableTable = <T extends ItemWithId>({
     })
   );
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    if (!active || !over) return;
     if (active.id !== over.id) {
       const oldIndex = items.findIndex((t) => t.id == active.id);
       const newIndex = items.findIndex((t) => t.id == over.id);
