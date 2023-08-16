@@ -32,11 +32,13 @@ import {
   Cached as ReloadIcon,
   Settings as SettingsIcon,
   Home as HomeIcon,
+  VideogameAsset as OpenControlIcon,
 } from "@mui/icons-material";
 import { useRecoilState } from "recoil";
 import { notificationsState } from "./states/notifications";
 import update from "immutability-helper";
 import { IS_DEVELOPMENT } from "./utils";
+import { playerState } from "./states/player";
 
 const drawerWidth = 240;
 
@@ -113,6 +115,7 @@ export default function Layout({ children }: LayoutProps) {
   const navigate = useNavigate();
   const [notifications, setNotifications] = useRecoilState(notificationsState);
   const { pathname } = useLocation();
+  const [{ hideControls }, setPlayerState] = useRecoilState(playerState);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -231,7 +234,21 @@ export default function Layout({ children }: LayoutProps) {
             )}
           </List>
           <Divider />
-          <List></List>
+          <List>
+            {hideControls && (
+              <ListItemButton
+                onClick={() =>
+                  setPlayerState((s) =>
+                    update(s, { hideControls: { $set: false } })
+                  )
+                }>
+                <ListItemIcon>
+                  <OpenControlIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Open Control"} />
+              </ListItemButton>
+            )}
+          </List>
         </Drawer>
         <Box
           component="main"
