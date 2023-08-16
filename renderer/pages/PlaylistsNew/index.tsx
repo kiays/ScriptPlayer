@@ -13,6 +13,7 @@ import {
   KeyboardSensor,
   PointerSensor,
   closestCenter,
+  DragEndEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -58,8 +59,9 @@ const PlaylistNew = () => {
     })
   );
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    if (!active || !over) return;
     if (active.id !== over.id) {
       setTracks((items) => {
         const oldIndex = items.findIndex((t) => t.id == active.id);
