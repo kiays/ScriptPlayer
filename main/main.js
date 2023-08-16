@@ -11,6 +11,7 @@ const database = require("./database");
 const { traverseDirectory, copyToDataDir } = require("./directory");
 const crypto = require("crypto");
 const fs = require("fs/promises");
+const _fs = require("fs");
 const { state, saveState } = require("./preferences");
 let mainWindow;
 
@@ -63,7 +64,7 @@ app.whenReady().then(() => {
   //   .then((name) => console.log(`Added Extension:  ${name}`))
   //   .catch((err) => console.log("An error occurred: ", err));
   ipcMain.handle("main-window-ready", () => {
-    console.log("main window ready");
+    return;
   });
   createWindow();
 
@@ -92,10 +93,18 @@ ipcMain.handle("import-work", async (e, arg) => {
 });
 
 ipcMain.handle("file-hash", async (_, filePath) => {
-  const fileBuffer = await fs.readFile(filePath);
-  const hashSum = crypto.createHash("sha256");
-  hashSum.update(fileBuffer);
-  return hashSum.digest("hex");
+  return new Promise((resolve, reject) => {
+    const stream = _fs.createReadStream(filePath);
+    const hash = crypto.createHash("sha256");
+    hash.on("error", (e) => console.log("hash error", e));
+    hash.setEncoding("hex");
+    stream.once("end", () => resolve(hash.digest("hex")));
+    stream.once(
+      "error",
+      (e) => console.log("stream read error", e) || reject(e)
+    );
+    stream.on("data", (chunk) => hash.update(chunk));
+  });
 });
 ipcMain.handle("read-file-as-text", async (_, filePath) => {
   const fileContentStr = await fs.readFile(filePath, { encoding: "utf8" });

@@ -67,12 +67,13 @@ const Item = ({
   setThumbnail,
   thumbnailPath,
 }: ItemProps) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const isChecked = checked[path] || false;
   const isDir = type == "dir";
   const isImage = type && type.startsWith("image");
-  const checkable = type && type.startsWith("audio");
+  const checkable =
+    type && (type.startsWith("audio") || type.startsWith("video"));
   const handleClick = () => {
     if (isDir) {
       setOpen(!open);

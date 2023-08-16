@@ -78,6 +78,7 @@ type PlayerState = {
   tracks: Array<Track & PlaylistTrack>;
   trackIndex: number;
   playing: boolean;
+  hideControls: boolean;
 };
 
 type SnackbarNotification = {
