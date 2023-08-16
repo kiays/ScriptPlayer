@@ -91,6 +91,7 @@ const PlaylistDetail = () => {
     const trackIndex = playlist.tracks
       .filter(Boolean)
       .findIndex((e) => e.id == id);
+    if (!playlist.tracks[trackIndex]) return;
     setPlaylist(
       update(playlist, {
         tracks: {
@@ -104,6 +105,7 @@ const PlaylistDetail = () => {
     const trackIndex = playlist.tracks
       .filter(Boolean)
       .findIndex((e) => e.id == id);
+    if (!playlist.tracks[trackIndex]) return;
     setPlaylist(
       update(playlist, {
         tracks: {
