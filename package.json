@@ -63,7 +63,7 @@
     "@sentry/webpack-plugin": "^2.7.1",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
-    "@types/web-bluetooth": "^0.0.17",
+    "@types/web-bluetooth": "^0.0.18",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "dotenv-webpack": "^8.0.1",
