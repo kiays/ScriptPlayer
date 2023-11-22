@@ -47,7 +47,7 @@
     "playwright": "^1.37.1",
     "prettier": "3.0.3",
     "release-it": "^17.0.0",
-    "typescript": "^5.2.2",
+    "typescript": "^5.3.2",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.3"
   },
