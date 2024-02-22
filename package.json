@@ -35,7 +35,7 @@
     "@typescript-eslint/parser": "^6.21.0",
     "@webpack-cli/generators": "^3.0.7",
     "cross-env": "^7.0.3",
-    "electron": "^29.0.0",
+    "electron": "^29.0.1",
     "electron-devtools-installer": "^3.2.0",
     "electron-rebuild": "^3.2.9",
     "esbuild-loader": "^4.0.3",
