@@ -59,7 +59,7 @@
     "@mui/icons-material": "^5.15.11",
     "@mui/material": "^5.15.11",
     "@sentry/electron": "^4.18.0",
-    "@sentry/react": "^7.102.1",
+    "@sentry/react": "^7.103.0",
     "@sentry/webpack-plugin": "^2.14.2",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19",
