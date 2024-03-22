@@ -66,7 +66,7 @@
     "@types/web-bluetooth": "^0.0.20",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
-    "dotenv-webpack": "^8.0.1",
+    "dotenv-webpack": "^8.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "file-type": "^19.0.0",
     "immutability-helper": "^3.1.1",
