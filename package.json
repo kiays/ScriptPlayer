@@ -61,7 +61,7 @@
     "@sentry/electron": "^4.21.0",
     "@sentry/react": "^7.108.0",
     "@sentry/webpack-plugin": "^2.16.0",
-    "@types/react": "^18.2.70",
+    "@types/react": "^18.2.71",
     "@types/react-dom": "^18.2.22",
     "@types/web-bluetooth": "^0.0.20",
     "date-fns": "^3.6.0",
