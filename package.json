@@ -70,7 +70,7 @@
     "electron-squirrel-startup": "^1.0.1",
     "file-type": "^19.0.0",
     "immutability-helper": "^3.1.1",
-    "material-ui-popup-state": "^5.1.0",
+    "material-ui-popup-state": "^5.1.1",
     "qrcode": "^1.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.3.1",
