@@ -56,7 +56,7 @@
     "@dnd-kit/sortable": "^9.0.0",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
-    "@mui/icons-material": "^5.16.7",
+    "@mui/icons-material": "^5.16.8",
     "@mui/material": "^5.16.8",
     "@sentry/electron": "^5.7.0",
     "@sentry/react": "^8.40.0",
