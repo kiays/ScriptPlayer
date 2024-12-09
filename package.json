@@ -52,7 +52,7 @@
     "webpack-cli": "^5.1.3"
   },
   "dependencies": {
-    "@dnd-kit/core": "^6.2.0",
+    "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
