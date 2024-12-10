@@ -30,7 +30,7 @@
   "devDependencies": {
     "@electron-forge/cli": "^7.6.0",
     "@electron-forge/maker-zip": "^7.6.0",
-    "@playwright/test": "^1.49.0",
+    "@playwright/test": "^1.49.1",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@webpack-cli/generators": "^3.0.7",
