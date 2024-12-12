@@ -58,7 +58,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^5.16.8",
     "@mui/material": "^5.16.9",
-    "@sentry/electron": "^5.7.0",
+    "@sentry/electron": "^5.8.0",
     "@sentry/react": "^8.43.0",
     "@sentry/webpack-plugin": "^2.22.6",
     "@types/react": "^18.3.12",
